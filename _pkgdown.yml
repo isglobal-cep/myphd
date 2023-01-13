@@ -1,0 +1,4 @@
+url: https://lorenzofabbri.github.io/myphd/
+template:
+  bootstrap: 5
+  bootswatch: flatly
