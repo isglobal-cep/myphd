@@ -11,3 +11,9 @@ LazyData: true
 URL: https://lorenzofabbri.github.io/myphd/
 RoxygenNote: 7.2.3
 License: MIT + file LICENSE
+Roxygen: list(markdown = TRUE)
+Imports: 
+    lifecycle
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
