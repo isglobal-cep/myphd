@@ -14,6 +14,7 @@ License: MIT + file LICENSE
 Roxygen: list(markdown = TRUE)
 Imports: 
     dagitty,
+    dplyr,
     ggdag,
     lifecycle,
     magrittr
