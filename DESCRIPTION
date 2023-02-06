@@ -13,7 +13,10 @@ RoxygenNote: 7.2.3
 License: MIT + file LICENSE
 Roxygen: list(markdown = TRUE)
 Imports: 
-    lifecycle
+    dagitty,
+    ggdag,
+    lifecycle,
+    magrittr
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
