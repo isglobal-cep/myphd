@@ -2,7 +2,7 @@
 % Please edit documentation in R/dags.R
 \name{visualize.dag}
 \alias{visualize.dag}
-\title{Visualize DAG
+\title{Visualize DAG.
 \code{visualize.dag} is a wrapper function to plot DAGs
 using \pkg{ggdag}.}
 \usage{
@@ -15,7 +15,7 @@ visualize.dag(dag.code)
 A \pkg{ggplot} object.
 }
 \description{
-Visualize DAG
+Visualize DAG.
 \code{visualize.dag} is a wrapper function to plot DAGs
 using \pkg{ggdag}.
 }
