@@ -1,4 +1,4 @@
-#' Visualize DAG
+#' Visualize DAG.
 #' `visualize.dag` is a wrapper function to plot DAGs
 #' using \pkg{ggdag}.
 #'
