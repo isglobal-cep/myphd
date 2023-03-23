@@ -2,22 +2,24 @@
 #'
 #' Wrapper function to plot DAGs using \pkg{ggdag}.
 #'
-#' @param dag_code Input DAG name. A string.
-#' @returns A \pkg{ggplot} object.
+#' @param dag A \pkg{dagitty} object.
+#' @returns A \pkg{ggdag} object.
 #' @export
-visualize_dag <- function(dag_code) {
-  # Create dagitty object
-  dag <- dagitty::dagitty(dag_code) |>
-    ggdag::tidy_dagitty()
-
-  # Plot DAG
-  plt <- ggdag::ggdag(dag) +
+visualize_dag <- function(dag) {
+  ret <- dag |>
+    ggdag::tidy_dagitty() |>
+    ggdag::node_status() |>
+    ggplot2::ggplot(ggplot2::aes(x, y,
+                                 xend = xend, yend = yend,
+                                 color = status)) +
     ggdag::geom_dag_edges() +
-    ggdag::geom_dag_point(fill = "white", color = "black",
-                          shape = 21) +
-    ggdag::geom_dag_text(col = "black") +
-    ggdag::scale_adjusted() +
-    ggdag::theme_dag()
+    ggdag::geom_dag_point() +
+    geom_dag_text_repel() +
+    ggokabeito::scale_color_okabe_ito(na.value = "grey90") +
+    theme_dag() +
+    ggplot2::coord_cartesian(clip = "off")
+
+  return(ret)
 }
 
 #' Test conditional independencies
