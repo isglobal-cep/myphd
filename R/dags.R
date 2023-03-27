@@ -22,6 +22,34 @@ visualize_dag <- function(dag) {
   return(ret)
 }
 
+#' Convert a \pkg{dagitty} DAG to a formatted string
+#'
+#' @description
+#' Convert a DAG from \pkg{dagitty} to a formatted
+#' string that can be used to create DAGs with \pkg{ggdag}
+#' using its formula-based input method.
+#'
+#' @examples
+#' myphd::from_dagitty_to_ggdag(dag)$dag_formula %>% cat(sep = "\n")
+#'
+#' @param dag A \pkg{dagitty} DAG. A string.
+#' @returns A formatted string.
+#' @export
+from_dagitty_to_ggdag <- function(dag) {
+  dag <- dagitty::dagitty(dag)
+
+  to_ggdag <- ggdag::tidy_dagitty(dag) |>
+    (\(x) x$data) () |>
+    dplyr::select(name, to) |>
+    dplyr::rename(from = name) |>
+    dplyr::group_by(to) |>
+    dplyr::summarise(from_formula = paste(from, collapse = " + ")) |>
+    tidyr::drop_na(to) |>
+    tidyr::unite(dag_formula, to, from_formula, sep = " ~ ")
+
+  return(to_ggdag)
+}
+
 #' Test conditional independencies
 #'
 #' @description

@@ -4,15 +4,19 @@
 \name{myphd-package}
 \alias{myphd}
 \alias{myphd-package}
-\title{myphd: What the Package Does (Title Case)}
+\title{myphd: A Small R Package for my PhD}
 \description{
-More about what it does (maybe more than one line) Use four spaces when indenting paragraphs within the Description.
+A fairly small R package written during my PhD years to automate certain tasks.
 }
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://lorenzofabbri.github.io/myphd/}
 }
+
+}
+\author{
+\strong{Maintainer}: Lorenzo Fabbri \email{lorenzo.fabbri@isglobal.org} (\href{https://orcid.org/0000-0003-3031-322X}{ORCID})
 
 }
 \keyword{internal}
