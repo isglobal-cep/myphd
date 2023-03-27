@@ -16,15 +16,30 @@
     <loc>https://lorenzofabbri.github.io/myphd/index.html</loc>
   </url>
   <url>
+    <loc>https://lorenzofabbri.github.io/myphd/reference/create_data.html</loc>
+  </url>
+  <url>
+    <loc>https://lorenzofabbri.github.io/myphd/reference/from_dagitty_to_ggdag.html</loc>
+  </url>
+  <url>
+    <loc>https://lorenzofabbri.github.io/myphd/reference/geom_dag_text_repel.html</loc>
+  </url>
+  <url>
     <loc>https://lorenzofabbri.github.io/myphd/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>https://lorenzofabbri.github.io/myphd/reference/map_covariates.html</loc>
   </url>
   <url>
     <loc>https://lorenzofabbri.github.io/myphd/reference/myphd-package.html</loc>
   </url>
   <url>
-    <loc>https://lorenzofabbri.github.io/myphd/reference/test.npsem.html</loc>
+    <loc>https://lorenzofabbri.github.io/myphd/reference/test_npsem.html</loc>
   </url>
   <url>
-    <loc>https://lorenzofabbri.github.io/myphd/reference/visualize.dag.html</loc>
+    <loc>https://lorenzofabbri.github.io/myphd/reference/theme_dag.html</loc>
+  </url>
+  <url>
+    <loc>https://lorenzofabbri.github.io/myphd/reference/visualize_dag.html</loc>
   </url>
 </urlset>
