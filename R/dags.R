@@ -1,3 +1,25 @@
+#' Find intersection of confounders
+#'
+#' Given a DAG with multiple adjustment sets, find the
+#' intersection of all the nodes.
+#'
+#' @param dag A \pkg{dagitty} object.
+#' @param type_mas The type of adjustment set.
+#' @param type_effect The type of effect to be estimated.
+#' @returns A list.
+#' @export
+find_intersection_confounders <- function(dag, type_mas, type_effect) {
+  adj_sets <- dagitty::adjustmentSets(x = dag,
+                                      type = type_mas,
+                                      effect = type_effect)
+  common_nodes <- adj_sets |>
+    unlist() |>
+    unname() |>
+    unique()
+
+  return(common_nodes)
+}
+
 #' Visualize DAG
 #'
 #' Wrapper function to plot DAGs using \pkg{ggdag}.
@@ -30,7 +52,7 @@ visualize_dag <- function(dag) {
 #' using its formula-based input method.
 #'
 #' @examples
-#' myphd::from_dagitty_to_ggdag(dag)$dag_formula %>% cat(sep = "\n")
+#' myphd::from_dagitty_to_ggdag(dag)$dag_formula %>% cat(sep = ",\n")
 #'
 #' @param dag A \pkg{dagitty} DAG. A string.
 #' @returns A formatted string.
