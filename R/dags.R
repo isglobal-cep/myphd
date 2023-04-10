@@ -52,7 +52,7 @@ visualize_dag <- function(dag) {
 #' using its formula-based input method.
 #'
 #' @examples
-#' myphd::from_dagitty_to_ggdag(dag)$dag_formula %>% cat(sep = ",\n")
+#' myphd::from_dagitty_to_ggdag(dag)$dag_formula |> cat(sep = ",\n")
 #'
 #' @param dag A \pkg{dagitty} DAG. A string.
 #' @returns A formatted string.

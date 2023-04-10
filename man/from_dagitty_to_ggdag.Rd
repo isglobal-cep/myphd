@@ -18,6 +18,6 @@ string that can be used to create DAGs with \pkg{ggdag}
 using its formula-based input method.
 }
 \examples{
-myphd::from_dagitty_to_ggdag(dag)$dag_formula \%>\% cat(sep = "\n")
+myphd::from_dagitty_to_ggdag(dag)$dag_formula |> cat(sep = ",\n")
 
 }
