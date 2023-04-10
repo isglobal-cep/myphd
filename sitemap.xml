@@ -19,6 +19,12 @@
     <loc>https://lorenzofabbri.github.io/myphd/reference/create_data.html</loc>
   </url>
   <url>
+    <loc>https://lorenzofabbri.github.io/myphd/reference/df_mapping_vars.html</loc>
+  </url>
+  <url>
+    <loc>https://lorenzofabbri.github.io/myphd/reference/find_intersection_confounders.html</loc>
+  </url>
+  <url>
     <loc>https://lorenzofabbri.github.io/myphd/reference/from_dagitty_to_ggdag.html</loc>
   </url>
   <url>
@@ -26,9 +32,6 @@
   </url>
   <url>
     <loc>https://lorenzofabbri.github.io/myphd/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://lorenzofabbri.github.io/myphd/reference/map_covariates.html</loc>
   </url>
   <url>
     <loc>https://lorenzofabbri.github.io/myphd/reference/myphd-package.html</loc>
