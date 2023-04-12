@@ -22,7 +22,7 @@
     <loc>https://lorenzofabbri.github.io/myphd/reference/df_mapping_vars.html</loc>
   </url>
   <url>
-    <loc>https://lorenzofabbri.github.io/myphd/reference/find_intersection_confounders.html</loc>
+    <loc>https://lorenzofabbri.github.io/myphd/reference/find_common_confounders.html</loc>
   </url>
   <url>
     <loc>https://lorenzofabbri.github.io/myphd/reference/from_dagitty_to_ggdag.html</loc>
@@ -32,6 +32,9 @@
   </url>
   <url>
     <loc>https://lorenzofabbri.github.io/myphd/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>https://lorenzofabbri.github.io/myphd/reference/map_covars.html</loc>
   </url>
   <url>
     <loc>https://lorenzofabbri.github.io/myphd/reference/myphd-package.html</loc>
