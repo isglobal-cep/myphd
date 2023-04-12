@@ -1,14 +1,14 @@
-#' Find intersection of confounders
+#' Find common confounders
 #'
-#' Given a DAG with multiple adjustment sets, find the
-#' intersection of all the nodes.
+#' Given a DAG with multiple adjustment sets, find
+#' all the common nodes.
 #'
 #' @param dag A \pkg{dagitty} object.
 #' @param type_mas The type of adjustment set.
 #' @param type_effect The type of effect to be estimated.
 #' @returns A list.
 #' @export
-find_intersection_confounders <- function(dag, type_mas, type_effect) {
+find_common_confounders <- function(dag, type_mas, type_effect) {
   adj_sets <- dagitty::adjustmentSets(x = dag,
                                       type = type_mas,
                                       effect = type_effect)

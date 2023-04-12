@@ -2,9 +2,10 @@
 
 export(create_data)
 export(df_mapping_vars)
-export(find_intersection_confounders)
+export(find_common_confounders)
 export(from_dagitty_to_ggdag)
 export(geom_dag_text_repel)
+export(map_covars)
 export(test_npsem)
 export(theme_dag)
 export(visualize_dag)

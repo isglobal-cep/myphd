@@ -16,6 +16,25 @@ create_data <- function(variables, num_rows, num_cols, ids) {
   }
 }
 
+#' Mapping between causal nodes and variables' names
+#'
+#' @description
+#' Given a dictionary mapping the nodes of a DAG to the
+#' variables' names in a dataset, and a list of nodes from the
+#' same DAG, it returns the corresponding variables in the
+#' dataset.
+#'
+#' @param dict_mapping A named list of vectors. A list.
+#' @param adjustment_set A list of confounders from `dagitty::adjustmentSets`. A list.
+#' @returns A list of variables' names.
+#' @export
+map_covars <- function(dict_mapping, adjustment_set) {
+  vars <- dict_mapping[[adjustment_set]] |>
+    unlist()
+
+  return(vars)
+}
+
 #' Create dataframe for mapping of variables
 #'
 #' @description
