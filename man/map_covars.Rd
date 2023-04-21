@@ -4,19 +4,14 @@
 \alias{map_covars}
 \title{Mapping between causal nodes and variables' names}
 \usage{
-map_covars(dict_mapping, adjustment_set)
+map_covars()
 }
 \arguments{
-\item{dict_mapping}{A named list of vectors. A list.}
-
-\item{adjustment_set}{A list of confounders from \code{dagitty::adjustmentSets}. A list.}
+\item{A.}{.}
 }
 \value{
 A list of variables' names.
 }
 \description{
-Given a dictionary mapping the nodes of a DAG to the
-variables' names in a dataset, and a list of nodes from the
-same DAG, it returns the corresponding variables in the
-dataset.
+Mapping between causal nodes and variables' names
 }

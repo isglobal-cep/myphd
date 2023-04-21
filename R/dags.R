@@ -51,9 +51,6 @@ visualize_dag <- function(dag) {
 #' string that can be used to create DAGs with \pkg{ggdag}
 #' using its formula-based input method.
 #'
-#' @examples
-#' myphd::from_dagitty_to_ggdag(dag)$dag_formula |> cat(sep = ",\n")
-#'
 #' @param dag A \pkg{dagitty} DAG. A string.
 #' @returns A formatted string.
 #' @export
