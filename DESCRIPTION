@@ -12,7 +12,8 @@ Description:
     automate certain tasks.
 Encoding: UTF-8
 LazyData: true
-URL: https://lorenzofabbri.github.io/myphd/
+URL: https://lorenzofabbri.github.io/myphd/,
+    https://isglobal-cep.github.io/myphd/
 RoxygenNote: 7.2.3
 License: MIT + file LICENSE
 Roxygen: list(markdown = TRUE)
