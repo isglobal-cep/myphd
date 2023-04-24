@@ -22,6 +22,9 @@
     <loc>https://isglobal-cep.github.io/myphd/reference/create_mapping_labels.html</loc>
   </url>
   <url>
+    <loc>https://isglobal-cep.github.io/myphd/reference/edcs_information.html</loc>
+  </url>
+  <url>
     <loc>https://isglobal-cep.github.io/myphd/reference/find_common_confounders.html</loc>
   </url>
   <url>
@@ -34,10 +37,16 @@
     <loc>https://isglobal-cep.github.io/myphd/reference/index.html</loc>
   </url>
   <url>
+    <loc>https://isglobal-cep.github.io/myphd/reference/load_ctd.html</loc>
+  </url>
+  <url>
     <loc>https://isglobal-cep.github.io/myphd/reference/map_covars.html</loc>
   </url>
   <url>
     <loc>https://isglobal-cep.github.io/myphd/reference/myphd-package.html</loc>
+  </url>
+  <url>
+    <loc>https://isglobal-cep.github.io/myphd/reference/plot_ctd.html</loc>
   </url>
   <url>
     <loc>https://isglobal-cep.github.io/myphd/reference/test_npsem.html</loc>
