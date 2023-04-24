@@ -35,6 +35,7 @@ create_mapping_labels <- function(labels, codes) {
 add_metadata <- function(dat, metadat) {
   # Helper function to tidy certain variables' names
   .tidy_string <- function(x) {
+    x <- gsub(" *\\(.*?\\) *", "", x)
     ret <- x |>
       stringr::str_trim(side = "both") |>
       stringr::str_to_title()
