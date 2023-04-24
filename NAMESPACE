@@ -2,10 +2,13 @@
 
 export(add_metadata)
 export(create_mapping_labels)
+export(edcs_information)
 export(find_common_confounders)
 export(from_dagitty_to_ggdag)
 export(geom_dag_text_repel)
+export(load_ctd)
 export(map_covars)
+export(plot_ctd)
 export(test_npsem)
 export(theme_dag)
 export(visualize_dag)

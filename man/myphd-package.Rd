@@ -12,6 +12,7 @@ A fairly small R package written during my PhD years to automate certain tasks.
 Useful links:
 \itemize{
   \item \url{https://lorenzofabbri.github.io/myphd/}
+  \item \url{https://isglobal-cep.github.io/myphd/}
 }
 
 }
