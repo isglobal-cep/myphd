@@ -10,9 +10,11 @@
 #' @export
 create_mapping_labels <- function(labels, codes) {
   labels <- strsplit(labels, ", ") |>
-    unlist()
+    unlist() |>
+    as.character()
   codes <- strsplit(codes, ",") |>
-    unlist()
+    unlist() |>
+    as.integer()
 
   ret <- codes
   ret <- setNames(ret, labels)
@@ -38,7 +40,7 @@ add_metadata <- function(dat, metadat) {
     x <- gsub(" *\\(.*?\\) *", "", x)
     ret <- x |>
       stringr::str_trim(side = "both") |>
-      stringr::str_to_title()
+      stringr::str_to_sentence()
     return(ret)
   }
 
@@ -59,6 +61,8 @@ add_metadata <- function(dat, metadat) {
       dat_modified,
       !!x,
       description = info$description,
+      # Manually adding `label` attribute to work with gtsummary
+      label = info$description,
       value_lables = ifelse(
         info$type == "Categorical",
         create_mapping_labels(info$label, info$code),
