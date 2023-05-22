@@ -17,17 +17,17 @@ A pre-processed dataset. A data.table.
 \description{
 Perform basic pre-processing of a given dataset:
 \itemize{
-\item Data cleaning
+\item Data cleaning:
 \itemize{
-\item Removal of incorrect/unwanted variables
-\item Remove of incorrect/unwanted subjects
-\item Handling of missing values
+\item Removal of incorrect/unwanted variables.
+\item Remove of incorrect/unwanted subjects.
+\item Handling of missing values.
 }
-\item Variable transformations
+\item Variable transformations:
 \itemize{
-\item Transformation (e.g., log-transformation)
-\item Standardization (zero mean and unit standard deviation)
-\item Normalization (subtract the minimum and divide by the range)
+\item Transformation (e.g., log-transformation).
+\item Standardization (zero mean and unit standard deviation).
+\item Normalization (subtract the minimum and divide by the range).
 }
 }
 }
