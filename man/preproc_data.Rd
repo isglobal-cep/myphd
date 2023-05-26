@@ -4,7 +4,7 @@
 \alias{preproc_data}
 \title{Basic pre-processing of datasets}
 \usage{
-preproc_data(dat, dic_steps)
+preproc_data(dat, outcome = NULL, dic_steps)
 }
 \arguments{
 \item{dat}{A dataset with variables as columns. A data.table.}
@@ -25,7 +25,7 @@ Perform basic pre-processing of a given dataset:
 }
 \item Variable transformations:
 \itemize{
-\item Transformation (e.g., log-transformation).
+\item Transformation (e.g., log-transformation, bound outcome).
 \item Standardization (zero mean and unit standard deviation).
 \item Normalization (subtract the minimum and divide by the range).
 }
