@@ -25,28 +25,38 @@ preproc_data <- function(dat, outcome = NULL, dic_steps) {
   dat_ret <- dat
 
   # Variable transformations: bound outcome
-  if (exists("bound", dic_steps) & dic_steps$bound$do) {
-    dat_ret <- bound_outcome_tmle(dat_ret,
-                                  var = outcome)
+  if ("bound" %in% names(dic_steps)) {
+    if (dic_steps$bound$do) {
+      message("Bounding the outcome for TMLE.")
+      dat_ret <- bound_outcome_tmle(dat_ret,
+                                    var = outcome)
+    }
   }
 
   # Data cleaning: missing values imputation
-  if (exists("missings", dic_steps) & dic_steps$missings$do) {
-    warning("The value of `pmm.k` for missRanger must be selected.")
-    dat_ret <- missRanger::missRanger(data = dat_ret,
-                                      formula = . ~ . - HelixID,
-                                      pmm.k = 3)
+  if ("missings" %in% names(dic_steps)) {
+    if (dic_steps$missings$do) {
+      warning("The value of `pmm.k` for missRanger must be selected.")
+      dat_ret <- missRanger::missRanger(data = dat_ret,
+                                        formula = . ~ . - HelixID,
+                                        pmm.k = 3)
+    }
+
   }
 
   # Variable transformations: standardization
-  if (exists("standardization", dic_steps) & dic_steps$standardization$do) {
-    dat_ret <- scale(dplyr::select(dat_ret, -HelixID),
-                     center = dic_steps$standardization$center,
-                     scale = dic_steps$standardization$scale)
-    dat_ret <- dat_ret |>
-      tibble::as_tibble() |>
-      dplyr::mutate(HelixID = dat$HelixID) |>
-      dplyr::relocate(HelixID)
+  if ("standardization" %in% names(dic_steps)) {
+    if (dic_steps$standardization$do) {
+      message("Standardizing variables using robStandardize.")
+      # dat_ret <- scale(dplyr::select(dat_ret, -HelixID),
+      #                  center = dic_steps$standardization$center,
+      #                  scale = dic_steps$standardization$scale)
+      dat_ret <- robustHD::robStandardize(dplyr::select(dat_ret, -HelixID))
+      dat_ret <- dat_ret |>
+        tibble::as_tibble() |>
+        dplyr::mutate(HelixID = dat$HelixID) |>
+        dplyr::relocate(HelixID)
+    }
   }
 
   return(dat_ret)
