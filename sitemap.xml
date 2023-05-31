@@ -28,7 +28,19 @@
     <loc>https://isglobal-cep.github.io/myphd/reference/create_mapping_labels.html</loc>
   </url>
   <url>
+    <loc>https://isglobal-cep.github.io/myphd/reference/describe_data.html</loc>
+  </url>
+  <url>
     <loc>https://isglobal-cep.github.io/myphd/reference/edcs_information.html</loc>
+  </url>
+  <url>
+    <loc>https://isglobal-cep.github.io/myphd/reference/explore_data.html</loc>
+  </url>
+  <url>
+    <loc>https://isglobal-cep.github.io/myphd/reference/explore_missings.html</loc>
+  </url>
+  <url>
+    <loc>https://isglobal-cep.github.io/myphd/reference/extract_cohort.html</loc>
   </url>
   <url>
     <loc>https://isglobal-cep.github.io/myphd/reference/find_common_confounders.html</loc>
