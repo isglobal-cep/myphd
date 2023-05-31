@@ -1,3 +1,20 @@
+#' Title
+#'
+#' @param dat
+#' @param id_var
+#'
+#' @return
+#' @export
+extract_cohort <- function(dat, id_var) {
+  warning("Creating cohort variable from ID variable: it ",
+          "assumes that the first 3 letters represent the cohort.")
+  dat <- dat |>
+    dplyr::mutate(cohort = substr(.data[[id_var]], 1, 3))
+  dat$cohort <- as.factor(dat$cohort)
+
+  return(dat)
+}
+
 #' Basic pre-processing of datasets
 #'
 #' @description
@@ -67,18 +84,10 @@ preproc_data <- function(dat, outcome = NULL, dic_steps) {
 #' @param dat
 #' @param by_var
 #' @param threshold
-#' @param path_store_reports
 #'
 #' @return
 #' @export
-handle_missing_values <- function(dat, by_var, threshold, path_store_reports) {
-  if (!is.null(by_var)) {
-    missings <- dat |>
-      dplyr::group_by(by_var) |>
-      naniar::miss_var_summary() |>
-      dplyr::filter(pct_miss > threshold) |>
-      dplyr::ungroup()
-  }
+handle_missing_values <- function(dat, by_var, threshold) {
 }
 
 #' Title
