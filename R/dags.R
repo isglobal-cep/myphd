@@ -20,6 +20,53 @@ find_common_confounders <- function(dag, type_mas, type_effect) {
   return(common_nodes)
 }
 
+#' Title
+#'
+#' @param dat
+#' @param meta
+#' @param adjustment_sets
+#'
+#' @return
+#' @export
+minimize_missings <- function(dat, meta, adjustment_sets) {
+  cohorts <- levels(dat$cohort)
+
+  # List of dataframes with covariates from adjustment sets
+  dfs_covars <- lapply(adjustment_sets, function(x) {
+    mapping_covars <- meta[meta$dag %in% x, ]$variable
+    tmp <- dat |>
+      dplyr::select("cohort",
+                    dplyr::any_of(mapping_covars))
+  })
+
+  # List of dataframes with fractions of missing values by cohort,
+  # for each adjustment set
+  ret_miss <- suppressMessages(lapply(dfs_covars, function(x) {
+    nans <- x |>
+      dplyr::group_split(cohort, .keep = FALSE) |>
+      lapply(function(y) {
+        round(sum(is.na(y)) / (nrow(y) * ncol(y)) * 100, 0)
+      }) |>
+      unname() |>
+      unlist()
+    nans <- tibble::as_tibble(nans)
+  }) |>
+    purrr::reduce(dplyr::bind_cols))
+  colnames(ret_miss) <- paste0("adj_set_", 1:ncol(ret_miss))
+  ret_miss <- ret_miss |>
+    dplyr::mutate(cohort = cohorts) |>
+    dplyr::relocate(cohort)
+
+  # Sum of missing values, for each adjustment set
+  ret <- ret_miss |>
+    dplyr::select(-cohort) |>
+    colSums() |>
+    which.min() |>
+    as.integer()
+
+  return(ret)
+}
+
 #' Visualize DAG
 #'
 #' Wrapper function to plot DAGs using \pkg{ggdag}.
