@@ -73,7 +73,8 @@ preproc_data <- function(dat, outcome = NULL, dic_steps,
     if (dic_steps$standardization$do) {
       message("Standardizing variables using robStandardize.")
       dat_ret <- robustHD::robStandardize(dplyr::select(dat_ret,
-                                                        -dplyr::all_of(id_var))) |>
+                                                        -dplyr::any_of(id_var,
+                                                                       by_var))) |>
         tibble::as_tibble()
       dat_ret[[id_var]] <- dat[[id_var]]
       dat_ret <- dplyr::relocate(dat_ret, id_var)
@@ -123,7 +124,7 @@ handle_missing_values <- function(dat, id_var, by_var,
   # Step 3: impute the remaining variables
   vis_miss_before <- naniar::vis_miss(dat)
   dat_imp <- missRanger::missRanger(data = dat,
-                                    formula = . ~ . - as.name(id_var),
+                                    formula = as.formula(glue::glue(". ~ . -{id_var}")),
                                     pmm.k = 5)
   vis_miss_after <- naniar::vis_miss(dat_imp)
 
