@@ -4,10 +4,10 @@
 \alias{describe_data}
 \title{Title}
 \usage{
-describe_data(dat, id_var, grouping_var, path_save)
+describe_data(dat, id_var, grouping_var)
 }
 \arguments{
-\item{path_save}{}
+\item{grouping_var}{}
 }
 \description{
 Title

@@ -121,6 +121,7 @@ handle_missing_values <- function(dat, id_var, by_var,
   vis_miss_before <- naniar::vis_miss(dat)
   dat_imp <- missRanger::missRanger(data = dat,
                                     formula = as.formula(glue::glue(". ~ . -{id_var}")),
+                                    num.trees = 10,
                                     pmm.k = 5)
   vis_miss_after <- naniar::vis_miss(dat_imp)
 

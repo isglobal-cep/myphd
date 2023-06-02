@@ -3,27 +3,87 @@
 #' @param dat
 #' @param id_var
 #' @param grouping_var
-#' @param path_save
 #'
 #' @return
 #' @export
-explore_data <- function(dat, id_var, grouping_var, path_save) {
+describe_data <- function(dat, id_var, grouping_var) {
   dat <- extract_cohort(dat, id_var)
+  dat <- dat |>
+    dplyr::select(-dplyr::all_of(id_var))
 
-  # Data overview with `qreport`
-}
+  ##############################################################################
+  # Step 1: simple diagnose of numerical and categorical variables w/ `dlookr`
+  step1_num <- dlookr::diagnose_numeric(dat)
+  step1_cat <- dlookr::diagnose_category(dat)
+  ##############################################################################
 
-#' Title
-#'
-#' @param dat
-#' @param id_var
-#' @param grouping_var
-#' @param path_save
-#'
-#' @return
-#' @export
-describe_data <- function(dat, id_var, grouping_var, path_save) {
-  dat <- extract_cohort(dat, id_var)
+  ##############################################################################
+  # Step 2: diagnose of numerical and categorical variables by factor w/ `dlookr`
+  step2_num <- step2_cat <- NULL
+  if (!is.null(grouping_var)) {
+    step2_num <- dlookr::diagnose_numeric(dat |>
+                                            dplyr::group_by({{ grouping_var }}))
+    step2_cat <- dlookr::diagnose_category(dat |>
+                                             dplyr::group_by({{ grouping_var }}))
+  }
+  ##############################################################################
+
+  ##############################################################################
+  # Step 3: summary of variables w/ `gtsummary`
+  step3 <- dat |>
+    gtsummary::tbl_summary(by = grouping_var,
+                           statistic = list(
+                             gtsummary::all_continuous() ~ c(
+                               "{median} ({p25}, {p75})"
+                             ),
+                             gtsummary::all_categorical() ~ "{n} ({p}%)"
+                           )) |>
+    gtsummary::add_overall()
+  ##############################################################################
+
+  ##############################################################################
+  # Step 4: detailed summary of variables w/ `gtsummary`
+  step4 <- dat |>
+    gtsummary::tbl_summary(by = grouping_var,
+                           type = list(
+                             gtsummary::all_continuous() ~ "continuous2",
+                             gtsummary::all_categorical() ~ "categorical"
+                           ),
+                           statistic = list(
+                             gtsummary::all_continuous() ~ c(
+                               "{N_obs} ({p_nonmiss}%)",
+                               "{median} ({p25}, {p75})",
+                               "{min}, {max}"
+                             ),
+                             gtsummary::all_categorical() ~ "{n} / {N} ({p}%)"
+                           )) |>
+    gtsummary::add_overall()
+  ##############################################################################
+
+  ##############################################################################
+  # Step 5: visualize summaries w/ `summaryM` from `Hmisc`
+  vars <- setdiff(names(dat), grouping_var)
+  form <- as.formula(paste(paste(vars, collapse = '+'),
+                           '~',
+                           grouping_var))
+  step5 <- Hmisc::summaryM(formula = form, data = dat,
+                           test = TRUE,
+                           na.include = TRUE, overall = TRUE)
+  step5_plot_con <- plot(step5, which = "continuous")
+  step5_plot_cat <- plot(step5, which = "categorical")
+  ##############################################################################
+
+  return(list(
+    step1_num = step1_num,
+    step1_cat = step1_cat,
+    step2_num = step2_num,
+    step2_cat = step2_cat,
+    step3 = step3,
+    step4 = step4,
+    step5 = step5,
+    step5_plot_con = step5_plot_con,
+    step5_plot_cat = step5_plot_cat
+  ))
 }
 
 #' Title
@@ -92,7 +152,8 @@ explore_missings <- function(dat, id_var, grouping_var, path_save) {
     ggplot2::scale_y_discrete(limits = dat$cohort,
                               labels = dat$cohort)
   ggplot2::ggsave(filename = paste0(path_save,
-                                    "vis_miss.png"),
+                                    "vis_miss_",
+                                    ".png"),
                   dpi = 720,
                   height = 15,
                   width = 30,
