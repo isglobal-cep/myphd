@@ -73,11 +73,10 @@ preproc_data <- function(dat, outcome = NULL, dic_steps,
     if (dic_steps$standardization$do) {
       message("Standardizing variables using robStandardize.")
       dat_ret <- robustHD::robStandardize(dplyr::select(dat_ret,
-                                                        -dplyr::all_of(id_var)))
-      dat_ret <- dat_ret |>
-        tibble::as_tibble() |>
-        dplyr::mutate(id_var = dat[[id_var]]) |>
-        dplyr::relocate(id_var)
+                                                        -dplyr::all_of(id_var))) |>
+        tibble::as_tibble()
+      dat_ret[[id_var]] <- dat[[id_var]]
+      dat_ret <- dplyr::relocate(dat_ret, id_var)
     }
   }
 
