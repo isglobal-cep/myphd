@@ -80,10 +80,7 @@ preproc_data <- function(dat, outcome = NULL, dic_steps,
     }
   }
 
-  return(list(
-    dat = dat_ret,
-    res_missings = res_missings
-  ))
+  return(dat = dat_ret)
 }
 
 #' Title
