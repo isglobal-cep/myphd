@@ -71,6 +71,7 @@ preproc_data <- function(dat, outcome = NULL, dic_steps,
   if ("standardization" %in% names(dic_steps)) {
     if (dic_steps$standardization$do) {
       message("Standardizing variables using robStandardize.")
+      print(dat_ret)
       dat_ret <- dat_ret |>
         dplyr::select(-dplyr::any_of(c(id_var, by_var))) |>
         robustHD::robStandardize() |>
