@@ -65,7 +65,6 @@ preproc_data <- function(dat, outcome = NULL, dic_steps,
                                             threshold_overall = dic_steps$missings$threshold_overall)
       dat_ret <- res_missings$dat_imputed
     }
-
   }
 
   # Variable transformations: standardization
