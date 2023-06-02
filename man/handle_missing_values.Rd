@@ -4,10 +4,10 @@
 \alias{handle_missing_values}
 \title{Title}
 \usage{
-handle_missing_values(dat, by_var, threshold)
+handle_missing_values(dat, id_var, by_var, threshold_within, threshold_overall)
 }
 \arguments{
-\item{threshold}{}
+\item{threshold_overall}{}
 }
 \description{
 Title

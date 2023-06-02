@@ -4,7 +4,7 @@
 \alias{preproc_data}
 \title{Basic pre-processing of datasets}
 \usage{
-preproc_data(dat, outcome = NULL, dic_steps)
+preproc_data(dat, outcome = NULL, dic_steps, id_var, by_var)
 }
 \arguments{
 \item{dat}{A dataset with variables as columns. A data.table.}

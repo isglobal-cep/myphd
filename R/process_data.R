@@ -35,10 +35,14 @@ extract_cohort <- function(dat, id_var) {
 #' }
 #'
 #' @param dat A dataset with variables as columns. A data.table.
+#' @param outcome
 #' @param dic_steps A named list of steps to perform. A list.
+#' @param id_var
+#' @param by_var
 #' @returns A pre-processed dataset. A data.table.
 #' @export
-preproc_data <- function(dat, outcome = NULL, dic_steps) {
+preproc_data <- function(dat, outcome = NULL, dic_steps,
+                         id_var, by_var) {
   dat_ret <- dat
 
   # Variable transformations: bound outcome
@@ -53,10 +57,13 @@ preproc_data <- function(dat, outcome = NULL, dic_steps) {
   # Data cleaning: missing values imputation
   if ("missings" %in% names(dic_steps)) {
     if (dic_steps$missings$do) {
-      warning("The value of `pmm.k` for missRanger must be selected.")
-      dat_ret <- missRanger::missRanger(data = dat_ret,
-                                        formula = . ~ . - HelixID,
-                                        pmm.k = 3)
+      message("Imputing missing values.")
+      res_missings <- handle_missing_values(dat = dat_ret,
+                                            id_var = id_var,
+                                            by_var = by_var,
+                                            threshold_within = dic_steps$missings$threshold_within,
+                                            threshold_overall = dic_steps$missings$threshold_overall)
+      dat_ret <- res_missings$dat_imputed
     }
 
   }
@@ -65,29 +72,69 @@ preproc_data <- function(dat, outcome = NULL, dic_steps) {
   if ("standardization" %in% names(dic_steps)) {
     if (dic_steps$standardization$do) {
       message("Standardizing variables using robStandardize.")
-      # dat_ret <- scale(dplyr::select(dat_ret, -HelixID),
-      #                  center = dic_steps$standardization$center,
-      #                  scale = dic_steps$standardization$scale)
-      dat_ret <- robustHD::robStandardize(dplyr::select(dat_ret, -HelixID))
+      dat_ret <- robustHD::robStandardize(dplyr::select(dat_ret,
+                                                        -dplyr::all_of(id_var)))
       dat_ret <- dat_ret |>
         tibble::as_tibble() |>
-        dplyr::mutate(HelixID = dat$HelixID) |>
-        dplyr::relocate(HelixID)
+        dplyr::mutate(id_var = dat[[id_var]]) |>
+        dplyr::relocate(id_var)
     }
   }
 
-  return(dat_ret)
+  return(list(
+    dat = dat_ret,
+    res_missings = res_missings
+  ))
 }
 
 #' Title
 #'
 #' @param dat
+#' @param id_var
 #' @param by_var
-#' @param threshold
+#' @param threshold_within
+#' @param threshold_overall
 #'
 #' @return
 #' @export
-handle_missing_values <- function(dat, by_var, threshold) {
+handle_missing_values <- function(dat, id_var, by_var,
+                                  threshold_within,
+                                  threshold_overall) {
+
+  # Step 1: group by factor and remove variables with a high
+  #         fraction of missing values within each group
+  step1 <- dat |>
+    dplyr::select(-dplyr::all_of(id_var)) |>
+    dplyr::group_by(.data[[by_var]]) |>
+    naniar::miss_var_summary() |>
+    dplyr::filter(pct_miss >= threshold_within) |>
+    dplyr::ungroup()
+  dat <- dat |>
+    dplyr::select(-dplyr::all_of(step1$variable))
+
+  # Step 2: remove variables with a high fraction of missing
+  #         values overall
+  step2 <- dat |>
+    dplyr::select(-dplyr::all_of(id_var)) |>
+    naniar::miss_var_summary() |>
+    dplyr::filter(pct_miss >= threshold_overall)
+  dat <- dat |>
+    dplyr::select(-dplyr::all_of(step2$variable))
+
+  # Step 3: impute the remaining variables
+  vis_miss_before <- naniar::vis_miss(dat)
+  dat_imp <- missRanger::missRanger(data = dat,
+                                    formula = . ~ . - as.name(id_var),
+                                    pmm.k = 5)
+  vis_miss_after <- naniar::vis_miss(dat_imp)
+
+  return(list(
+    step1 = step1,
+    step2 = step2,
+    dat_imputed = dat_imp,
+    vis_miss_before = vis_miss_before,
+    vis_miss_after = vis_miss_after
+  ))
 }
 
 #' Title
