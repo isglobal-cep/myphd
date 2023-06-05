@@ -13,8 +13,10 @@ describe_data <- function(dat, id_var, grouping_var) {
 
   ##############################################################################
   # Step 1: simple diagnose of numerical and categorical variables w/ `dlookr`
-  step1_num <- dlookr::diagnose_numeric(dat)
-  step1_cat <- dlookr::diagnose_category(dat)
+  step1_num <- dlookr::diagnose_numeric(dat) |>
+    dplyr::arrange(variables)
+  step1_cat <- dlookr::diagnose_category(dat) |>
+    dplyr::arrange(variables)
   ##############################################################################
 
   ##############################################################################
@@ -22,9 +24,15 @@ describe_data <- function(dat, id_var, grouping_var) {
   step2_num <- step2_cat <- NULL
   if (!is.null(grouping_var)) {
     step2_num <- dlookr::diagnose_numeric(dat |>
-                                            dplyr::group_by({{ grouping_var }}))
+                                            dplyr::group_by(
+                                              dplyr::across(grouping_var)
+                                            )) |>
+      dplyr::arrange(variables, cohort)
     step2_cat <- dlookr::diagnose_category(dat |>
-                                             dplyr::group_by({{ grouping_var }}))
+                                             dplyr::group_by(
+                                               dplyr::across(grouping_var)
+                                             )) |>
+      dplyr::arrange(variables, cohort)
   }
   ##############################################################################
 
