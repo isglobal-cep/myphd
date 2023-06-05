@@ -12,7 +12,7 @@ create_mapping_labels <- function(labels, codes) {
   labels <- strsplit(as.character(labels), ", ") |>
     unlist() |>
     as.character()
-  codes <- strsplit(codes, ",") |>
+  codes <- strsplit(as.character(codes), ",") |>
     unlist() |>
     as.integer()
 
