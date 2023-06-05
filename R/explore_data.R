@@ -28,8 +28,12 @@ describe_data <- function(dat, id_var, grouping_var) {
                       .drop = FALSE)
     step2_num <- dlookr::diagnose_numeric(dat) |>
       dplyr::arrange(variables, cohort)
-    step2_cat <- dlookr::diagnose_category(dat, -grouping_var) |>
-      dplyr::arrange(variables, cohort)
+    suppressWarnings(
+      step2_cat <- dlookr::diagnose_category(dat, -grouping_var)
+    )
+    if (!is.null(step2_cat)) {
+      step2_cat <- dplyr::arrange(step2_cat, variables, cohort)
+    }
     dat <- dplyr::ungroup(dat)
   }
   ##############################################################################
