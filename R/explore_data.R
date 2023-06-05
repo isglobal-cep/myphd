@@ -79,8 +79,8 @@ describe_data <- function(dat, id_var, grouping_var) {
   step5 <- Hmisc::summaryM(formula = form, data = dat,
                            test = TRUE,
                            na.include = TRUE, overall = TRUE)
-  step5_plot_con <- plot(step5, which = "continuous")
-  step5_plot_cat <- plot(step5, which = "categorical")
+  #step5_plot_con <- plot(step5, which = "continuous")
+  #step5_plot_cat <- plot(step5, which = "categorical")
   ##############################################################################
 
   return(list(
@@ -90,9 +90,7 @@ describe_data <- function(dat, id_var, grouping_var) {
     step2_cat = step2_cat,
     step3 = step3,
     step4 = step4,
-    step5 = step5,
-    step5_plot_con = step5_plot_con,
-    step5_plot_cat = step5_plot_cat
+    step5 = step5
   ))
 }
 

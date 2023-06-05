@@ -9,7 +9,7 @@
 #' @returns A named list.
 #' @export
 create_mapping_labels <- function(labels, codes) {
-  labels <- strsplit(labels, ", ") |>
+  labels <- strsplit(as.character(labels), ", ") |>
     unlist() |>
     as.character()
   codes <- strsplit(codes, ",") |>
