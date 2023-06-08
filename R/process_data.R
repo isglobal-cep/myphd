@@ -73,7 +73,8 @@ preproc_data <- function(dat, outcome = NULL, dic_steps,
       message("Standardizing variables using robStandardize.")
       dat_ret <- dat_ret |>
         dplyr::select(-dplyr::any_of(c(id_var, by_var))) |>
-        robustHD::robStandardize() |>
+        robustHD::robStandardize(centerFun = dic_steps$standardization$center_fun,
+                                 scaleFun = dic_steps$standardization$scale_fun) |>
         tibble::as_tibble()
       dat_ret[[id_var]] <- dat[[id_var]]
       dat_ret <- dplyr::relocate(dat_ret, id_var)
