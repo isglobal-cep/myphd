@@ -1,5 +1,55 @@
 #' Title
 #'
+#' @param shift_func
+#'
+#' @return
+#' @export
+#'
+#' @examples
+explore_shift <- function(dat,
+                          shift_type,
+                          shift_amount,
+                          shift_lower_bound,
+                          shift_upper_bound) {
+
+  # Apply shift function
+  shifted <- lapply(colnames(dat), function(x) {
+    dd <- switch(shift_type,
+                 "mul" = dat[[x]] * shift_amount,
+                 "add" = dat[[x]] + shift_amount)
+    #dd[dd < shift_lower_bound] <- shift_lower_bound
+    #dd[dd > shift_upper_bound] <- shift_upper_bound
+    return(dd)
+  })
+  shifted <- suppressWarnings(
+    tibble::as_tibble(shifted, .name_repair = "unique")
+  )
+  colnames(shifted) <- colnames(dat)
+
+  # Prepare data
+  shifted <- shifted |>
+    tidyr::pivot_longer(cols = dplyr::everything()) |>
+    dplyr::mutate(shifted = TRUE)
+  dat_long <- dat |>
+    tidyr::pivot_longer(cols = dplyr::everything()) |>
+    dplyr::mutate(shifted = FALSE)
+  dat_gg <- dplyr::bind_rows(dat_long, shifted)
+
+  # Compare distributions
+  ret <- dat_gg |>
+    dplyr::group_by(name) |>
+    ggplot2::ggplot(ggplot2::aes(x = name,
+                                y = value,
+                                fill = shifted)) +
+    ggplot2::geom_violin() +
+    ggplot2::facet_grid(shifted ~ .,
+                        scales = "free_y")
+
+  return(ret)
+}
+
+#' Title
+#'
 #' @param dat
 #' @param id_var
 #' @param grouping_var
