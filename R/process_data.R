@@ -15,6 +15,16 @@ extract_cohort <- function(dat, id_var) {
   return(dat)
 }
 
+#' Title
+#'
+#' @param dat
+#' @param strategy
+#'
+#' @return
+#' @export
+handle_loq <- function(dat, strategy) {
+}
+
 #' Basic pre-processing of datasets
 #'
 #' @description
