@@ -33,7 +33,8 @@ minimize_missings <- function(dat, meta, adjustment_sets) {
 
   # List of dataframes with covariates from adjustment sets
   dfs_covars <- lapply(adjustment_sets, function(x) {
-    mapping_covars <- meta[meta$dag %in% x, ]$variable
+    mapping_covars <- meta[meta$dag %in% x, ]$variable |>
+      as.character()
     tmp <- dat |>
       dplyr::select("cohort",
                     dplyr::any_of(mapping_covars))
@@ -116,40 +117,60 @@ from_dagitty_to_ggdag <- function(dag) {
   return(to_ggdag)
 }
 
-#' Test conditional independencies
-#'
-#' @description
-#' Check whether the assumptions encoded in the DAG
-#' are consistent with the data.
-#'
-#' @param dag_code Input DAG name. A string.
-#' @param dat The dataset to test the DAG against. A dataframe.
-#' @param params A named list containing eventual parameters.
-#' @returns The results of `dagitty::localTests`.
-#' @export
-test_npsem <- function(dag_code, dat, params) {
-  # Step 0: create dagitty object
-  dag <- dagitty::dagitty(dag_code) |>
-    ggdag::tidy_dagitty()
 
+#' Title
+#'
+#' @param dag_code
+#' @param dat
+#' @param meta
+#' @param params
+#'
+#' @return
+#' @export
+test_npsem <- function(dag, dat, meta, params) {
   # Step 1: extract adjustment set(s)
   dag_as <- dagitty::adjustmentSets(x = dag,
                                     type = params$type_mas,
                                     effect = params$type_effect)
-  if (length(dag_as) > 1) {
-    print(dag_as)
-    cat("\n")
-    idx = readline(prompt = "There are multiple adjustment sets. Select one: ") |>
-      as.integer()
-    dag_as <- dag_as[[idx]]
-  }
 
-  # Step 2: map nodes in DAG to variable names in dataset and extract columns
-  dag_as_clean <- map_covariates(adj_set = dag_as, params = params)
-  dat_test <- dat |>
-    dplyr::select(dplyr::all_of(dag_as_clean))
+  res <- lapply(dag_as, function(as) {
+    ret <- list()
+    ret$mapping_covars <- meta[meta$dag %in% as, ] |>
+      dplyr::distinct(dag, .keep_all = TRUE) |>
+      dplyr::select(variable) |>
+      c() |> unname() |> unlist() |> as.character()
+    ret$adjustment_set <- as
 
-  # Step 3: test independencies
-  ret <- dagitty::localTests(x = dag, data = dat_test,
-                             type = "cis.loess", R = 5)
+    # Step 2: map nodes in DAG to variable names in dataset and extract columns
+    warning("When all the covariates are available, ",
+            "replace `any_of` with `all_of`.")
+    covariates <- dat$covariates |>
+      dplyr::select(params$identifier,
+                    dplyr::any_of(ret$mapping_covars))
+    colnames(covariates) <- c(params$identifier,
+                              meta[meta$variable %in% ret$mapping_covars, ]$dag |>
+                                as.character())
+    covariates <- covariates[, !duplicated(colnames(covariates))]
+
+    # Step 3: test independencies for each exposure
+    exposure_list <- setdiff(colnames(dat$exposures), params$identifier)
+    ret$tests <- lapply(exposure_list, function(expo) {
+      dat_test <- purrr::reduce(list(covariates,
+                                     dat$exposures |>
+                                       dplyr::select(params$identifier,
+                                                     .data[[expo]]),
+                                     dat$outcome),
+                                dplyr::inner_join,
+                                by = params$identifier)
+      test <- dagitty::localTests(x = dag,
+                                  data = dat_test,
+                                  type = "cis.loess",
+                                  R = 3)
+      return(test)
+    }) # End lapply over exposures
+
+    return(ret)
+  }) # End lapply over adjustment sets
+
+  return(res)
 }
