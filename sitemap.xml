@@ -37,6 +37,9 @@
     <loc>https://isglobal-cep.github.io/myphd/reference/explore_missings.html</loc>
   </url>
   <url>
+    <loc>https://isglobal-cep.github.io/myphd/reference/explore_shift.html</loc>
+  </url>
+  <url>
     <loc>https://isglobal-cep.github.io/myphd/reference/extract_cohort.html</loc>
   </url>
   <url>
@@ -47,6 +50,9 @@
   </url>
   <url>
     <loc>https://isglobal-cep.github.io/myphd/reference/geom_dag_text_repel.html</loc>
+  </url>
+  <url>
+    <loc>https://isglobal-cep.github.io/myphd/reference/handle_loq.html</loc>
   </url>
   <url>
     <loc>https://isglobal-cep.github.io/myphd/reference/handle_missing_values.html</loc>
