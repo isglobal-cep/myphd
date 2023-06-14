@@ -142,11 +142,9 @@ test_npsem <- function(dag, dat, meta, params) {
     ret$adjustment_set <- as
 
     # Step 2: map nodes in DAG to variable names in dataset and extract columns
-    warning("When all the covariates are available, ",
-            "replace `any_of` with `all_of`.")
     covariates <- dat$covariates |>
       dplyr::select(params$identifier,
-                    dplyr::any_of(ret$mapping_covars))
+                    dplyr::all_of(ret$mapping_covars))
     colnames(covariates) <- c(params$identifier,
                               meta[meta$variable %in% ret$mapping_covars, ]$dag |>
                                 as.character())

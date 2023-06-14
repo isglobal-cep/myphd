@@ -2,21 +2,13 @@
 % Please edit documentation in R/dags.R
 \name{test_npsem}
 \alias{test_npsem}
-\title{Test conditional independencies}
+\title{Title}
 \usage{
-test_npsem(dag_code, dat, params)
+test_npsem(dag, dat, meta, params)
 }
 \arguments{
-\item{dag_code}{Input DAG name. A string.}
-
-\item{dat}{The dataset to test the DAG against. A dataframe.}
-
-\item{params}{A named list containing eventual parameters.}
-}
-\value{
-The results of \code{dagitty::localTests}.
+\item{params}{}
 }
 \description{
-Check whether the assumptions encoded in the DAG
-are consistent with the data.
+Title
 }
