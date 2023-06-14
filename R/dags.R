@@ -37,7 +37,7 @@ minimize_missings <- function(dat, meta, adjustment_sets) {
       as.character()
     tmp <- dat |>
       dplyr::select("cohort",
-                    dplyr::any_of(mapping_covars))
+                    dplyr::all_of(mapping_covars))
   })
 
   # List of dataframes with fractions of missing values by cohort,
