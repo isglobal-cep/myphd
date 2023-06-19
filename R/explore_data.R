@@ -133,14 +133,38 @@ describe_data <- function(dat, id_var, grouping_var) {
   #step5_plot_cat <- plot(step5, which = "categorical")
   ##############################################################################
 
+  ##############################################################################
+  # Step 6: correlation structure variables
+  corrs_pearson <- corrr::correlate(x = dat,
+                                    method = "pearson") |>
+    corrr::rearrange(absolute = TRUE)
+  corrs_spearman <- corrr::correlate(x = dat,
+                                     method = "spearman") |>
+    corrr::rearrange(absolute = TRUE)
+  viz_corr_pearson <- corrr::rplot(corrs_pearson,
+                                   print_cor = TRUE) +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(
+      angle = 60, hjust = 1
+    ))
+  viz_corr_spearman <- corrr::rplot(corrs_spearman,
+                                    print_cor = TRUE) +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(
+      angle = 60, hjust = 1
+    ))
+  ##############################################################################
+
   return(list(
-    step1_num = step1_num,
-    step1_cat = step1_cat,
-    step2_num = step2_num,
-    step2_cat = step2_cat,
+    step1 = list(num = step1_num,
+                 cat = step1_cat),
+    step2 = list(num = step2_num,
+                 cat = step2_cat),
     step3 = step3,
     step4 = step4,
-    step5 = step5
+    step5 = step5,
+    step6 = list(corr_pearson = corrs_pearson,
+                 viz_corr_pearson = viz_corr_pearson,
+                 corr_spearman = corrs_spearman,
+                 viz_corr_spearman = viz_corr_spearman)
   ))
 }
 
