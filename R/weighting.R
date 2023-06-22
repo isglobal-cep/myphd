@@ -70,8 +70,7 @@ estimate_weights <- function(dat,
 #' @export
 explore_balance <- function(exposure,
                             covariates,
-                            weights,
-                            path_save) {
+                            weights) {
   threshold_cor <- 0.1
 
   # Assessing balance numerically
@@ -94,9 +93,11 @@ explore_balance <- function(exposure,
                             abs = TRUE,
                             var.order = "unadjusted",
                             thresholds = c(cor = threshold_cor),
-                            line = TRUE)
+                            line = TRUE,
+                            title = exposure)
 
   return(list(
+    exposure = exposure,
     tab = tab,
     graph = graph,
     love = love
