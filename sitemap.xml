@@ -34,6 +34,12 @@
     <loc>https://isglobal-cep.github.io/myphd/reference/edcs_information.html</loc>
   </url>
   <url>
+    <loc>https://isglobal-cep.github.io/myphd/reference/estimate_weights.html</loc>
+  </url>
+  <url>
+    <loc>https://isglobal-cep.github.io/myphd/reference/explore_balance.html</loc>
+  </url>
+  <url>
     <loc>https://isglobal-cep.github.io/myphd/reference/explore_missings.html</loc>
   </url>
   <url>
@@ -44,6 +50,9 @@
   </url>
   <url>
     <loc>https://isglobal-cep.github.io/myphd/reference/find_common_confounders.html</loc>
+  </url>
+  <url>
+    <loc>https://isglobal-cep.github.io/myphd/reference/fit_model_weighted.html</loc>
   </url>
   <url>
     <loc>https://isglobal-cep.github.io/myphd/reference/from_dagitty_to_ggdag.html</loc>
