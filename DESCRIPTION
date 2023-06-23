@@ -1,15 +1,17 @@
 Package: myphd
 Type: Package
 Title: A Small R Package for my PhD
-Version: 0.1.0
+Version: 0.0.1
 Authors@R:
     person("Lorenzo", "Fabbri", , 
           "lorenzo.fabbri@isglobal.org", 
           role = c("aut", "cre"), 
           comment = c(ORCID = "0000-0003-3031-322X"))
+Mantainer: Lorenzo Fabbri <lorenzo.fabbri@isglobal.org>
 Description:
-    A fairly small R package written during my PhD years to 
-    automate certain tasks.
+    An R package written during my PhD years to 
+    automate certain tasks in epidemiology and causa inference 
+    reseaerch.
 Encoding: UTF-8
 LazyData: true
 URL: https://lorenzofabbri.github.io/myphd/,

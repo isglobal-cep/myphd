@@ -1,4 +1,18 @@
+title: myphd
 url: https://isglobal-cep.github.io/myphd/
 template:
-  bootstrap: 5
-  bootswatch: flatly
+  params:
+    bootstrap: 5
+    bootswatch: flatly
+navbar:
+  title: ""
+  left:
+    - text: "myphd"
+      href: "index.html"
+    - text: "Reference"
+      href: "reference/index.html"
+
+reference:
+  - title: "Index"
+    contents:
+      - starts_with("")
