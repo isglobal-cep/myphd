@@ -1,9 +1,15 @@
-#' Title
+#' Extract the cohort label from the subject ID
 #'
-#' @param dat
-#' @param id_var
+#' @description
+#' This function extracts the cohort ID (e.g., SAB) from the subject ID
+#' (e.g., SubjectID). It assumes that the cohort ID corresponds to the first
+#' three letters of the subject ID.
 #'
-#' @return
+#' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param id_var The variable name to be used to identify subjects. A string.
+#'
+#' @return A dataframe containing a new column named `cohort`. A tibble.
+#'
 #' @export
 extract_cohort <- function(dat, id_var) {
   warning("Creating cohort variable from ID variable: it ",
@@ -15,12 +21,15 @@ extract_cohort <- function(dat, id_var) {
   return(dat)
 }
 
-#' Title
+#' Handle values below the limit of quantification
 #'
-#' @param dat
+#' @description
+#'
+#' @param dat A dataframe containing the variables of interest. A tibble.
 #' @param strategy
 #'
 #' @return
+#'
 #' @export
 handle_loq <- function(dat, strategy) {
 }
@@ -28,7 +37,7 @@ handle_loq <- function(dat, strategy) {
 #' Basic pre-processing of datasets
 #'
 #' @description
-#' Perform basic pre-processing of a given dataset:
+#' This function performs basic pre-processing of a given dataset:
 #' \itemize{
 #'  \item Data cleaning:
 #'    \itemize{
@@ -44,12 +53,26 @@ handle_loq <- function(dat, strategy) {
 #'    }
 #' }
 #'
-#' @param dat A dataset with variables as columns. A data.table.
-#' @param outcome
-#' @param dic_steps A named list of steps to perform. A list.
-#' @param id_var
-#' @param by_var
-#' @returns A pre-processed dataset. A data.table.
+#' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param outcome A optional string indicating the outcome variable. A string.
+#' @param dic_steps A nested named list of steps to perform. A list. It can
+#' include the following elements:
+#' * `missings`, to handle missing values. A named list with elements:
+#'  * `do`, a logical indicating whether to perform this step or not. A logical.
+#'  * `threshold_within`, the missing value threshold within each group. An integer.
+#'  * `threshold_overall`, the overall missing value threshold. An integer.
+#' * `standardization`, to standardize variables. A named list with elements:
+#'  * `do`, a logical indicating whether to perform this step or not. A logical.
+#'  * `center_fun`, the centering function (e.g., `mean`).
+#'  * `scale_fun`, the scaling function (e.g., `sd`).
+#' * `bound`, to bound the outcome variable. A named list with elements:
+#'  * `do`, a logical indicating whether to perform this step or not. A logical.
+#' @param id_var The variable name to be used to identify subjects. A string.
+#' @param by_var The variable name to group by. A string.
+#' @md
+#'
+#' @returns A pre-processed dataset. A tibble.
+#'
 #' @export
 preproc_data <- function(dat, outcome = NULL, dic_steps,
                          id_var, by_var) {
@@ -94,15 +117,27 @@ preproc_data <- function(dat, outcome = NULL, dic_steps,
   return(dat = dat_ret)
 }
 
-#' Title
+#' Various strategies to handle missing values
 #'
-#' @param dat
-#' @param id_var
-#' @param by_var
-#' @param threshold_within
-#' @param threshold_overall
+#' @description
+#' Given a dataset, this function performs the following steps:
+#' * Removal of variables with a fraction of missing values greater than
+#' the chosen threshold, within each group.
+#' * Removal of variables with a fraction of missing values greater than
+#' the chosen threshold, for the entire dataset.
+#' * Imputation of the remaining variables with Random Forests using the
+#' \link[missRanger]{missRanger} function.
+#' @md
 #'
-#' @return
+#' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param id_var The variable name to be used to identify subjects. A string.
+#' @param by_var The variable name to group by. A string.
+#' @param threshold_within The missing value threshold within each group. An integer.
+#' @param threshold_overall The overall missing value threshold. An integer.
+#'
+#' @return A named list containing the results of the steps described above.
+#' The imputed dataset is named `dat_imputed`.
+#'
 #' @export
 handle_missing_values <- function(dat, id_var, by_var,
                                   threshold_within,
@@ -145,12 +180,18 @@ handle_missing_values <- function(dat, id_var, by_var,
   ))
 }
 
-#' Title
+#' Bound an outcome variable
 #'
-#' @param dat
-#' @param var
+#' @description
+#' In order to be able to use TMLE with a continuous outcome,
+#' it is necessary to bound it between 0 and 1. This function performs
+#' the necessary steps.
 #'
-#' @return
+#' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param var The variable name corresponding to the outcome to be bounded. A string.
+#'
+#' @return A dataframe containing the bounded outcome. A tibble.
+#'
 #' @export
 bound_outcome_tmle <- function(dat, var) {
   b <- max(dat[[var]], na.rm = TRUE)

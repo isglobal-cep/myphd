@@ -6,7 +6,7 @@
 \alias{myphd-package}
 \title{myphd: A Small R Package for my PhD}
 \description{
-A fairly small R package written during my PhD years to automate certain tasks.
+An R package written during my PhD years to automate certain tasks in epidemiology and causa inference reseaerch.
 }
 \seealso{
 Useful links:

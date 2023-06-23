@@ -12,7 +12,7 @@ add_metadata(dat, metadat)
 \item{metadat}{A dataframe or tibble of metadata. A dataframe.}
 }
 \value{
-A tibble.
+A tibble containing both data and metadata.
 }
 \description{
 Given a dataset with observations as rows and variables as columns,

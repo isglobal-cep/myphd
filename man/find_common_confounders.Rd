@@ -7,14 +7,14 @@
 find_common_confounders(dag, type_mas, type_effect)
 }
 \arguments{
-\item{dag}{A \pkg{dagitty} object.}
+\item{dag}{A \link[dagitty]{dagitty} object.}
 
-\item{type_mas}{The type of adjustment set.}
+\item{type_mas}{The type of adjustment set. A string.}
 
-\item{type_effect}{The type of effect to be estimated.}
+\item{type_effect}{The type of effect to be estimated. A string.}
 }
 \value{
-A list.
+The list of common nodes. A list.
 }
 \description{
 Given a DAG with multiple adjustment sets, find

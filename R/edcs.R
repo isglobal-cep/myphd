@@ -1,6 +1,9 @@
-#' Return information on non-persistent EDCs
+#' Return information on chemicals of interest
 #'
-#' @returns A data.table object.
+#' @returns A \link[data.table]{data.table} object. Each entry has
+#' information on full and short names, chemical class, SMILES, PubChem, CTD,
+#' and ExposomeExplorer IDs, eventual parental compound.
+#'
 #' @export
 edcs_information <- function() {
   template = list(

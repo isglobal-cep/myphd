@@ -2,13 +2,39 @@
 % Please edit documentation in R/explore_data.R
 \name{describe_data}
 \alias{describe_data}
-\title{Title}
+\title{A function to describe the used dataset}
 \usage{
 describe_data(dat, id_var, grouping_var)
 }
 \arguments{
-\item{grouping_var}{}
+\item{dat}{A dataframe containing the variables of interest. A tibble.}
+
+\item{id_var}{The variable name to be used to identify subjects. A string.}
+
+\item{grouping_var}{The variable name to group by. A string.}
+}
+\value{
+A nested named list containing the objects corresponding to the
+steps described above.
 }
 \description{
-Title
+Given a dataset, this function performs the following steps:
+\itemize{
+\item Simple diagnose of numerical and categorical
+variables with the \link[dlookr]{diagnose_numeric} and
+\link[dlookr]{diagnose_category} functions, respectively.
+\item Diagnose of numerical and categorical
+variables with the \link[dlookr]{diagnose_numeric} and
+\link[dlookr]{diagnose_category} functions, respectively,
+after grouping by a factor (e.g., cohort).
+\item Concise summary of continuous and categorical variables with
+the \link[gtsummary]{tbl_summary} function.
+\item Detailed summary of continuous and categorical variables with
+the \link[gtsummary]{tbl_summary} function.
+\item Visualization of variables' summaries with the
+\link[Hmisc]{summaryM} function.
+\item Visualization of the correlation structure of the dataset using
+the \link[corrr]{correlate} and \link[corrr]{rplot} functions,
+with both Pearson's and Spearman's correlation.
+}
 }

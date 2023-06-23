@@ -1,24 +1,28 @@
-#' Title
+#' Visualize the distribution of the shifted exposures
 #'
-#' @param shift_func
+#' @description
+#' Compare the distribution, using a violin plot, of the original
+#' and shifted exposures. The shifted exposures are obtained
+#' applying a shift function, that can be multiplicative or
+#' additive.
 #'
-#' @return
+#' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param shift_type A string indicating whether to apply a
+#' multiplicative (`mul`) or additive (`add`) type of shift. A string.
+#' @param shift_amount The shift value to be applied. A double.
+#'
+#' @return A \link[ggplot2]{ggplot} object.
+#'
 #' @export
-#'
-#' @examples
 explore_shift <- function(dat,
                           shift_type,
-                          shift_amount,
-                          shift_lower_bound,
-                          shift_upper_bound) {
+                          shift_amount) {
 
   # Apply shift function
   shifted <- lapply(colnames(dat), function(x) {
     dd <- switch(shift_type,
                  "mul" = dat[[x]] * shift_amount,
                  "add" = dat[[x]] + shift_amount)
-    #dd[dd < shift_lower_bound] <- shift_lower_bound
-    #dd[dd > shift_upper_bound] <- shift_upper_bound
     return(dd)
   })
   shifted <- suppressWarnings(
@@ -48,13 +52,35 @@ explore_shift <- function(dat,
   return(ret)
 }
 
-#' Title
+#' A function to describe the used dataset
 #'
-#' @param dat
-#' @param id_var
-#' @param grouping_var
+#' @description
+#' Given a dataset, this function performs the following steps:
+#' * Simple diagnose of numerical and categorical
+#' variables with the \link[dlookr]{diagnose_numeric} and
+#' \link[dlookr]{diagnose_category} functions, respectively.
+#' * Diagnose of numerical and categorical
+#' variables with the \link[dlookr]{diagnose_numeric} and
+#' \link[dlookr]{diagnose_category} functions, respectively,
+#' after grouping by a factor (e.g., cohort).
+#' * Concise summary of continuous and categorical variables with
+#' the \link[gtsummary]{tbl_summary} function.
+#' * Detailed summary of continuous and categorical variables with
+#' the \link[gtsummary]{tbl_summary} function.
+#' * Visualization of variables' summaries with the
+#' \link[Hmisc]{summaryM} function.
+#' * Visualization of the correlation structure of the dataset using
+#' the \link[corrr]{correlate} and \link[corrr]{rplot} functions,
+#' with both Pearson's and Spearman's correlation.
+#' @md
 #'
-#' @return
+#' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param id_var The variable name to be used to identify subjects. A string.
+#' @param grouping_var The variable name to group by. A string.
+#'
+#' @return A nested named list containing the objects corresponding to the
+#' steps described above.
+#'
 #' @export
 describe_data <- function(dat, id_var, grouping_var) {
   dat <- extract_cohort(dat, id_var)
@@ -168,14 +194,31 @@ describe_data <- function(dat, id_var, grouping_var) {
   ))
 }
 
-#' Title
+#' A function to explore the missing values of a dataset
 #'
-#' @param dat
-#' @param id_var
-#' @param grouping_var
-#' @param path_save
+#' @description
+#' Given a dataset, this function performs the following steps:
+#' * Count and percentage of missing values by cohort, for each variable.
+#' * Summary of missing values for the variables, grouped by a factor,
+#' using the \link[naniar]{miss_var_summary} function.
+#' The information is the same as that provided in the previous step,
+#' but also in long format.
+#' * Summary of missing values for the cases
+#' using the \link[naniar]{miss_case_summary} function.
+#' * Missingness report using the \link[visdat]{vis_miss} function.
+#' * Little's test statistic to assess if data is missing
+#' completely at random (MCAR), using the \link[naniar]{mcar_test} function.
+#' The null hypothesis in this test is that the data is MCAR.
+#' @md
 #'
-#' @return
+#' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param id_var The variable name to be used to identify subjects. A string.
+#' @param grouping_var The variable name to group by. A string.
+#' @param path_save The path where to store the missingness report. A string.
+#'
+#' @return A named list containing the objects corresponding to the
+#' steps described above.
+#'
 #' @export
 explore_missings <- function(dat, id_var, grouping_var, path_save) {
   dat <- extract_cohort(dat, id_var)

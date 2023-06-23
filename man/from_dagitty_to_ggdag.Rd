@@ -2,18 +2,19 @@
 % Please edit documentation in R/dags.R
 \name{from_dagitty_to_ggdag}
 \alias{from_dagitty_to_ggdag}
-\title{Convert a \pkg{dagitty} DAG to a formatted string}
+\title{Convert a DAG to a formatted string}
 \usage{
 from_dagitty_to_ggdag(dag)
 }
 \arguments{
-\item{dag}{A \pkg{dagitty} DAG. A string.}
+\item{dag}{A textual description of a DAG that can
+be read by the \link[dagitty]{dagitty} function. A string.}
 }
 \value{
 A formatted string.
 }
 \description{
-Convert a DAG from \pkg{dagitty} to a formatted
-string that can be used to create DAGs with \pkg{ggdag}
+Convert a DAG to a formatted
+string that can be used to create DAGs with \link[ggdag]{ggdag}
 using its formula-based input method.
 }

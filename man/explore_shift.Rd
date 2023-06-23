@@ -2,19 +2,24 @@
 % Please edit documentation in R/explore_data.R
 \name{explore_shift}
 \alias{explore_shift}
-\title{Title}
+\title{Visualize the distribution of the shifted exposures}
 \usage{
-explore_shift(
-  dat,
-  shift_type,
-  shift_amount,
-  shift_lower_bound,
-  shift_upper_bound
-)
+explore_shift(dat, shift_type, shift_amount)
 }
 \arguments{
-\item{shift_func}{}
+\item{dat}{A dataframe containing the variables of interest. A tibble.}
+
+\item{shift_type}{A string indicating whether to apply a
+multiplicative (\code{mul}) or additive (\code{add}) type of shift. A string.}
+
+\item{shift_amount}{The shift value to be applied. A double.}
+}
+\value{
+A \link[ggplot2]{ggplot} object.
 }
 \description{
-Title
+Compare the distribution, using a violin plot, of the original
+and shifted exposures. The shifted exposures are obtained
+applying a shift function, that can be multiplicative or
+additive.
 }

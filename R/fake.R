@@ -1,13 +1,17 @@
-#' Create fake dataset based on actual one
+#' Create a fake dataset based on a real one
 #'
 #' @description
-#' Given a dataset with variables as columns, create a
+#' Given a dataset with variables as columns, this function creates a
 #' random dataset that can be stored on the local machine
 #' without security and privacy issues. The type of the
 #' variables is matched.
 #'
-#' @param dat A dataset with variables as columns. A data.table.
-#' @returns A random dataset with matching variables. A data.table.
+#' @param dat A dataset with variables as columns.
+#' A \link[data.table]{data.table} object.
+#'
+#' @returns A random dataset with matching variables.
+#' A \link[data.table]{data.table} object.
+#'
 #' @export
 create_fake_data <- function(dat) {
   ret <- data.table::as.data.table(

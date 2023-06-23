@@ -27,6 +27,7 @@ theme_dag <- function() {
 }
 
 #' Repulsive textual annotations
+#'
 #' @export
 geom_dag_text_repel <- function(..., seed = 10) {
   ggdag::geom_dag_label_repel(

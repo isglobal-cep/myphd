@@ -2,13 +2,15 @@
 % Please edit documentation in R/edcs.R
 \name{edcs_information}
 \alias{edcs_information}
-\title{Return information on non-persistent EDCs}
+\title{Return information on chemicals of interest}
 \usage{
 edcs_information()
 }
 \value{
-A data.table object.
+A \link[data.table]{data.table} object. Each entry has
+information on full and short names, chemical class, SMILES, PubChem, CTD,
+and ExposomeExplorer IDs, eventual parental compound.
 }
 \description{
-Return information on non-persistent EDCs
+Return information on chemicals of interest
 }

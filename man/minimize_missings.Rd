@@ -2,13 +2,24 @@
 % Please edit documentation in R/dags.R
 \name{minimize_missings}
 \alias{minimize_missings}
-\title{Title}
+\title{Select confounders to minimize missing values}
 \usage{
 minimize_missings(dat, meta, adjustment_sets)
 }
 \arguments{
-\item{adjustment_sets}{}
+\item{dat}{A dataframe containing the variables of interest. A tibble.}
+
+\item{meta}{A dataframe containing the metadata. A tibble.}
+
+\item{adjustment_sets}{A list of adjustment sets. A character vector.}
+}
+\value{
+An integer corresponding to the index of the adjustment
+set that minimizes the number of missing values.
 }
 \description{
-Title
+Given a dataset and a list of adjustment sets
+identified with the \link[dagitty]{adjustmentSets} function,
+find the set that minimizes the number of missing values
+for the confounders.
 }

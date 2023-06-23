@@ -2,13 +2,42 @@
 % Please edit documentation in R/dags.R
 \name{test_npsem}
 \alias{test_npsem}
-\title{Title}
+\title{Wrapper function to derive a DAG's testable implications}
 \usage{
 test_npsem(dag, dat, meta, params)
 }
 \arguments{
-\item{params}{}
+\item{dag}{A \link[dagitty]{dagitty} object.}
+
+\item{dat}{A dataframe containing the variables of interest. A tibble.}
+
+\item{meta}{A dataframe containing the metadata. A tibble.}
+
+\item{params}{A named list with the following variables:
+\itemize{
+\item \code{type_mas}, the type of adjustment set.
+\item \code{type_effect}, the type of effect to be estimated.
+\item \code{identifier}, the name of the variable in \code{dat} to be used as
+subject identifier.
+}}
+}
+\value{
+A named list containing the results of the call to
+the \link[dagitty]{localTests} function for each adjustment set
+and each exposure. A list.
 }
 \description{
-Title
+Given a graphical model (e.g., a DAG) and a dataset, this function
+derives the testable implications and it tests them against
+the given dataset. It is a wrapper around the \link[dagitty]{localTests}
+function to take into account the following points:
+\itemize{
+\item A single DAG can result in multiple adjustment sets, and we
+might want to test all of them.
+\item The DAG might have been built using nodes with names that differ
+from the variables in the dataset, so we need to map them.
+\item We might have multiple exposure variables in the dataset,
+and only one exposure node in the DAG. So we might want to
+test all of them.
+}
 }

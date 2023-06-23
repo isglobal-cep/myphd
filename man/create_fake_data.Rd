@@ -2,18 +2,20 @@
 % Please edit documentation in R/fake.R
 \name{create_fake_data}
 \alias{create_fake_data}
-\title{Create fake dataset based on actual one}
+\title{Create a fake dataset based on a real one}
 \usage{
 create_fake_data(dat)
 }
 \arguments{
-\item{dat}{A dataset with variables as columns. A data.table.}
+\item{dat}{A dataset with variables as columns.
+A \link[data.table]{data.table} object.}
 }
 \value{
-A random dataset with matching variables. A data.table.
+A random dataset with matching variables.
+A \link[data.table]{data.table} object.
 }
 \description{
-Given a dataset with variables as columns, create a
+Given a dataset with variables as columns, this function creates a
 random dataset that can be stored on the local machine
 without security and privacy issues. The type of the
 variables is matched.

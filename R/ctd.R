@@ -3,7 +3,9 @@
 #' @param path Path to the CTD file. A string.
 #' @param filter_evidence Indicates whether to filter the type of
 #'                        direct evidence. A bool.
-#' @returns A tibble.
+#'
+#' @returns A tibble containing the CTD database.
+#'
 #' @export
 load_ctd <- function(path, filter_evidence) {
   ctd <- read.csv(path) |>
@@ -34,7 +36,9 @@ load_ctd <- function(path, filter_evidence) {
 #'
 #' @param dat The CTD dataset. A tibble.
 #' @param group The faceting variable. A string.
+#'
 #' @returns A ggplot object.
+#'
 #' @export
 plot_ctd <- function(dat, group = NULL) {
   plt <- dat |>

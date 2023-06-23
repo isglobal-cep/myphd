@@ -2,13 +2,33 @@
 % Please edit documentation in R/explore_data.R
 \name{explore_missings}
 \alias{explore_missings}
-\title{Title}
+\title{A function to explore the missing values of a dataset}
 \usage{
 explore_missings(dat, id_var, grouping_var, path_save)
 }
 \arguments{
-\item{path_save}{}
+\item{dat}{A dataframe containing the variables of interest. A tibble.}
+
+\item{id_var}{The variable name to be used to identify subjects. A string.}
+
+\item{grouping_var}{The variable name to group by. A string.}
+
+\item{path_save}{The path where to store the missingness report. A string.}
+}
+\value{
+A named list containing the objects corresponding to the
+steps described above.
 }
 \description{
-Title
+Given a dataset, this function performs the following steps:
+\itemize{
+\item Count and percentage of missing values by cohort, for each variable.
+\item Summary of missing values for the variables, grouped by a factor,
+using the \link[naniar]{miss_var_summary} function.
+The information is the same as that provided in the previous step,
+but also in long format.
+\item Summary of missing values for the cases
+using the \link[naniar]{miss_case_summary} function.
+\item Missingness report using the \link[visdat]{vis_miss} function.
+}
 }

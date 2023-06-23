@@ -6,7 +6,9 @@
 #'
 #' @param labels A string of labels separated by a comma and a space. A string.
 #' @param code A string of values separated by a comma. A string.
-#' @returns A named list.
+#'
+#' @returns A named list mapping labels to values.
+#'
 #' @export
 create_mapping_labels <- function(labels, codes) {
   labels <- strsplit(as.character(labels), ", ") |>
@@ -32,7 +34,9 @@ create_mapping_labels <- function(labels, codes) {
 #'
 #' @param dat A dataframe or tibble of data. A dataframe.
 #' @param metadat A dataframe or tibble of metadata. A dataframe.
-#' @returns A tibble.
+#'
+#' @returns A tibble containing both data and metadata.
+#'
 #' @export
 add_metadata <- function(dat, metadat) {
   # Helper function to tidy certain variables' names
@@ -77,14 +81,4 @@ add_metadata <- function(dat, metadat) {
   }
 
   return(dat_modified)
-}
-
-#' Mapping between causal nodes and variables' names
-#'
-#' @description
-#'
-#' @param  A. .
-#' @returns A list of variables' names.
-#' @export
-map_covars <- function() {
 }

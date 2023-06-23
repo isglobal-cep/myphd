@@ -4,7 +4,7 @@
 \alias{explore_balance}
 \title{Title}
 \usage{
-explore_balance(exposure, covariates, weights, path_save)
+explore_balance(exposure, covariates, weights)
 }
 \arguments{
 \item{path_save}{}

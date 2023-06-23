@@ -1,12 +1,15 @@
 #' Find common confounders
 #'
+#' @description
 #' Given a DAG with multiple adjustment sets, find
 #' all the common nodes.
 #'
-#' @param dag A \pkg{dagitty} object.
-#' @param type_mas The type of adjustment set.
-#' @param type_effect The type of effect to be estimated.
-#' @returns A list.
+#' @param dag A \link[dagitty]{dagitty} object.
+#' @param type_mas The type of adjustment set. A string.
+#' @param type_effect The type of effect to be estimated. A string.
+#'
+#' @returns The list of common nodes. A list.
+#'
 #' @export
 find_common_confounders <- function(dag, type_mas, type_effect) {
   adj_sets <- dagitty::adjustmentSets(x = dag,
@@ -20,13 +23,21 @@ find_common_confounders <- function(dag, type_mas, type_effect) {
   return(common_nodes)
 }
 
-#' Title
+#' Select confounders to minimize missing values
 #'
-#' @param dat
-#' @param meta
-#' @param adjustment_sets
+#' @description
+#' Given a dataset and a list of adjustment sets
+#' identified with the \link[dagitty]{adjustmentSets} function,
+#' find the set that minimizes the number of missing values
+#' for the confounders.
 #'
-#' @return
+#' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param meta A dataframe containing the metadata. A tibble.
+#' @param adjustment_sets A list of adjustment sets. A character vector.
+#'
+#' @returns An integer corresponding to the index of the adjustment
+#' set that minimizes the number of missing values.
+#'
 #' @export
 minimize_missings <- function(dat, meta, adjustment_sets) {
   cohorts <- levels(dat$cohort)
@@ -72,8 +83,10 @@ minimize_missings <- function(dat, meta, adjustment_sets) {
 #'
 #' Wrapper function to plot DAGs using \pkg{ggdag}.
 #'
-#' @param dag A \pkg{dagitty} object.
-#' @returns A \pkg{ggdag} object.
+#' @param dag A \link[dagitty]{dagitty} object.
+#'
+#' @returns A \link[ggdag]{ggdag} object.
+#'
 #' @export
 visualize_dag <- function(dag) {
   ret <- dag |>
@@ -92,15 +105,18 @@ visualize_dag <- function(dag) {
   return(ret)
 }
 
-#' Convert a \pkg{dagitty} DAG to a formatted string
+#' Convert a DAG to a formatted string
 #'
 #' @description
-#' Convert a DAG from \pkg{dagitty} to a formatted
-#' string that can be used to create DAGs with \pkg{ggdag}
+#' Convert a DAG to a formatted
+#' string that can be used to create DAGs with \link[ggdag]{ggdag}
 #' using its formula-based input method.
 #'
-#' @param dag A \pkg{dagitty} DAG. A string.
+#' @param dag A textual description of a DAG that can
+#' be read by the \link[dagitty]{dagitty} function. A string.
+#'
 #' @returns A formatted string.
+#'
 #' @export
 from_dagitty_to_ggdag <- function(dag) {
   dag <- dagitty::dagitty(dag)
@@ -118,14 +134,36 @@ from_dagitty_to_ggdag <- function(dag) {
 }
 
 
-#' Title
+#' Wrapper function to derive a DAG's testable implications
 #'
-#' @param dag_code
-#' @param dat
-#' @param meta
-#' @param params
+#' @description
+#' Given a graphical model (e.g., a DAG) and a dataset, this function
+#' derives the testable implications and it tests them against
+#' the given dataset. It is a wrapper around the \link[dagitty]{localTests}
+#' function to take into account the following points:
+#' * A single DAG can result in multiple adjustment sets, and we
+#' might want to test all of them.
+#' * The DAG might have been built using nodes with names that differ
+#' from the variables in the dataset, so we need to map them.
+#' * We might have multiple exposure variables in the dataset,
+#' and only one exposure node in the DAG. So we might want to
+#' test all of them.
+#' @md
 #'
-#' @return
+#' @param dag A \link[dagitty]{dagitty} object.
+#' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param meta A dataframe containing the metadata. A tibble.
+#' @param params A named list with the following variables:
+#' * `type_mas`, the type of adjustment set.
+#' * `type_effect`, the type of effect to be estimated.
+#' * `identifier`, the name of the variable in `dat` to be used as
+#' subject identifier.
+#' @md
+#'
+#' @returns A named list containing the results of the call to
+#' the \link[dagitty]{localTests} function for each adjustment set
+#' and each exposure. A list.
+#'
 #' @export
 test_npsem <- function(dag, dat, meta, params) {
   # Step 1: extract adjustment set(s)

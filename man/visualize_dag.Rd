@@ -7,10 +7,10 @@
 visualize_dag(dag)
 }
 \arguments{
-\item{dag}{A \pkg{dagitty} object.}
+\item{dag}{A \link[dagitty]{dagitty} object.}
 }
 \value{
-A \pkg{ggdag} object.
+A \link[ggdag]{ggdag} object.
 }
 \description{
 Wrapper function to plot DAGs using \pkg{ggdag}.

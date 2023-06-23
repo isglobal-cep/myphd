@@ -12,7 +12,7 @@ create_mapping_labels(labels, codes)
 \item{code}{A string of values separated by a comma. A string.}
 }
 \value{
-A named list.
+A named list mapping labels to values.
 }
 \description{
 Given the labels and the codes of a variable,

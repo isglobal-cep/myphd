@@ -13,7 +13,7 @@ load_ctd(path, filter_evidence)
 direct evidence. A bool.}
 }
 \value{
-A tibble.
+A tibble containing the CTD database.
 }
 \description{
 Load local CTD file

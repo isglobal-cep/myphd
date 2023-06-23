@@ -44,15 +44,15 @@ issue](https://github.com/isglobal-cep/myphd/issues).
 
 After using the `myphd` R package, please cite the following:
 
-@software{fabbri2023myphd-rpkg,
-  author = {Fabbri, Lorenzo},
-  title = {{myphd}: An R package for a PhD in my group},
-  year = {2023},
-  howpublished = {\url{https://github.com/isglobal-cep/myphd}},
-  note = {{R} package version 4.1.2},
-  url = {https://doi.org/10.5281/zenodo.8073459},
-  doi = {10.5281/zenodo.8073459}
-}
+        @software{fabbri2023myphd-rpkg,
+          author = {Fabbri, Lorenzo},
+          title = {{myphd}: An R package for a PhD in my group},
+          year = {2023},
+          howpublished = {\url{https://github.com/isglobal-cep/myphd}},
+          note = {{R} package version 4.1.2},
+          url = {https://doi.org/10.5281/zenodo.8073459},
+          doi = {10.5281/zenodo.8073459}
+        }
 
 ---
 
