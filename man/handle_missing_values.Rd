@@ -2,13 +2,33 @@
 % Please edit documentation in R/process_data.R
 \name{handle_missing_values}
 \alias{handle_missing_values}
-\title{Title}
+\title{Various strategies to handle missing values}
 \usage{
 handle_missing_values(dat, id_var, by_var, threshold_within, threshold_overall)
 }
 \arguments{
-\item{threshold_overall}{}
+\item{dat}{A dataframe containing the variables of interest. A tibble.}
+
+\item{id_var}{The variable name to be used to identify subjects. A string.}
+
+\item{by_var}{The variable name to group by. A string.}
+
+\item{threshold_within}{The missing value threshold within each group. An integer.}
+
+\item{threshold_overall}{The overall missing value threshold. An integer.}
+}
+\value{
+A named list containing the results of the steps described above.
+The imputed dataset is named \code{dat_imputed}.
 }
 \description{
-Title
+Given a dataset, this function performs the following steps:
+\itemize{
+\item Removal of variables with a fraction of missing values greater than
+the chosen threshold, within each group.
+\item Removal of variables with a fraction of missing values greater than
+the chosen threshold, for the entire dataset.
+\item Imputation of the remaining variables with Random Forests using the
+\link[missRanger]{missRanger} function.
+}
 }

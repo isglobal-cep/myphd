@@ -7,15 +7,34 @@
 preproc_data(dat, outcome = NULL, dic_steps, id_var, by_var)
 }
 \arguments{
-\item{dat}{A dataset with variables as columns. A data.table.}
+\item{dat}{A dataframe containing the variables of interest. A tibble.}
 
-\item{dic_steps}{A named list of steps to perform. A list.}
+\item{outcome}{A optional string indicating the outcome variable. A string.}
+
+\item{dic_steps}{A nested named list of steps to perform. A list. It can
+include the following elements:
+\itemize{
+\item \code{missings}, to handle missing values. A named list with elements:
+\item \code{do}, a logical indicating whether to perform this step or not. A logical.
+\item \code{threshold_within}, the missing value threshold within each group. An integer.
+\item \code{threshold_overall}, the overall missing value threshold. An integer.
+\item \code{standardization}, to standardize variables. A named list with elements:
+\item \code{do}, a logical indicating whether to perform this step or not. A logical.
+\item \code{center_fun}, the centering function (e.g., \code{mean}).
+\item \code{scale_fun}, the scaling function (e.g., \code{sd}).
+\item \code{bound}, to bound the outcome variable. A named list with elements:
+\item \code{do}, a logical indicating whether to perform this step or not. A logical.
+}}
+
+\item{id_var}{The variable name to be used to identify subjects. A string.}
+
+\item{by_var}{The variable name to group by. A string.}
 }
 \value{
-A pre-processed dataset. A data.table.
+A pre-processed dataset. A tibble.
 }
 \description{
-Perform basic pre-processing of a given dataset:
+This function performs basic pre-processing of a given dataset:
 \itemize{
 \item Data cleaning:
 \itemize{

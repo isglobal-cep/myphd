@@ -2,13 +2,36 @@
 % Please edit documentation in R/weighting.R
 \name{estimate_weights}
 \alias{estimate_weights}
-\title{Title}
+\title{Wrapper function to estimate balancing weights}
 \usage{
 estimate_weights(dat, exposure, covariates = NULL, method, method_args)
 }
 \arguments{
-\item{method_args}{}
+\item{dat}{A dataframe containing the variables of interest. A tibble.}
+
+\item{exposure}{The name of the variable corresponding to the exposure. A string.}
+
+\item{covariates}{A optional vector of covariates' names.
+If not provided, they are extracted from \code{dat} excluding the exposure. A vector.}
+
+\item{method}{The method to be used to estimate the weights. A string.}
+
+\item{method_args}{A named list with the following variables:
+\itemize{
+\item \code{use_kernel}, whether to use kernel density estimation
+to estimate the numerator and denominator densities for the weights. A logical.
+\item \code{sl_discrete}, whether to use discrete SuperLearner, which
+selects the best performing method, or to find the optimal combination of predictions.
+\item \code{sl_lib}, either a vector of learners or \code{FALSE}, in which case
+it uses a fixed library of learners.
+}}
+}
+\value{
+A named list containing the estimated weights, and the names
+of the exposure and covariates used.
 }
 \description{
-Title
+This functions is essentially a wrapper around the
+\link[WeightIt]{weightit} function. The user can specify the
+method to be used to estimate the weights.
 }

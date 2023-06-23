@@ -2,13 +2,15 @@
 % Please edit documentation in R/process_data.R
 \name{handle_loq}
 \alias{handle_loq}
-\title{Title}
+\title{Handle values below the limit of quantification}
 \usage{
 handle_loq(dat, strategy)
 }
 \arguments{
+\item{dat}{A dataframe containing the variables of interest. A tibble.}
+
 \item{strategy}{}
 }
 \description{
-Title
+Handle values below the limit of quantification
 }

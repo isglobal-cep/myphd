@@ -2,13 +2,20 @@
 % Please edit documentation in R/process_data.R
 \name{extract_cohort}
 \alias{extract_cohort}
-\title{Title}
+\title{Extract the cohort label from the subject ID}
 \usage{
 extract_cohort(dat, id_var)
 }
 \arguments{
-\item{id_var}{}
+\item{dat}{A dataframe containing the variables of interest. A tibble.}
+
+\item{id_var}{The variable name to be used to identify subjects. A string.}
+}
+\value{
+A dataframe containing a new column named \code{cohort}. A tibble.
 }
 \description{
-Title
+This function extracts the cohort ID (e.g., SAB) from the subject ID
+(e.g., SubjectID). It assumes that the cohort ID corresponds to the first
+three letters of the subject ID.
 }

@@ -30,5 +30,8 @@ but also in long format.
 \item Summary of missing values for the cases
 using the \link[naniar]{miss_case_summary} function.
 \item Missingness report using the \link[visdat]{vis_miss} function.
+\item Little's test statistic to assess if data is missing
+completely at random (MCAR), using the \link[naniar]{mcar_test} function.
+The null hypothesis in this test is that the data is MCAR.
 }
 }

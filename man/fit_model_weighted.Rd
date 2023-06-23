@@ -2,13 +2,22 @@
 % Please edit documentation in R/weighting.R
 \name{fit_model_weighted}
 \alias{fit_model_weighted}
-\title{Title}
+\title{Fit various models with weighting}
 \usage{
 fit_model_weighted(dat, exposure, covariates, weights, method, method_args)
 }
 \arguments{
+\item{dat}{A dataframe containing the variables of interest. A tibble.}
+
+\item{exposure}{The name of the variable corresponding to the exposure. A string.}
+
+\item{covariates}{A vector of covariates' names. A vector.}
+
+\item{weights}{The \code{weights} element of the result of the call
+to \code{\link[=estimate_weights]{estimate_weights()}}. A \link[WeightIt]{weightit} object.}
+
 \item{method_args}{}
 }
 \description{
-Title
+Fit various models with weighting
 }

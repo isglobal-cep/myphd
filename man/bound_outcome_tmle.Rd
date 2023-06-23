@@ -2,13 +2,20 @@
 % Please edit documentation in R/process_data.R
 \name{bound_outcome_tmle}
 \alias{bound_outcome_tmle}
-\title{Title}
+\title{Bound an outcome variable}
 \usage{
 bound_outcome_tmle(dat, var)
 }
 \arguments{
-\item{var}{}
+\item{dat}{A dataframe containing the variables of interest. A tibble.}
+
+\item{var}{The variable name corresponding to the outcome to be bounded. A string.}
+}
+\value{
+A dataframe containing the bounded outcome. A tibble.
 }
 \description{
-Title
+In order to be able to use TMLE with a continuous outcome,
+it is necessary to bound it between 0 and 1. This function performs
+the necessary steps.
 }
