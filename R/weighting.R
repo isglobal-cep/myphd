@@ -136,6 +136,7 @@ explore_balance <- function(exposure,
 #' @description
 #'
 #' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param outcome
 #' @param exposure The name of the variable corresponding to the exposure. A string.
 #' @param covariates A vector of covariates' names. A vector.
 #' @param weights The `weights` element of the result of the call
@@ -147,8 +148,46 @@ explore_balance <- function(exposure,
 #'
 #' @export
 fit_model_weighted <- function(dat,
+                               outcome,
                                exposure,
                                covariates,
                                weights,
                                method,
-                               method_args) {}
+                               method_args) {
+  # Fit model
+  if (method == "glm") {
+    form <- as.formula(
+      paste0(exposure,
+             " ~ ",
+             paste0(covariates, collapse = " + "))
+    )
+    fit <- glm(formula = form,
+               data = dat,
+               weights = weights)
+  } else if (method == "gam") {
+    form <- as.formula(
+      paste0(exposure,
+             " ~ ",
+             paste0(
+               lapply(covariates, function(x) {
+                 glue::glue("s({x})")
+               }),
+               collapse = " + "
+             ))
+    ) # End formula for GAMs
+    additive_args <- additive::additive(mode = "regression",
+                                        engine = "mgcv",
+                                        fitfunc = c(pkg = "mgcv",
+                                                    fun = "gam"),
+                                        method = "REML")
+    fit <- additive::additive_fit(formula = form,
+                                  data = dat,
+                                  ... = additive_args)
+  } else if (method == "super") {
+  } # End if `method`
+
+  return(list(
+    formula = form,
+    fit = fit
+  ))
+}

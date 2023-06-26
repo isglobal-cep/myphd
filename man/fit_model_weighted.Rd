@@ -4,7 +4,15 @@
 \alias{fit_model_weighted}
 \title{Fit various models with weighting}
 \usage{
-fit_model_weighted(dat, exposure, covariates, weights, method, method_args)
+fit_model_weighted(
+  dat,
+  outcome,
+  exposure,
+  covariates,
+  weights,
+  method,
+  method_args
+)
 }
 \arguments{
 \item{dat}{A dataframe containing the variables of interest. A tibble.}
