@@ -175,14 +175,11 @@ fit_model_weighted <- function(dat,
                collapse = " + "
              ))
     ) # End formula for GAMs
-    additive_args <- additive::additive(mode = "regression",
-                                        engine = "mgcv",
-                                        fitfunc = c(pkg = "mgcv",
-                                                    fun = "gam"),
-                                        method = "REML")
-    fit <- additive::additive_fit(formula = form,
-                                  data = dat,
-                                  ... = additive_args)
+    fit <- mgcv::gam(formula = form,
+                     family = gaussian(),
+                     data = dat,
+                     weights = weights,
+                     method = "REML")
   } else if (method == "super") {
   } # End if `method`
 
