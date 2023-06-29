@@ -154,37 +154,31 @@ fit_model_weighted <- function(dat,
                                weights,
                                method,
                                method_args) {
+  # Setup
+  covariates <- c(exposure, covariates)
+  dat[["weights"]] <- weights
+  task <- sl3::sl3_Task$new(
+    data = dat,
+    covariates = covariates,
+    outcome = outcome,
+    outcome_type = "continuous",
+    weights = "weights",
+    #folds = ,
+    drop_missing_outcome = FALSE
+  )
+
   # Fit model
   if (method == "glm") {
-    form <- as.formula(
-      paste0(exposure,
-             " ~ ",
-             paste0(covariates, collapse = " + "))
-    )
-    fit <- glm(formula = form,
-               data = dat,
-               weights = weights)
   } else if (method == "gam") {
-    form <- as.formula(
-      paste0(exposure,
-             " ~ ",
-             paste0(
-               lapply(covariates, function(x) {
-                 glue::glue("s({x})")
-               }),
-               collapse = " + "
-             ))
-    ) # End formula for GAMs
-    fit <- mgcv::gam(formula = form,
-                     family = gaussian(),
-                     data = dat,
-                     weights = weights,
-                     method = "REML")
+    lrnr <- sl3::Lrnr_gam$new(method = "REML",
+                              weights = weights)
   } else if (method == "super") {
   } # End if `method`
 
+  fit <- lrnr$train(task)
+
   return(list(
-    formula = form,
+    lrnr = lrnr,
     fit = fit
   ))
 }
