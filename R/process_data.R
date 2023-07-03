@@ -21,6 +21,29 @@ extract_cohort <- function(dat, id_var) {
   return(dat)
 }
 
+#' Convert time variables to season
+#'
+#' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param cols A vector of column names as strings. A vector.
+#'
+#' @return A dataframe with additional columns for seasons. A tibble.
+#'
+#' @export
+convert_time_season <- function(dat, cols) {
+  ret <- dat |>
+    dplyr::mutate(dplyr::across(cols,
+                                ~ lubridate::month(..1))) |>
+    dplyr::mutate(dplyr::across(cols,
+                                ~ dplyr::case_when(
+                                  ..1 %in% c(12, 1, 2) ~ "winter",
+                                  ..1 %in% c(3, 4, 5) ~ "spring",
+                                  ..1 %in% c(6, 7, 8) ~ "summer",
+                                  ..1 %in% c(9, 10, 11) ~ "autumn"
+                                )))
+
+  return(ret)
+}
+
 #' Handle values below the limit of quantification
 #'
 #' @description
