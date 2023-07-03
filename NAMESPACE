@@ -2,6 +2,7 @@
 
 export(add_metadata)
 export(bound_outcome_tmle)
+export(convert_time_season)
 export(create_fake_data)
 export(create_mapping_labels)
 export(describe_data)
