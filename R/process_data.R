@@ -31,9 +31,9 @@ extract_cohort <- function(dat, id_var) {
 #' @export
 convert_time_season <- function(dat, cols) {
   ret <- dat |>
-    dplyr::mutate(dplyr::across(cols,
+    dplyr::mutate(dplyr::across(dplyr::any_of(cols),
                                 ~ lubridate::month(..1))) |>
-    dplyr::mutate(dplyr::across(cols,
+    dplyr::mutate(dplyr::across(dplyr::any_of(cols),
                                 ~ dplyr::case_when(
                                   ..1 %in% c(12, 1, 2) ~ "winter",
                                   ..1 %in% c(3, 4, 5) ~ "spring",
