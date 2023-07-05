@@ -169,6 +169,7 @@ fit_model_weighted <- function(dat,
 
   # Fit model
   if (method == "glm") {
+    lrnr <- sl3::Lrnr_glm_fast$new()
   } else if (method == "gam") {
     lrnr <- sl3::Lrnr_gam$new(method = "REML",
                               weights = weights)
