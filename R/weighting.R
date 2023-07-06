@@ -163,7 +163,10 @@ fit_model_weighted <- function(dat,
     outcome = outcome,
     outcome_type = "continuous",
     weights = "weights",
-    #folds = ,
+    folds = origami::make_folds(
+      dat,
+      V = 1
+    ),
     drop_missing_outcome = FALSE
   )
 
