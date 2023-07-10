@@ -37,6 +37,9 @@
     <loc>https://isglobal-cep.github.io/myphd/reference/edcs_information.html</loc>
   </url>
   <url>
+    <loc>https://isglobal-cep.github.io/myphd/reference/estimate_marginal_effects.html</loc>
+  </url>
+  <url>
     <loc>https://isglobal-cep.github.io/myphd/reference/estimate_weights.html</loc>
   </url>
   <url>
@@ -83,6 +86,9 @@
   </url>
   <url>
     <loc>https://isglobal-cep.github.io/myphd/reference/plot_ctd.html</loc>
+  </url>
+  <url>
+    <loc>https://isglobal-cep.github.io/myphd/reference/plot_effect_estimates.html</loc>
   </url>
   <url>
     <loc>https://isglobal-cep.github.io/myphd/reference/preproc_data.html</loc>
