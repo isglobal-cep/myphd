@@ -155,34 +155,41 @@ fit_model_weighted <- function(dat,
                                method,
                                method_args) {
   # Setup
-  covariates <- c(exposure, covariates)
-  dat[["weights"]] <- weights
-  task <- sl3::sl3_Task$new(
-    data = dat,
-    covariates = covariates,
-    outcome = outcome,
-    outcome_type = "continuous",
-    weights = "weights",
-    folds = origami::make_folds(
-      dat,
-      V = 1
-    ),
-    drop_missing_outcome = FALSE
+  form <- paste0(
+    outcome, " ~ ",
+    exposure, " + ",
+    paste0(covariates, collapse = " + ")
   )
 
   # Fit model
-  if (method == "glm_fast") {
-    lrnr <- sl3::Lrnr_glm_fast$new()
+  if (method == "glm") {
+    fit <- glm(
+      formula = as.formula(form),
+      data = dat,
+      weights = weights
+    )
   } else if (method == "gam") {
-    lrnr <- sl3::Lrnr_gam$new(method = "REML",
-                              weights = weights)
   } else if (method == "super") {
   } # End if `method`
 
-  fit <- lrnr$train(task)
-
   return(list(
-    lrnr = lrnr,
     fit = fit
   ))
 }
+
+#' Title
+#'
+#' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param outcome
+#' @param exposure The name of the variable corresponding to the exposure. A string.
+#' @param covariates A vector of covariates' names. A vector.
+#' @param model
+#'
+#' @return
+#'
+#' @export
+estimate_marginal_effects <- function(dat,
+                                      outcome,
+                                      exposure,
+                                      covariates,
+                                      model) {}
