@@ -155,10 +155,31 @@ fit_model_weighted <- function(dat,
                                method,
                                method_args) {
   # Setup
+  covariates_continuous <- dat |>
+    dplyr::select(dplyr::where(is.numeric)) |>
+    colnames()
+  covariates_continuous <- setdiff(covariates_continuous,
+                                   c(outcome, exposure))
+  covariates_factor <- dat |>
+    dplyr::select(!dplyr::where(is.numeric)) |>
+    colnames()
+  covariates_factor <- setdiff(covariates_factor,
+                               c(outcome, exposure))
+  assertthat::are_equal(sort(covariates),
+                        sort(c(covariates_continuous,
+                               covariates_factor)))
   form <- paste0(
     outcome, " ~ ",
     exposure, " + ",
-    paste0(covariates, collapse = " + ")
+    paste0(covariates_continuous,
+           collapse = " + ")
+  )
+  form <- paste0(
+    form, " + ",
+    paste0("factor(",
+           covariates_factor,
+           ")",
+           collapse = " + ")
   )
 
   # Fit model
