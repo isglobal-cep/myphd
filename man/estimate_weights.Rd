@@ -4,14 +4,14 @@
 \alias{estimate_weights}
 \title{Wrapper function to estimate balancing weights}
 \usage{
-estimate_weights(dat, exposure, covariates = NULL, method, method_args)
+estimate_weights(dat, exposure, covariates, method, method_args)
 }
 \arguments{
 \item{dat}{A dataframe containing the variables of interest. A tibble.}
 
 \item{exposure}{The name of the variable corresponding to the exposure. A string.}
 
-\item{covariates}{A optional vector of covariates' names.
+\item{covariates}{A vector of covariates' names.
 If not provided, they are extracted from \code{dat} excluding the exposure. A vector.}
 
 \item{method}{The method to be used to estimate the weights. A string.}

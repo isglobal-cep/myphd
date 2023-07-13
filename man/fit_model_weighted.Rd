@@ -24,7 +24,13 @@ fit_model_weighted(
 \item{weights}{The \code{weights} element of the result of the call
 to \code{\link[=estimate_weights]{estimate_weights()}}. A \link[WeightIt]{weightit} object.}
 
-\item{method_args}{}
+\item{method_args}{A named list with the following variables:
+\itemize{
+\item \code{family}, .
+\item \code{add_inter_exposure}, .
+\item \code{add_splines_exposure}, .
+\item \code{df_splines}, .
+}}
 }
 \description{
 Fit various models with weighting

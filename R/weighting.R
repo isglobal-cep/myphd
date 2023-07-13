@@ -7,7 +7,7 @@
 #'
 #' @param dat A dataframe containing the variables of interest. A tibble.
 #' @param exposure The name of the variable corresponding to the exposure. A string.
-#' @param covariates A optional vector of covariates' names.
+#' @param covariates A vector of covariates' names.
 #' If not provided, they are extracted from `dat` excluding the exposure. A vector.
 #' @param method The method to be used to estimate the weights. A string.
 #' @param method_args A named list with the following variables:
@@ -25,19 +25,20 @@
 #' @export
 estimate_weights <- function(dat,
                              exposure,
-                             covariates = NULL,
+                             covariates,
                              method,
                              method_args) {
   # Create formula from exposure and covariates
-  if (is.null(covariates)) {
-    covariates <- setdiff(colnames(dat), exposure)
-  }
-  assertthat::assert_that(!exposure %in% colnames(covariates))
-  form <- as.formula(
-    paste0(exposure,
-           " ~ ",
-           paste0(covariates, collapse = " + "))
-    )
+  form <- create_formula(
+    dat = dat,
+    outcome = NULL,
+    exposure = exposure,
+    covariates = covariates,
+    method = method,
+    add_inter_exposure = NULL,
+    add_splines_exposure = NULL,
+    df_splines = NULL
+  )
 
   # Estimate weights using `WeightIt`
   other_args <- list(
@@ -51,7 +52,7 @@ estimate_weights <- function(dat,
                             "SL.gbm", "SL.glm", "SL.glmnet",
                             "SL.loess", "SL.ranger")
   }
-  ret <- WeightIt::weightit(formula = form,
+  ret <- WeightIt::weightit(formula = as.formula(form),
                             data = dat,
                             method = method,
                             #estimand = method_args$estimand,
@@ -105,6 +106,7 @@ explore_balance <- function(exposure,
                          stats = c("c", "k"),
                          un = TRUE,
                          thresholds = c(cor = threshold_cor),
+                         int = TRUE,
                          poly = 3)
 
   # Assessing balance graphically
@@ -142,7 +144,12 @@ explore_balance <- function(exposure,
 #' @param weights The `weights` element of the result of the call
 #' to [estimate_weights()]. A \link[WeightIt]{weightit} object.
 #' @param method
-#' @param method_args
+#' @param method_args A named list with the following variables:
+#' * `family`, .
+#' * `add_inter_exposure`, .
+#' * `add_splines_exposure`, .
+#' * `df_splines`, .
+#' @md
 #'
 #' @return
 #'
@@ -155,31 +162,16 @@ fit_model_weighted <- function(dat,
                                method,
                                method_args) {
   # Setup
-  covariates_continuous <- dat |>
-    dplyr::select(dplyr::where(is.numeric)) |>
-    colnames()
-  covariates_continuous <- setdiff(covariates_continuous,
-                                   c(outcome, exposure))
-  covariates_factor <- dat |>
-    dplyr::select(!dplyr::where(is.numeric)) |>
-    colnames()
-  covariates_factor <- setdiff(covariates_factor,
-                               c(outcome, exposure))
-  assertthat::are_equal(sort(covariates),
-                        sort(c(covariates_continuous,
-                               covariates_factor)))
-  form <- paste0(
-    outcome, " ~ ",
-    exposure, " + ",
-    paste0(covariates_continuous,
-           collapse = " + ")
-  )
-  form <- paste0(
-    form, " + ",
-    paste0("factor(",
-           covariates_factor,
-           ")",
-           collapse = " + ")
+  ## Create formula
+  form <- create_formula(
+    dat = dat,
+    outcome = outcome,
+    exposure = exposure,
+    covariates = covariates,
+    method = method,
+    add_inter_exposure = method_args$add_inter_exposure,
+    add_splines_exposure = method_args$add_splines_exposure,
+    df_splines = method_args$df_splines
   )
 
   # Fit model
@@ -187,7 +179,8 @@ fit_model_weighted <- function(dat,
     fit <- glm(
       formula = as.formula(form),
       data = dat,
-      weights = weights
+      weights = weights,
+      family = match.fun(method_args$family)
     )
   } else if (method == "gam") {
   } else if (method == "super") {
