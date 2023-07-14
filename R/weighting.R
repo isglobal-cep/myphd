@@ -107,7 +107,7 @@ explore_balance <- function(exposure,
                          un = TRUE,
                          thresholds = c(cor = threshold_cor),
                          int = TRUE,
-                         poly = 3)
+                         poly = 1)
 
   # Assessing balance graphically
   graph <- lapply(covariates, function(x) {
@@ -182,6 +182,7 @@ fit_model_weighted <- function(dat,
       weights = weights,
       family = match.fun(method_args$family)
     )
+  } else if (method == "orm") {
   } else if (method == "gam") {
   } else if (method == "super") {
   } # End if `method`

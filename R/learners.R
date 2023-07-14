@@ -35,28 +35,20 @@ create_formula <- function(dat,
 
   # Create formula (weights estimation)
   if (is.null(outcome)) {
-    if (method %in% c("lm", "glm")) {
-      ## Step 1: add exposure and continuous covariates
-      form <- paste0(
-        exposure, " ~ ",
-        paste0(covariates_continuous,
-               collapse = " + ")
-      )
-      ## Step 2: add remaining covariates
-      form <- paste0(
-        form, " + ",
-        paste0("factor(",
-               covariates_factor,
-               ")",
-               collapse = " + ")
-      )
-    } else if (method %in% c("gam")) {
-    } else {
-      stop(
-        glue::glue("The {method} method is not currently supported.",
-                   method = method)
-      )
-    }
+    ## Step 1: add exposure and continuous covariates
+    form <- paste0(
+      exposure, " ~ ",
+      paste0(covariates_continuous,
+             collapse = " + ")
+    )
+    ## Step 2: add remaining covariates
+    form <- paste0(
+      form, " + ",
+      paste0("factor(",
+             covariates_factor,
+             ")",
+             collapse = " + ")
+    )
 
     return(form)
   } # End formula weights estimation
