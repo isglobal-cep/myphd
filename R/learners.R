@@ -41,14 +41,19 @@ create_formula <- function(dat,
       paste0(covariates_continuous,
              collapse = " + ")
     )
-    ## Step 2: add remaining covariates
     form <- paste0(
       form, " + ",
-      paste0("factor(",
-             covariates_factor,
-             ")",
+      paste0(covariates_factor,
              collapse = " + ")
     )
+    ## Step 2: add remaining covariates
+    # form <- paste0(
+    #   form, " + ",
+    #   paste0("factor(",
+    #          covariates_factor,
+    #          ")",
+    #          collapse = " + ")
+    # )
 
     return(form)
   } # End formula weights estimation

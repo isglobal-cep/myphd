@@ -45,7 +45,11 @@ estimate_weights <- function(dat,
     use_kernel = method_args$use_kernel,
     discrete = ifelse(method == "super",
                       method_args$sl_discrete,
-                      FALSE)
+                      FALSE),
+    cvControl = list(
+      V = 3,
+      shuffle = TRUE
+    )
   )
   if (method_args$sl_lib == FALSE) {
     method_args$sl_lib <- c("SL.bartMachine", "SL.earth", "SL.gam",
@@ -62,7 +66,12 @@ estimate_weights <- function(dat,
                             ps = NULL,
                             SL.library = method_args$sl_lib,
                             subclass = NULL,
-                            missing = ,
+                            missing = "ind",
+                            plot = ifelse(
+                              method_args$use_kernel == TRUE,
+                              TRUE,
+                              FALSE
+                            ),
                             verbose = FALSE,
                             include.obj = TRUE,
                             ... = other_args)
