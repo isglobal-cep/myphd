@@ -128,7 +128,7 @@ explore_balance <- function(exposure,
   # Summarizing balance in a Love plot
   love <- cobalt::love.plot(weights,
                             stats = c("c", "ks"),
-                            abs = TRUE,
+                            abs = FALSE,
                             var.order = "unadjusted",
                             thresholds = c(cor = threshold_cor),
                             line = TRUE,
