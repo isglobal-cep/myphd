@@ -12,7 +12,9 @@ create_formula(
   method,
   add_inter_exposure,
   add_splines_exposure,
-  df_splines
+  df_splines,
+  threshold_smooth,
+  threshold_k
 )
 }
 \arguments{

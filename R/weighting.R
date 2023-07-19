@@ -37,44 +37,32 @@ estimate_weights <- function(dat,
     method = method,
     add_inter_exposure = NULL,
     add_splines_exposure = NULL,
-    df_splines = NULL
+    df_splines = NULL,
+    threshold_smooth = NULL,
+    threshold_k = NULL
   )
 
   # Estimate weights using `WeightIt`
-  other_args <- list(
-    use_kernel = method_args$use_kernel,
-    discrete = ifelse(method == "super",
-                      method_args$sl_discrete,
-                      FALSE),
-    cvControl = list(
-      V = 3,
-      shuffle = TRUE
-    )
-  )
-  if (method_args$sl_lib == FALSE) {
-    method_args$sl_lib <- c("SL.bartMachine", "SL.earth", "SL.gam",
-                            "SL.gbm", "SL.glm", "SL.glmnet",
-                            "SL.loess", "SL.ranger")
-  }
   ret <- WeightIt::weightit(formula = as.formula(form),
                             data = dat,
                             method = method,
-                            #estimand = method_args$estimand,
-                            #stabilize = method_args$stabilize,
-                            #by = method_args$by,
-                            #s.weights = method_args$s.weights,
                             ps = NULL,
-                            SL.library = method_args$sl_lib,
                             subclass = NULL,
                             missing = "ind",
+                            SL.library = method_args$sl_lib,
+                            cvControl = list(
+                              V = 3,
+                              shuffle = TRUE
+                            ),
+                            discrete = FALSE,
+                            use_kernel = method_args$use_kernel,
                             plot = ifelse(
                               method_args$use_kernel == TRUE,
                               TRUE,
                               FALSE
                             ),
                             verbose = FALSE,
-                            include.obj = TRUE,
-                            ... = other_args)
+                            include.obj = TRUE)
 
   return(list(
     weights = ret,
@@ -112,7 +100,7 @@ explore_balance <- function(exposure,
                             threshold_cor = 0.1) {
   # Assessing balance numerically
   tab <- cobalt::bal.tab(weights,
-                         stats = c("c", "k"),
+                         stats = c("c"),
                          un = TRUE,
                          thresholds = c(cor = threshold_cor),
                          int = TRUE,
@@ -127,7 +115,7 @@ explore_balance <- function(exposure,
 
   # Summarizing balance in a Love plot
   love <- cobalt::love.plot(weights,
-                            stats = c("c", "ks"),
+                            stats = c("c"),
                             abs = FALSE,
                             var.order = "unadjusted",
                             thresholds = c(cor = threshold_cor),
@@ -180,7 +168,9 @@ fit_model_weighted <- function(dat,
     method = method,
     add_inter_exposure = method_args$add_inter_exposure,
     add_splines_exposure = method_args$add_splines_exposure,
-    df_splines = method_args$df_splines
+    df_splines = method_args$df_splines,
+    threshold_smooth = method_args$threshold_smooth,
+    threshold_k = method_args$threshold_k
   )
 
   # Fit model
@@ -193,6 +183,16 @@ fit_model_weighted <- function(dat,
     )
   } else if (method == "orm") {
   } else if (method == "gam") {
+    fit <- mgcv::gam(
+      formula = as.formula(form),
+      family = method_args$family,
+      data = dat,
+      weights = weights,
+      method = "REML",
+      control = list(
+        maxit = 400
+      )
+    )
   } else if (method == "super") {
   } # End if `method`
 
