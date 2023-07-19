@@ -183,13 +183,17 @@ fit_model_weighted <- function(dat,
     )
   } else if (method == "orm") {
   } else if (method == "gam") {
-    fit <- mgcv::gam(
+    fit <- mgcv::bam(
       formula = as.formula(form),
       family = method_args$family,
       data = dat,
       weights = weights,
-      method = "REML",
+      method = "fREML",
+      select = FALSE,
+      discrete = FALSE,
       control = list(
+        nthreads = 2,
+        ncv.threads = 4,
         maxit = 400
       )
     )
