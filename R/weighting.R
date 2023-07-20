@@ -179,7 +179,7 @@ fit_model_weighted <- function(dat,
       formula = as.formula(form),
       data = dat,
       weights = weights,
-      family = match.fun(method_args$family)
+      family = method_args$family
     )
   } else if (method == "orm") {
   } else if (method == "gam") {
