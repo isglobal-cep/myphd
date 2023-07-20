@@ -192,8 +192,8 @@ fit_model_weighted <- function(dat,
       select = FALSE,
       discrete = FALSE,
       control = list(
-        nthreads = 2,
-        ncv.threads = 4,
+        nthreads = 4,
+        ncv.threads = 6,
         maxit = 400
       )
     )
