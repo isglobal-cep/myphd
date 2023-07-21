@@ -226,7 +226,7 @@ explore_missings <- function(dat, id_var, grouping_var, path_save) {
   ##############################################################################
   # Step 1: Count and percentage of missings by cohort, for each variable
   step1 <- aggregate(
-    formula = . ~ cohort,
+    . ~ cohort,
     data = dat,
     FUN = function(x) { sum(is.na(x)) },
     na.action = NULL
