@@ -20,12 +20,43 @@ RoxygenNote: 7.2.3
 License: MIT + file LICENSE
 Roxygen: list(markdown = TRUE)
 Imports: 
+    Hmisc,
+    WeightIt,
+    assertthat,
+    cobalt,
+    codebookr,
+    colorspace,
+    corrr,
     dagitty,
+    data.table,
+    devtools,
+    dlookr,
     dplyr,
     ggdag,
     ggokabeito,
+    ggplot2,
+    ggrepel,
+    glue,
+    gtsummary,
+    knitr,
     lifecycle,
-    magrittr
+    lubridate,
+    magrittr,
+    mgcv,
+    missRanger,
+    myphd,
+    naniar,
+    pkgdown,
+    purrr,
+    renv,
+    rmarkdown,
+    robustHD,
+    roxygen2,
+    stringr,
+    testthat,
+    tibble,
+    tidyr,
+    visdat
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
