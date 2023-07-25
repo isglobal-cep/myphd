@@ -44,7 +44,6 @@ Imports:
     magrittr,
     mgcv,
     missRanger,
-    myphd,
     naniar,
     pkgdown,
     purrr,

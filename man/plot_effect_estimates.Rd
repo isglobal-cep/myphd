@@ -4,7 +4,7 @@
 \alias{plot_effect_estimates}
 \title{Title}
 \usage{
-plot_effect_estimates(dat)
+plot_effect_estimates(dat, size_points)
 }
 \arguments{
 \item{dat}{}
