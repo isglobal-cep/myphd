@@ -289,7 +289,7 @@ handle_missing_values <- function(dat, covariates,
                                     pmm.k = 5)
 
   if (!is.null(covariates)) {
-    dat <- dat |>
+    dat_imp <- dat_imp |>
       dplyr::select(-dplyr::all_of(cols_to_remove))
   }
 
