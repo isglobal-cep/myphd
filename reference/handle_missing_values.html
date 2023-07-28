@@ -60,13 +60,24 @@ the chosen threshold, for the entire dataset.</p></li>
 </ul></div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">handle_missing_values</span><span class="op">(</span><span class="va">dat</span>, <span class="va">id_var</span>, <span class="va">by_var</span>, <span class="va">threshold_within</span>, <span class="va">threshold_overall</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">handle_missing_values</span><span class="op">(</span></span>
+<span>  <span class="va">dat</span>,</span>
+<span>  <span class="va">covariates</span>,</span>
+<span>  <span class="va">id_var</span>,</span>
+<span>  <span class="va">by_var</span>,</span>
+<span>  <span class="va">threshold_within</span>,</span>
+<span>  <span class="va">threshold_overall</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>dat</dt>
 <dd><p>A dataframe containing the variables of interest. A tibble.</p></dd>
+
+
+<dt>covariates</dt>
+<dd><p>A dataframe containing additional variables. A tibble.</p></dd>
 
 
 <dt>id_var</dt>

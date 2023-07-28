@@ -66,7 +66,17 @@ Normalization (subtract the minimum and divide by the range).
 </ul></div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">preproc_data</span><span class="op">(</span><span class="va">dat</span>, outcome <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">dic_steps</span>, <span class="va">id_var</span>, <span class="va">by_var</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">preproc_data</span><span class="op">(</span></span>
+<span>  <span class="va">dat</span>,</span>
+<span>  <span class="va">covariates</span>,</span>
+<span>  <span class="va">outcome</span>,</span>
+<span>  <span class="va">creatinine_var_names</span>,</span>
+<span>  <span class="va">creatinine_covariates_names</span>,</span>
+<span>  <span class="va">creatinine_name</span>,</span>
+<span>  <span class="va">dic_steps</span>,</span>
+<span>  <span class="va">id_var</span>,</span>
+<span>  <span class="va">by_var</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -75,22 +85,27 @@ Normalization (subtract the minimum and divide by the range).
 <dd><p>A dataframe containing the variables of interest. A tibble.</p></dd>
 
 
+<dt>covariates</dt>
+<dd><p>A dataframe containing additional variables. A tibble.</p></dd>
+
+
 <dt>outcome</dt>
-<dd><p>A optional string indicating the outcome variable. A string.</p></dd>
+<dd><p>A string indicating the outcome variable. A string.</p></dd>
 
 
 <dt>dic_steps</dt>
 <dd><p>A nested named list of steps to perform. A list. It can
-include the following elements:</p><ul><li><p><code>missings</code>, to handle missing values. A named list with elements:</p></li>
-<li><p><code>do</code>, a logical indicating whether to perform this step or not. A logical.</p></li>
+include the following elements:</p><ul><li><p><code>llod</code>, to handle values &lt;LOD/LOQ. A named list with elements:</p></li>
+<li><p><code>method</code>, the method to be used. A string.</p></li>
+<li><p><code>missings</code>, to handle missing values. A named list with elements:</p></li>
 <li><p><code>threshold_within</code>, the missing value threshold within each group. An integer.</p></li>
 <li><p><code>threshold_overall</code>, the overall missing value threshold. An integer.</p></li>
+<li><p><code>creatinine</code>, to handle confounding by dilution. A named list with elements:</p></li>
+<li><p><code>method_args</code>, options for fitting the models. A list.</p></li>
 <li><p><code>standardization</code>, to standardize variables. A named list with elements:</p></li>
-<li><p><code>do</code>, a logical indicating whether to perform this step or not. A logical.</p></li>
-<li><p><code>center_fun</code>, the centering function (e.g., <code>mean</code>).</p></li>
-<li><p><code>scale_fun</code>, the scaling function (e.g., <code>sd</code>).</p></li>
+<li><p><code>center_fun</code>, the centering function (e.g., <code>median</code>).</p></li>
+<li><p><code>scale_fun</code>, the scaling function (e.g., <code>IQR</code>).</p></li>
 <li><p><code>bound</code>, to bound the outcome variable. A named list with elements:</p></li>
-<li><p><code>do</code>, a logical indicating whether to perform this step or not. A logical.</p></li>
 </ul></dd>
 
 

@@ -19,10 +19,7 @@
     <loc>https://isglobal-cep.github.io/myphd/reference/add_metadata.html</loc>
   </url>
   <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/adjust_chemicals_for_creatinine.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/bound_outcome_tmle.html</loc>
+    <loc>https://isglobal-cep.github.io/myphd/reference/bound_outcome.html</loc>
   </url>
   <url>
     <loc>https://isglobal-cep.github.io/myphd/reference/convert_time_season.html</loc>
@@ -73,10 +70,16 @@
     <loc>https://isglobal-cep.github.io/myphd/reference/geom_dag_text_repel.html</loc>
   </url>
   <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/handle_loq.html</loc>
+    <loc>https://isglobal-cep.github.io/myphd/reference/handle_creatinine_confounding.html</loc>
+  </url>
+  <url>
+    <loc>https://isglobal-cep.github.io/myphd/reference/handle_llodq.html</loc>
   </url>
   <url>
     <loc>https://isglobal-cep.github.io/myphd/reference/handle_missing_values.html</loc>
+  </url>
+  <url>
+    <loc>https://isglobal-cep.github.io/myphd/reference/handle_standardization.html</loc>
   </url>
   <url>
     <loc>https://isglobal-cep.github.io/myphd/reference/index.html</loc>
