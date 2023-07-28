@@ -188,9 +188,11 @@ handle_creatinine_confounding <- function(dat, covariates,
       cratio <- dat_proc[[var]] / (dat_proc[[creatinine]] / cpred)
 
       return(cratio)
-    }) |> # End loop over variables to process
-      dplyr::bind_cols() |>
-      tibble::as_tibble()
+    }) # End loop over variables to process
+
+    ret <- suppressMessages(ret |>
+                              dplyr::bind_cols() |>
+                              tibble::as_tibble())
 
     return(ret)
   } # End function cas
@@ -275,8 +277,10 @@ handle_missing_values <- function(dat, covariates,
     cols_to_remove <- colnames(covariates)
     dat <- dplyr::full_join(
       dat, covariates,
-      by = id_var
-    )
+      by = id_var,
+      suffix = c("", ".y")
+    ) |>
+      dplyr::select(-dplyr::ends_with(".y"))
   }
 
   dat_imp <- missRanger::missRanger(data = dat,
