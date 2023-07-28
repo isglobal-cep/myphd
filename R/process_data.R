@@ -99,7 +99,7 @@ preproc_data <- function(dat, covariates, outcome,
     dat_ret <- switch (step,
       "llodq" = handle_llodq(dat = dat_ret,
                              method = dic_steps$llodq$method),
-      "creatinine" = handle_creatinine_confounding(dat = dat,
+      "creatinine" = handle_creatinine_confounding(dat = dat_ret,
                                                    covariates = covariates,
                                                    id_var = id_var,
                                                    var_names = creatinine_var_names,
@@ -147,10 +147,7 @@ handle_creatinine_confounding <- function(dat, covariates,
   message("Removing effect of urine dilution on biomarkers.")
 
   # Covariate-adjusted standardization
-  cas <- function(dat, covariates,
-                  id_var,
-                  var_names, covariates_names, creatinine,
-                  method_fit_args) {
+  cas <- function() {
     warning("Creatinine values are currently predicted without weights.",
             call. = TRUE)
 
@@ -203,13 +200,7 @@ handle_creatinine_confounding <- function(dat, covariates,
   } # End function cas
 
   dat_ret <- switch (method,
-    "cas" = cas(dat = dat,
-                covariates = covariates,
-                id_var = id_var,
-                var_names = var_names,
-                covariates_names = covariates_names,
-                creatinine = creatinine,
-                method_fit_args = method_fit_args),
+    "cas" = cas(),
     stop("Invalid `method`.")
   )
   colnames(dat_ret) <- var_names
