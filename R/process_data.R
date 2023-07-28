@@ -147,7 +147,10 @@ handle_creatinine_confounding <- function(dat, covariates,
   message("Removing effect of urine dilution on biomarkers.")
 
   # Covariate-adjusted standardization
-  cas <- function() {
+  cas <- function(dat, covariates,
+                  id_var,
+                  var_names, covariates_names, creatinine,
+                  method_fit_args) {
     warning("Creatinine values are currently predicted without weights.",
             call. = TRUE)
 
@@ -200,7 +203,13 @@ handle_creatinine_confounding <- function(dat, covariates,
   } # End function cas
 
   dat_ret <- switch (method,
-    "cas" = cas(),
+    "cas" = cas(dat = dat,
+                covariates = covariates,
+                id_var = id_var,
+                var_names = var_names,
+                covariates_names = covariates_names,
+                creatinine = creatinine,
+                method_fit_args = method_fit_args),
     stop("Invalid `method`.")
   )
   colnames(dat_ret) <- var_names
@@ -324,11 +333,7 @@ handle_missing_values <- function(dat, covariates,
 handle_standardization <- function(dat,
                                    id_var, by_var,
                                    center_fun, scale_fun) {
-  message(glue::glue(
-    "Standardizing variables using {center_fun} and {scale_fun}.",
-    center_fun = center_fun,
-    scale_fun = scale_fun
-  ))
+  message("Standardizing variables.")
 
   dat_ret <- dat |>
     dplyr::select(-dplyr::any_of(c(id_var, by_var))) |>
