@@ -156,7 +156,9 @@ handle_creatinine_confounding <- function(dat, covariates,
                                    covariates |>
                                      dplyr::select(dplyr::all_of(c(id_var,
                                                                    creatinine,
-                                                                   covariates_names))),
+                                                                   covariates_names |>
+                                                                     unlist() |>
+                                                                     unname()))),
                                    by = id_var) |>
         dplyr::select(-dplyr::any_of(id_var))
 
@@ -197,6 +199,7 @@ handle_creatinine_confounding <- function(dat, covariates,
     "cas" = cas(),
     stop("Invalid `method`.")
   )
+  colnames(dat_ret) <- var_names
 
   return(dat_ret)
 }
