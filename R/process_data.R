@@ -144,6 +144,8 @@ handle_creatinine_confounding <- function(dat, covariates,
                                           id_var,
                                           var_names, covariates_names, creatinine,
                                           method, method_fit_args) {
+  message("Removing effect of urine dilution on biomarkers.")
+
   # Covariate-adjusted standardization
   cas <- function() {
     warning("Creatinine values are currently predicted without weights.",
@@ -322,6 +324,12 @@ handle_missing_values <- function(dat, covariates,
 handle_standardization <- function(dat,
                                    id_var, by_var,
                                    center_fun, scale_fun) {
+  message(glue::glue(
+    "Standardizing variables using {center_fun} and {scale_fun}.",
+    center_fun = center_fun,
+    scale_fun = scale_fun
+  ))
+
   dat_ret <- dat |>
     dplyr::select(-dplyr::any_of(c(id_var, by_var))) |>
     robustHD::robStandardize(centerFun = center_fun,
