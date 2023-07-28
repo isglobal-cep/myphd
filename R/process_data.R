@@ -152,20 +152,25 @@ handle_creatinine_confounding <- function(dat, covariates,
     ret <- lapply(var_names, function(var) {
       dat_proc <- dplyr::full_join(dat |>
                                      dplyr::select(dplyr::all_of(c(id_var,
-                                                                 var))),
+                                                                   var))),
                                    covariates |>
                                      dplyr::select(dplyr::all_of(c(id_var,
-                                                                 covariates_names))),
+                                                                   creatinine,
+                                                                   covariates_names))),
                                    by = id_var) |>
         dplyr::select(-dplyr::any_of(id_var))
 
       # Step 1: estimate weights for creatinine
-      wts <- rep(1, lenght = nrow(dat_proc))
+      wts <- rep(1, times = nrow(dat_proc))
 
       # Step 2: predict creatinine with weights
       form <- paste0(
         creatinine, " ~ ",
-        paste0(setdiff(covariates_names, creatinine),
+        paste0(setdiff(covariates_names$numerical, creatinine),
+               collapse = " + "), " + ",
+        paste0("factor(",
+               setdiff(covariates_names$categorical, creatinine),
+               ")",
                collapse = " + ")
       )
       mod_creatine <- glm(
