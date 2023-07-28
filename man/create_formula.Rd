@@ -18,7 +18,7 @@ create_formula(
 )
 }
 \arguments{
-\item{df_splines}{}
+\item{threshold_k}{}
 }
 \description{
 Title

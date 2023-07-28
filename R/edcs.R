@@ -1,20 +1,3 @@
-#' Title
-#'
-#' @param dat
-#' @param exposures
-#' @param covariates
-#' @param creatinine
-#' @param method
-#'
-#' @return
-#'
-#' @export
-adjust_chemicals_for_creatinine <- function(dat,
-                                            exposures, covariates,
-                                            creatinine,
-                                            method) {
-}
-
 #' Return information on chemicals of interest
 #'
 #' @returns A \link[data.table]{data.table} object. Each entry has

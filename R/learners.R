@@ -8,6 +8,8 @@
 #' @param add_inter_exposure
 #' @param add_splines_exposure
 #' @param df_splines
+#' @param threshold_smooth
+#' @param threshold_k
 #'
 #' @return
 #'
@@ -123,3 +125,99 @@ create_formula <- function(dat,
 
   return(form)
 }
+
+#' Fit various models with weighting
+#'
+#' @description
+#'
+#' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param outcome
+#' @param exposure The name of the variable corresponding to the exposure. A string.
+#' @param covariates A vector of covariates' names. A vector.
+#' @param weights The `weights` element of the result of the call
+#' to [estimate_weights()]. A \link[WeightIt]{weightit} object.
+#' @param method
+#' @param method_args A named list with the following variables:
+#' * `family`, .
+#' * `add_inter_exposure`, .
+#' * `add_splines_exposure`, .
+#' * `df_splines`, .
+#' * `threshold_smooth`, .
+#' * `threshold_k`, .
+#' @md
+#'
+#' @return
+#'
+#' @export
+fit_model_weighted <- function(dat,
+                               outcome,
+                               exposure,
+                               covariates,
+                               weights,
+                               method,
+                               method_args) {
+  # Setup
+  ## Create formula
+  form <- create_formula(
+    dat = dat,
+    outcome = outcome,
+    exposure = exposure,
+    covariates = covariates,
+    method = method,
+    add_inter_exposure = method_args$add_inter_exposure,
+    add_splines_exposure = method_args$add_splines_exposure,
+    df_splines = method_args$df_splines,
+    threshold_smooth = method_args$threshold_smooth,
+    threshold_k = method_args$threshold_k
+  )
+
+  # Fit model
+  if (method == "glm") {
+    fit <- glm(
+      formula = as.formula(form),
+      data = dat,
+      weights = weights,
+      family = method_args$family
+    )
+  } else if (method == "orm") {
+  } else if (method == "gam") {
+    fit <- mgcv::bam(
+      formula = as.formula(form),
+      family = method_args$family,
+      data = dat,
+      weights = weights,
+      method = "fREML",
+      select = FALSE,
+      discrete = FALSE,
+      control = list(
+        nthreads = 4,
+        ncv.threads = 6,
+        maxit = 400
+      )
+    )
+  } else if (method == "super") {
+  } else {
+    stop("Invalid `method`.")
+  } # End if `method`
+
+  return(list(
+    fit = fit
+  ))
+}
+
+#' Title
+#'
+#' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param outcome
+#' @param exposure The name of the variable corresponding to the exposure. A string.
+#' @param covariates A vector of covariates' names. A vector.
+#' @param model
+#'
+#' @return
+#'
+#' @export
+estimate_marginal_effects <- function(dat,
+                                      outcome,
+                                      exposure,
+                                      covariates,
+                                      model) {}

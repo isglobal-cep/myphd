@@ -4,10 +4,19 @@
 \alias{handle_missing_values}
 \title{Various strategies to handle missing values}
 \usage{
-handle_missing_values(dat, id_var, by_var, threshold_within, threshold_overall)
+handle_missing_values(
+  dat,
+  covariates,
+  id_var,
+  by_var,
+  threshold_within,
+  threshold_overall
+)
 }
 \arguments{
 \item{dat}{A dataframe containing the variables of interest. A tibble.}
+
+\item{covariates}{A dataframe containing additional variables. A tibble.}
 
 \item{id_var}{The variable name to be used to identify subjects. A string.}
 

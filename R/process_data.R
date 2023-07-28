@@ -44,19 +44,6 @@ convert_time_season <- function(dat, cols) {
   return(ret)
 }
 
-#' Handle values below the limit of quantification
-#'
-#' @description
-#'
-#' @param dat A dataframe containing the variables of interest. A tibble.
-#' @param strategy
-#'
-#' @return
-#'
-#' @export
-handle_loq <- function(dat, strategy) {
-}
-
 #' Basic pre-processing of datasets
 #'
 #' @description
@@ -77,19 +64,24 @@ handle_loq <- function(dat, strategy) {
 #' }
 #'
 #' @param dat A dataframe containing the variables of interest. A tibble.
-#' @param outcome A optional string indicating the outcome variable. A string.
+#' @param covariates A dataframe containing additional variables. A tibble.
+#' @param outcome A string indicating the outcome variable. A string.
+#' @param creatinine_var_names
+#' @param creatinine_covariates_names
+#' @param creatinine_name
 #' @param dic_steps A nested named list of steps to perform. A list. It can
 #' include the following elements:
+#' * `llod`, to handle values <LOD/LOQ. A named list with elements:
+#'  * `method`, the method to be used. A string.
 #' * `missings`, to handle missing values. A named list with elements:
-#'  * `do`, a logical indicating whether to perform this step or not. A logical.
 #'  * `threshold_within`, the missing value threshold within each group. An integer.
 #'  * `threshold_overall`, the overall missing value threshold. An integer.
+#' * `creatinine`, to handle confounding by dilution. A named list with elements:
+#'  * `method_args`, options for fitting the models. A list.
 #' * `standardization`, to standardize variables. A named list with elements:
-#'  * `do`, a logical indicating whether to perform this step or not. A logical.
-#'  * `center_fun`, the centering function (e.g., `mean`).
-#'  * `scale_fun`, the scaling function (e.g., `sd`).
+#'  * `center_fun`, the centering function (e.g., `median`).
+#'  * `scale_fun`, the scaling function (e.g., `IQR`).
 #' * `bound`, to bound the outcome variable. A named list with elements:
-#'  * `do`, a logical indicating whether to perform this step or not. A logical.
 #' @param id_var The variable name to be used to identify subjects. A string.
 #' @param by_var The variable name to group by. A string.
 #' @md
@@ -97,47 +89,126 @@ handle_loq <- function(dat, strategy) {
 #' @returns A pre-processed dataset. A tibble.
 #'
 #' @export
-preproc_data <- function(dat, outcome = NULL, dic_steps,
+preproc_data <- function(dat, covariates, outcome,
+                         creatinine_var_names, creatinine_covariates_names, creatinine_name,
+                         dic_steps,
                          id_var, by_var) {
   dat_ret <- dat
 
-  # Variable transformations: bound outcome
-  if ("bound" %in% names(dic_steps)) {
-    if (dic_steps$bound$do) {
-      message("Bounding the outcome for TMLE.")
-      dat_ret <- bound_outcome_tmle(dat_ret,
-                                    var = outcome)
-    }
-  }
-
-  # Data cleaning: missing values imputation
-  if ("missings" %in% names(dic_steps)) {
-    if (dic_steps$missings$do) {
-      message("Imputing missing values.")
-      res_missings <- handle_missing_values(dat = dat_ret,
-                                            id_var = id_var,
-                                            by_var = by_var,
-                                            threshold_within = dic_steps$missings$threshold_within,
-                                            threshold_overall = dic_steps$missings$threshold_overall)
-      dat_ret <- res_missings$dat_imputed
-    }
-  }
-
-  # Variable transformations: standardization
-  if ("standardization" %in% names(dic_steps)) {
-    if (dic_steps$standardization$do) {
-      message("Standardizing variables using robStandardize.")
-      dat_ret <- dat_ret |>
-        dplyr::select(-dplyr::any_of(c(id_var, by_var))) |>
-        robustHD::robStandardize(centerFun = dic_steps$standardization$center_fun,
-                                 scaleFun = dic_steps$standardization$scale_fun) |>
-        tibble::as_tibble()
-      dat_ret[[id_var]] <- dat[[id_var]]
-      dat_ret <- dplyr::relocate(dat_ret, id_var)
-    }
-  }
+  for (step in dic_steps) {
+    dat_ret <- switch (step,
+      "llodq" = handle_llodq(dat = dat_ret,
+                             method = dic_steps$llodq$method),
+      "creatinine" = handle_creatinine_confounding(dat = dat,
+                                                   covariates = covariates,
+                                                   id_var = id_var,
+                                                   var_names = creatinine_var_names,
+                                                   covariates_names = creatinine_covariates_names,
+                                                   creatinine = creatinine_name,
+                                                   method = dic_steps$creatinine$method,
+                                                   method_fit_args = dic_steps$creatinine$method_fit_args),
+      "missings" = handle_missing_values(dat = dat_ret,
+                                         covariates = covariates,
+                                         id_var = id_var,
+                                         by_var = by_var,
+                                         threshold_within = dic_steps$missings$threshold_within,
+                                         threshold_overall = dic_steps$missings$threshold_overall)$dat_imputed,
+      "standardization" = handle_standardization(dat = dat_ret,
+                                                 id_var = id_var, by_var = by_var,
+                                                 center_fun = dic_steps$standardization$center_fun,
+                                                 scale_fun = dic_steps$standardization$scale_fun),
+      "bound" = bound_outcome(dat = dat_ret,
+                              var = outcome),
+      stop("Invalid `step` option.")
+    )
+  } # End loop over steps
 
   return(dat = dat_ret)
+}
+
+#' Title
+#'
+#' @param dat
+#' @param covariates
+#' @param id_var
+#' @param var_names
+#' @param covariates_names
+#' @param creatinine
+#' @param method
+#' @param method_fit_args
+#'
+#' @return
+#'
+#' @export
+handle_creatinine_confounding <- function(dat, covariates,
+                                          id_var,
+                                          var_names, covariates_names, creatinine,
+                                          method, method_fit_args) {
+  # Covariate-adjusted standardization
+  cas <- function() {
+    warning("Creatinine values are currently predicted without weights.",
+            call. = TRUE)
+
+    ret <- lapply(var_names, function(var) {
+      dat_proc <- dplyr::full_join(dat |>
+                                     dplyr::select(dplyr::all_of(id_var,
+                                                                 var)),
+                                   covariates |>
+                                     dplyr::select(dplyr::all_of(id_var,
+                                                                 covariates_names)),
+                                   by = id_var) |>
+        dplyr::select(-dplyr::any_of(id_var))
+
+      # Step 1: estimate weights for creatinine
+      wts <- rep(1, lenght = nrow(dat_proc))
+
+      # Step 2: predict creatinine with weights
+      form <- paste0(
+        creatinine, " ~ ",
+        paste0(setdiff(covariates_names, creatinine),
+               collapse = " + ")
+      )
+      mod_creatine <- glm(
+        formula = as.formula(form),
+        data = dat_proc,
+        weights = wts,
+        family = method_fit_args$family
+      )
+      cpred <- predict(mod_creatine,
+                       type = "response")
+
+      # Step 3: compute `Cratio = exposure / (C_obs / Cpred)`
+      cratio <- dat_proc[[var]] / (dat_proc[[creatinine]] / cpred)
+
+      return(cratio)
+    }) |> # End loop over variables to process
+      dplyr::bind_cols() |>
+      tibble::as_tibble()
+
+    return(ret)
+  } # End function cas
+
+  dat_ret <- switch (method,
+    "cas" = cas(),
+    stop("Invalid `method`.")
+  )
+
+  return(dat_ret)
+}
+
+#' Various strategies to handle values below the limit of detection/quantification
+#'
+#' @description
+#'
+#' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param method
+#'
+#' @return
+#'
+#' @export
+handle_llodq <- function(dat, method) {
+
+  return(dat)
 }
 
 #' Various strategies to handle missing values
@@ -153,6 +224,7 @@ preproc_data <- function(dat, outcome = NULL, dic_steps,
 #' @md
 #'
 #' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param covariates A dataframe containing additional variables. A tibble.
 #' @param id_var The variable name to be used to identify subjects. A string.
 #' @param by_var The variable name to group by. A string.
 #' @param threshold_within The missing value threshold within each group. An integer.
@@ -162,7 +234,8 @@ preproc_data <- function(dat, outcome = NULL, dic_steps,
 #' The imputed dataset is named `dat_imputed`.
 #'
 #' @export
-handle_missing_values <- function(dat, id_var, by_var,
+handle_missing_values <- function(dat, covariates,
+                                  id_var, by_var,
                                   threshold_within,
                                   threshold_overall) {
 
@@ -188,10 +261,26 @@ handle_missing_values <- function(dat, id_var, by_var,
 
   # Step 3: impute the remaining variables
   vis_miss_before <- naniar::vis_miss(dat)
+
+  ## Check whether to perform imputation by including additional variables
+  if (!is.null(covariates)) {
+    cols_to_remove <- colnames(covariates)
+    dat <- dplyr::full_join(
+      dat, covariates,
+      by = id_var
+    )
+  }
+
   dat_imp <- missRanger::missRanger(data = dat,
                                     formula = as.formula(glue::glue(". ~ . -{id_var}")),
                                     num.trees = 10,
                                     pmm.k = 5)
+
+  if (!is.null(covariates)) {
+    dat <- dat |>
+      dplyr::select(-dplyr::all_of(cols_to_remove))
+  }
+
   vis_miss_after <- naniar::vis_miss(dat_imp)
 
   return(list(
@@ -203,10 +292,35 @@ handle_missing_values <- function(dat, id_var, by_var,
   ))
 }
 
-#' Bound an outcome variable
+#' Title
+#'
+#' @param dat
+#' @param id_var
+#' @param by_var
+#' @param center_fun
+#' @param scale_fun
+#'
+#' @return
+#'
+#' @export
+handle_standardization <- function(dat,
+                                   id_var, by_var,
+                                   center_fun, scale_fun) {
+  dat_ret <- dat |>
+    dplyr::select(-dplyr::any_of(c(id_var, by_var))) |>
+    robustHD::robStandardize(centerFun = center_fun,
+                             scaleFun = scale_fun) |>
+    tibble::as_tibble()
+  dat_ret[[id_var]] <- dat[[id_var]]
+  dat_ret <- dplyr::relocate(dat_ret, id_var)
+
+  return(dat_ret)
+}
+
+#' Bound a outcome variable
 #'
 #' @description
-#' In order to be able to use TMLE with a continuous outcome,
+#' In order to be able to use e.g., TMLE, with a continuous outcome,
 #' it is necessary to bound it between 0 and 1. This function performs
 #' the necessary steps.
 #'
@@ -216,7 +330,7 @@ handle_missing_values <- function(dat, id_var, by_var,
 #' @return A dataframe containing the bounded outcome. A tibble.
 #'
 #' @export
-bound_outcome_tmle <- function(dat, var) {
+bound_outcome <- function(dat, var) {
   b <- max(dat[[var]], na.rm = TRUE)
   a <- min(dat[[var]], na.rm = TRUE)
   num <- dat[[var]] - a
