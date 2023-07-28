@@ -202,6 +202,8 @@ handle_creatinine_confounding <- function(dat, covariates,
     stop("Invalid `method`.")
   )
   colnames(dat_ret) <- var_names
+  dat_ret[[id_var]] <- dat[[id_var]]
+  dat_ret <- dplyr::relocate(dat_ret, id_var)
 
   return(dat_ret)
 }
@@ -290,7 +292,9 @@ handle_missing_values <- function(dat, covariates,
 
   if (!is.null(covariates)) {
     dat_imp <- dat_imp |>
-      dplyr::select(-dplyr::all_of(cols_to_remove))
+      dplyr::select(-dplyr::all_of(
+        setdiff(cols_to_remove, id_var)
+      ))
   }
 
   vis_miss_after <- naniar::vis_miss(dat_imp)
