@@ -151,11 +151,11 @@ handle_creatinine_confounding <- function(dat, covariates,
 
     ret <- lapply(var_names, function(var) {
       dat_proc <- dplyr::full_join(dat |>
-                                     dplyr::select(dplyr::all_of(id_var,
-                                                                 var)),
+                                     dplyr::select(dplyr::all_of(c(id_var,
+                                                                 var))),
                                    covariates |>
-                                     dplyr::select(dplyr::all_of(id_var,
-                                                                 covariates_names)),
+                                     dplyr::select(dplyr::all_of(c(id_var,
+                                                                 covariates_names))),
                                    by = id_var) |>
         dplyr::select(-dplyr::any_of(id_var))
 
