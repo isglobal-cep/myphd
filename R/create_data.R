@@ -34,11 +34,12 @@ create_mapping_labels <- function(labels, codes) {
 #'
 #' @param dat A dataframe or tibble of data. A dataframe.
 #' @param metadat A dataframe or tibble of metadata. A dataframe.
+#' @param categorical_types
 #'
 #' @returns A tibble containing both data and metadata.
 #'
 #' @export
-add_metadata <- function(dat, metadat) {
+add_metadata <- function(dat, metadat, categorical_types) {
   # Helper function to tidy certain variables' names
   .tidy_string <- function(x) {
     x <- gsub(" *\\(.*?\\) *", "", x)
@@ -48,7 +49,13 @@ add_metadata <- function(dat, metadat) {
     return(ret)
   }
 
-  dat_modified <- dat
+  dat_modified <- dat |>
+    dplyr::mutate(type = ifelse(
+      type %in% categorical_types,
+      type = "Categorical",
+      type
+    ))
+
   # Add metadata to each column of dataset
   for (x in names(dat_modified)) {
     # Extract and tidy metadata for each variable
@@ -67,7 +74,7 @@ add_metadata <- function(dat, metadat) {
       description = info$description,
       # Manually adding `label` attribute to work with gtsummary
       label = info$description,
-      value_lables = ifelse(
+      value_labels = ifelse(
         info$type == "Categorical",
         create_mapping_labels(info$label, info$code),
         NA

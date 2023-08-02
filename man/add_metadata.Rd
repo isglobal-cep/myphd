@@ -4,12 +4,14 @@
 \alias{add_metadata}
 \title{Add metadata to dataset}
 \usage{
-add_metadata(dat, metadat)
+add_metadata(dat, metadat, categorical_types)
 }
 \arguments{
 \item{dat}{A dataframe or tibble of data. A dataframe.}
 
 \item{metadat}{A dataframe or tibble of metadata. A dataframe.}
+
+\item{categorical_types}{}
 }
 \value{
 A tibble containing both data and metadata.
