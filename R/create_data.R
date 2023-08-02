@@ -51,42 +51,45 @@ add_metadata <- function(dat, metadat, categorical_types) {
 
   dat_modified <- dat
   metadat <- metadat |>
-    dplyr::mutate(type = ifelse(
-      type %in% categorical_types,
-      "Categorical",
-      type
-    ))
+    dplyr::mutate(
+      type = as.character(type),
+      type = ifelse(
+        type %in% categorical_types,
+        "categorical",
+        type
+      )
+    )
 
   # Add metadata to each column of dataset
   for (x in names(dat_modified)) {
     # Extract and tidy metadata for each variable
+    if (nrow(metadat |> dplyr::filter(variable == x)) == 0) {
+      next
+    }
     info <- metadat |>
       dplyr::filter(variable == x) |>
       as.list()
     info$description <- .tidy_string(info$description)
     info$remark <- .tidy_string(info$remark)
-    info$type <- stringr::str_to_title(info$type)
+    info$type <- stringr::str_to_lower(info$type)
     info$comments <- stringr::str_to_lower(info$comments)
+    info <- lapply(info, as.character)
 
     # Add metadata
-    dat_modified <- codebookr::cb_add_col_attributes(
-      dat_modified,
-      !!x,
-      description = info$description,
-      # Manually adding `label` attribute to work with gtsummary
-      label = info$description,
-      value_labels = ifelse(
-        info$type == "Categorical",
-        create_mapping_labels(info$label, info$code),
-        NA
-      ),
-      col_type = info$type,
-      units = info$comments,
-      remarks = info$remark,
-      dag_var = info$dag,
-      period = info$period
-    )
-  }
+    attr(dat_modified[[x]], "label") <- info$description
+    attr(dat_modified[[x]], "units") <- info$comments
+    attr(dat_modified[[x]], "remarks") <- info$remark
+    attr(dat_modified[[x]], "dag_var") <- info$dag
+    attr(dat_modified[[x]], "period") <- info$period
+    if (info$type == "categorical") {
+      dat_modified[[x]] <- labelled::labelled(
+        dat_modified[[x]],
+        labels = create_mapping_labels(info$label, info$code),
+        label = info$description
+      ) |>
+        labelled::to_factor()
+    }
+  } # End loop over variables
 
   return(dat_modified)
 }
