@@ -49,7 +49,8 @@ add_metadata <- function(dat, metadat, categorical_types) {
     return(ret)
   }
 
-  dat_modified <- dat |>
+  dat_modified <- dat
+  metadat <- metadat |>
     dplyr::mutate(type = ifelse(
       type %in% categorical_types,
       "Categorical",
