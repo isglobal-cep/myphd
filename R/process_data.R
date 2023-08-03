@@ -96,7 +96,7 @@ preproc_data <- function(dat, covariates, outcome,
   dat_ret <- dat
 
   for (step in names(dic_steps)) {
-    dat_ret <- switch (step,
+    dat_ret <- switch(step,
       "llodq" = handle_llodq(dat = dat_ret,
                              method = dic_steps$llodq$method),
       "creatinine" = handle_creatinine_confounding(dat = dat_ret,
