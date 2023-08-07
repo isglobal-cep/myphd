@@ -22,7 +22,6 @@ steps described above.
 \description{
 Given a dataset, this function performs the following steps:
 \itemize{
-\item Count and percentage of missing values by cohort, for each variable.
 \item Summary of missing values for the variables, grouped by a factor,
 using the \link[naniar]{miss_var_summary} function.
 The information is the same as that provided in the previous step,
