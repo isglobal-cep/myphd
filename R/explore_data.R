@@ -264,7 +264,7 @@ explore_missings <- function(dat, id_var, grouping_var, path_save) {
                   bg = "white")
 
   plt <- naniar::gg_miss_fct(x = dat,
-                             fct = grouping_var)
+                             fct = !! rlang::ensym(grouping_var))
   ggplot2::ggsave(filename = paste0(path_save,
                                     "gg_miss",
                                     ".png"),
