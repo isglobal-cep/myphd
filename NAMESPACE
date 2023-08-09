@@ -3,6 +3,7 @@
 export(add_metadata)
 export(bound_outcome)
 export(convert_time_season)
+export(create_df_marginal_comparisons)
 export(create_fake_data)
 export(create_formula)
 export(create_mapping_labels)
