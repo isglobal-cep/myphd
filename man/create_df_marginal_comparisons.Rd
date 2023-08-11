@@ -4,10 +4,10 @@
 \alias{create_df_marginal_comparisons}
 \title{Title}
 \usage{
-create_df_marginal_comparisons(dat, var, percentiles, group_var)
+create_df_marginal_comparisons(dat, var, percentiles, grouping_var)
 }
 \arguments{
-\item{group_var}{}
+\item{grouping_var}{}
 }
 \description{
 Title

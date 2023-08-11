@@ -34,28 +34,30 @@ find_common_confounders <- function(dag, type_mas, type_effect) {
 #' @param dat A dataframe containing the variables of interest. A tibble.
 #' @param meta A dataframe containing the metadata. A tibble.
 #' @param adjustment_sets A list of adjustment sets. A character vector.
+#' @param grouping_var
 #'
 #' @returns An integer corresponding to the index of the adjustment
 #' set that minimizes the number of missing values.
 #'
 #' @export
-minimize_missings <- function(dat, meta, adjustment_sets) {
-  cohorts <- levels(dat$cohort)
+minimize_missings <- function(dat, meta, adjustment_sets,
+                              grouping_var) {
+  levels_group_var <- levels(dat[[grouping_var]])
 
   # List of dataframes with covariates from adjustment sets
   dfs_covars <- lapply(adjustment_sets, function(x) {
     mapping_covars <- meta[meta$dag %in% x, ]$variable |>
       as.character()
     tmp <- dat |>
-      dplyr::select("cohort",
-                    dplyr::all_of(mapping_covars))
+      dplyr::select(dplyr::all_of(c(grouping_var,
+                                    mapping_covars)))
   })
 
-  # List of dataframes with fractions of missing values by cohort,
+  # List of dataframes with fractions of missing values by grouping variable,
   # for each adjustment set
   ret_miss <- suppressMessages(lapply(dfs_covars, function(x) {
     nans <- x |>
-      dplyr::group_split(cohort, .keep = FALSE) |>
+      dplyr::group_split(.data[[grouping_var]], .keep = FALSE) |>
       lapply(function(y) {
         round(sum(is.na(y)) / (nrow(y) * ncol(y)) * 100, 0)
       }) |>
@@ -66,12 +68,12 @@ minimize_missings <- function(dat, meta, adjustment_sets) {
     purrr::reduce(dplyr::bind_cols))
   colnames(ret_miss) <- paste0("adj_set_", 1:ncol(ret_miss))
   ret_miss <- ret_miss |>
-    dplyr::mutate(cohort = cohorts) |>
-    dplyr::relocate(cohort)
+    dplyr::mutate({{grouping_var}} := levels_group_var) |>
+    dplyr::relocate(.data[[grouping_var]])
 
   # Sum of missing values, for each adjustment set
   ret <- ret_miss |>
-    dplyr::select(-cohort) |>
+    dplyr::select(-{{grouping_var}}) |>
     colSums() |>
     which.min() |>
     as.integer()
@@ -196,7 +198,7 @@ test_npsem <- function(dag, dat, meta, params) {
                                        dplyr::select(params$identifier,
                                                      .data[[expo]]),
                                      dat$outcome),
-                                dplyr::inner_join,
+                                dplyr::full_join,
                                 by = params$identifier)
       test <- dagitty::localTests(x = dag,
                                   data = dat_test,

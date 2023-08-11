@@ -4,7 +4,7 @@
 \alias{minimize_missings}
 \title{Select confounders to minimize missing values}
 \usage{
-minimize_missings(dat, meta, adjustment_sets)
+minimize_missings(dat, meta, adjustment_sets, grouping_var)
 }
 \arguments{
 \item{dat}{A dataframe containing the variables of interest. A tibble.}
@@ -12,6 +12,8 @@ minimize_missings(dat, meta, adjustment_sets)
 \item{meta}{A dataframe containing the metadata. A tibble.}
 
 \item{adjustment_sets}{A list of adjustment sets. A character vector.}
+
+\item{grouping_var}{}
 }
 \value{
 An integer corresponding to the index of the adjustment
