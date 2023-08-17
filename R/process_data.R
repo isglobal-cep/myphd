@@ -176,7 +176,7 @@ handle_creatinine_confounding <- function(dat, covariates,
     covariates <- covariates |>
       modelr::add_predictions(
         model = mod_creatine,
-        val = "cpred",
+        var = "cpred",
         type = "response"
       )
 
