@@ -187,7 +187,7 @@ handle_creatinine_confounding <- function(dat, covariates,
         dplyr::all_of(var_names),
         \(x) { x / (.data[[creatinine]] / cpred) }
       )) |>
-      dplyr::select(-cpred)
+      dplyr::select(-dplyr::all_of(c(creatinine, "cpred")))
 
     return(dat)
   } # End function cas
