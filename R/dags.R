@@ -42,7 +42,7 @@ find_common_confounders <- function(dag, type_mas, type_effect) {
 #' @export
 minimize_missings <- function(dat, meta, adjustment_sets,
                               grouping_var) {
-  levels_group_var <- levels(dat[[grouping_var]])
+  levels_group_var <- sort(levels(dat[[grouping_var]]))
 
   # List of dataframes with covariates from adjustment sets
   dfs_covars <- lapply(adjustment_sets, function(x) {

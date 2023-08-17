@@ -31,10 +31,11 @@ create_formula <- function(dat,
     colnames()
   covariates_factor <- setdiff(covariates_factor,
                                c(outcome, exposure))
-  assertthat::are_equal(sort(covariates),
-                        sort(c(covariates_continuous,
-                               covariates_factor)))
-  assertthat::assert_that(!exposure %in% covariates)
+  assertthat::assert_that(identical(sort(covariates),
+                                    sort(c(covariates_continuous, covariates_factor))),
+                          msg = "The covariates do not match the originals.")
+  assertthat::assert_that(!exposure %in% covariates,
+                          msg = "The exposure was found among the covariates.")
 
   # Create formula (weights estimation)
   if (is.null(outcome)) {

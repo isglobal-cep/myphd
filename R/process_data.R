@@ -161,8 +161,13 @@ handle_creatinine_confounding <- function(dat, covariates,
                                                                    covariates_names |>
                                                                      unlist() |>
                                                                      unname()))),
-                                   by = id_var) |>
-        dplyr::select(-dplyr::any_of(id_var))
+                                   by = id_var)
+      assertthat::assert_that(
+        identical(dat_proc[[id_var]], dat[[id_var]]),
+        msg = "The order of the IDs does not match between original and new data."
+      )
+      dat_proc <- dplyr::select(dat_proc,
+                                -dplyr::any_of(id_var))
 
       # Step 1: estimate weights for creatinine
       wts <- rep(1, times = nrow(dat_proc))
@@ -358,9 +363,9 @@ bound_outcome <- function(dat, var) {
   dat[[var]] <- num / den
 
   assertthat::assert_that(min(dat[[var]], na.rm = TRUE) >= 0,
-                          msg = "Outcome is not bounded for TMLE (min).")
+                          msg = "Outcome is not bounded (min).")
   assertthat::assert_that(max(dat[[var]], na.rm = TRUE) <= 1,
-                          msg = "Outcome is not bounded for TMLE (max).")
+                          msg = "Outcome is not bounded (max).")
 
   return(dat)
 }
