@@ -151,66 +151,51 @@ handle_creatinine_confounding <- function(dat, covariates,
     warning("Creatinine values are currently predicted without weights.",
             call. = TRUE)
 
-    ret <- lapply(var_names, function(var) {
-      dat_proc <- dplyr::full_join(dat |>
-                                     dplyr::select(dplyr::all_of(c(id_var,
-                                                                   var))),
-                                   covariates |>
-                                     dplyr::select(dplyr::all_of(c(id_var,
-                                                                   creatinine,
-                                                                   covariates_names |>
-                                                                     unlist() |>
-                                                                     unname()))),
-                                   by = id_var)
-      assertthat::assert_that(
-        identical(dat_proc[[id_var]], dat[[id_var]]),
-        msg = "The order of the IDs does not match between original and new data."
+    # Step 1: estimate weights for creatinine
+    wts <- rep(1, times = nrow(covariates))
+
+    # Step 2: predict creatinine with weights
+    ## Formula for model fitting
+    form <- paste0(
+      creatinine, " ~ ",
+      paste0(setdiff(covariates_names$numerical, creatinine),
+             collapse = " + "), " + ",
+      paste0("factor(",
+             setdiff(covariates_names$categorical, creatinine),
+             ")",
+             collapse = " + ")
+    )
+    ## Fit model for creatinine
+    mod_creatine <- glm(
+      formula = as.formula(form),
+      data = covariates,
+      weights = wts,
+      family = method_fit_args$family
+    )
+    ## Predicted creatinine values
+    covariates <- covariates |>
+      modelr::add_predictions(
+        model = mod_creatine,
+        val = "cpred",
+        type = "response"
       )
-      dat_proc <- dplyr::select(dat_proc,
-                                -dplyr::any_of(id_var))
 
-      # Step 1: estimate weights for creatinine
-      wts <- rep(1, times = nrow(dat_proc))
+    # Step 3: compute `Cratio = exposure / (C_obs / Cpred)`
+    dat <- dplyr::full_join(dat, covariates[, c(id_var, "cpred")],
+                            by = id_var) |>
+      dplyr::mutate(dplyr::across(
+        dplyr::all_of(var_names),
+        \(x) { x / (.data[[creatinine]] / cpred) }
+      )) |>
+      dplyr::select(-cpred)
 
-      # Step 2: predict creatinine with weights
-      form <- paste0(
-        creatinine, " ~ ",
-        paste0(setdiff(covariates_names$numerical, creatinine),
-               collapse = " + "), " + ",
-        paste0("factor(",
-               setdiff(covariates_names$categorical, creatinine),
-               ")",
-               collapse = " + ")
-      )
-      mod_creatine <- glm(
-        formula = as.formula(form),
-        data = dat_proc,
-        weights = wts,
-        family = method_fit_args$family
-      )
-      cpred <- predict(mod_creatine,
-                       type = "response")
-
-      # Step 3: compute `Cratio = exposure / (C_obs / Cpred)`
-      cratio <- dat_proc[[var]] / (dat_proc[[creatinine]] / cpred)
-
-      return(cratio)
-    }) # End loop over variables to process
-
-    ret <- suppressMessages(ret |>
-                              dplyr::bind_cols() |>
-                              tibble::as_tibble())
-
-    return(ret)
+    return(dat)
   } # End function cas
 
-  dat_ret <- switch (method,
-    "cas" = cas(),
-    stop("Invalid `method`.")
+  dat_ret <- switch(method,
+                    "cas" = cas(),
+                    stop("Invalid `method`.")
   )
-  colnames(dat_ret) <- var_names
-  dat_ret[[id_var]] <- dat[[id_var]]
-  dat_ret <- dplyr::relocate(dat_ret, id_var)
 
   return(dat_ret)
 }
