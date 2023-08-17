@@ -181,7 +181,7 @@ handle_creatinine_confounding <- function(dat, covariates,
       )
 
     # Step 3: compute `Cratio = exposure / (C_obs / Cpred)`
-    dat <- dplyr::full_join(dat, covariates[, c(id_var, "cpred")],
+    dat <- dplyr::full_join(dat, covariates[, c(id_var, creatinine, "cpred")],
                             by = id_var) |>
       dplyr::mutate(dplyr::across(
         dplyr::all_of(var_names),
