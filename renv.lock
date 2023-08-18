@@ -511,6 +511,13 @@
       ],
       "Hash": "3f038e5ac7f41d4ac41ce658c85e3042"
     },
+    "clisymbols": {
+      "Package": "clisymbols",
+      "Version": "1.2.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "96c01552bfd5661b9bbdefbc762f4bcd"
+    },
     "cluster": {
       "Package": "cluster",
       "Version": "2.1.4",
@@ -3109,6 +3116,19 @@
         "utils"
       ],
       "Hash": "0fc97a52b4b32a0b4a3de4c5241348e2"
+    },
+    "tidylog": {
+      "Package": "tidylog",
+      "Version": "1.0.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "clisymbols",
+        "dplyr",
+        "glue",
+        "tidyr"
+      ],
+      "Hash": "a55d41e241dbe858d1456d952ce3301f"
     },
     "tidyr": {
       "Package": "tidyr",
