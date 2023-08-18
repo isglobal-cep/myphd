@@ -13,9 +13,9 @@ load_ctd <- function(path, filter_evidence) {
 
   if (filter_evidence == TRUE) {
     ctd <- ctd |>
-      dplyr::filter(DirectEvidence %in% c("marker/mechanism",
-                                          "therapeutic",
-                                          "marker/mechanism|therapeutic"))
+      tidylog::filter(DirectEvidence %in% c("marker/mechanism",
+                                            "therapeutic",
+                                            "marker/mechanism|therapeutic"))
   }
 
   ctd <- ctd |>
@@ -42,8 +42,8 @@ load_ctd <- function(path, filter_evidence) {
 #' @export
 plot_ctd <- function(dat, group = NULL) {
   plt <- dat |>
-    dplyr::filter(DiseaseCategories != "") |>
-    dplyr::group_by(DiseaseCategories) |>
+    tidylog::filter(DiseaseCategories != "") |>
+    tidylog::group_by(DiseaseCategories) |>
     ggplot2::ggplot(mapping = ggplot2::aes(
       x = DiseaseCategories,
       fill = factor(ChemicalName)

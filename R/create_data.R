@@ -16,12 +16,12 @@ create_df_marginal_comparisons <- function(dat, var, percentiles, grouping_var) 
 
   # Compute `low` and `high` values of the variable of interest, by group
   ret <- dat |>
-    dplyr::group_by(.data[[grouping_var]]) |>
-    dplyr::mutate(
+    tidylog::group_by(.data[[grouping_var]]) |>
+    tidylog::mutate(
       low = quantile(.data[[var]], percentiles[1]),
       high = quantile(.data[[var]], percentiles[2])
     ) |>
-    dplyr::ungroup()
+    tidylog::ungroup()
 
   return(ret)
 }
@@ -79,7 +79,7 @@ add_metadata <- function(dat, metadat, categorical_types) {
 
   dat_modified <- dat
   metadat <- metadat |>
-    dplyr::mutate(
+    tidylog::mutate(
       type = as.character(type),
       type = ifelse(
         type %in% categorical_types,
@@ -91,11 +91,11 @@ add_metadata <- function(dat, metadat, categorical_types) {
   # Add metadata to each column of dataset
   for (x in names(dat_modified)) {
     # Extract and tidy metadata for each variable
-    if (nrow(metadat |> dplyr::filter(variable == x)) == 0) {
+    if (nrow(metadat |> tidylog::filter(variable == x)) == 0) {
       next
     }
     info <- metadat |>
-      dplyr::filter(variable == x) |>
+      tidylog::filter(variable == x) |>
       as.list()
     info$description <- .tidy_string(info$description)
     info$remark <- .tidy_string(info$remark)

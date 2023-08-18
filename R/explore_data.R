@@ -32,19 +32,19 @@ explore_shift <- function(dat,
 
   # Prepare data
   shifted <- shifted |>
-    tidyr::pivot_longer(cols = dplyr::everything()) |>
-    dplyr::mutate(shifted = TRUE)
+    tidylog::pivot_longer(cols = dplyr::everything()) |>
+    tidylog::mutate(shifted = TRUE)
   dat_long <- dat |>
-    tidyr::pivot_longer(cols = dplyr::everything()) |>
-    dplyr::mutate(shifted = FALSE)
+    tidylog::pivot_longer(cols = dplyr::everything()) |>
+    tidylog::mutate(shifted = FALSE)
   dat_gg <- dplyr::bind_rows(dat_long, shifted)
 
   # Compare distributions
   ret <- dat_gg |>
-    dplyr::group_by(name) |>
+    tidylog::group_by(name) |>
     ggplot2::ggplot(ggplot2::aes(x = name,
-                                y = value,
-                                fill = shifted)) +
+                                 y = value,
+                                 fill = shifted)) +
     ggplot2::geom_violin() +
     ggplot2::facet_grid(shifted ~ .,
                         scales = "free_y")
@@ -84,7 +84,7 @@ explore_shift <- function(dat,
 #' @export
 describe_data <- function(dat, id_var, grouping_var) {
   dat <- dat |>
-    dplyr::select(-dplyr::all_of(id_var))
+    tidylog::select(-dplyr::all_of(id_var))
 
   ##############################################################################
   # Step 1: simple diagnose of numerical and categorical variables w/ `dlookr`
@@ -99,8 +99,8 @@ describe_data <- function(dat, id_var, grouping_var) {
   step2_num <- step2_cat <- NULL
   if (!is.null(grouping_var)) {
     dat <- dat |>
-      dplyr::group_by(dplyr::across(grouping_var),
-                      .drop = FALSE)
+      tidylog::group_by(dplyr::across(grouping_var),
+                        .drop = FALSE)
     step2_num <- dlookr::diagnose_numeric(dat) |>
       dplyr::arrange(variables, grouping_var)
     suppressWarnings(
@@ -109,7 +109,7 @@ describe_data <- function(dat, id_var, grouping_var) {
     if (!is.null(step2_cat)) {
       step2_cat <- dplyr::arrange(step2_cat, variables, grouping_var)
     }
-    dat <- dplyr::ungroup(dat)
+    dat <- tidylog::ungroup(dat)
   }
   ##############################################################################
 
@@ -225,19 +225,20 @@ explore_missings <- function(dat, id_var, grouping_var, path_save) {
   ##############################################################################
   # Step 2: summary missings of variables by grouping variable (`naniar`)
   step2 <- dat |>
-    dplyr::group_by(.data[[grouping_var]]) |>
+    tidylog::group_by(.data[[grouping_var]]) |>
     naniar::miss_var_summary() |>
-    dplyr::ungroup()
+    tidylog::ungroup()
 
   step2_wide <- dat |>
-    dplyr::group_by(.data[[grouping_var]]) |>
+    tidylog::group_by(.data[[grouping_var]]) |>
     naniar::miss_var_summary() |>
-    dplyr::select(-c(n_miss)) |>
-    tidyr::pivot_wider(names_from = c(grouping_var),
-                       values_from = c(pct_miss)) |>
+    tidylog::select(-c(n_miss)) |>
+    tidylog::pivot_wider(names_from = c(grouping_var),
+                         values_from = c(pct_miss)) |>
     dplyr::arrange(variable) |>
-    dplyr::mutate(dplyr::across(dplyr::where(is.numeric),
-                                \(x) round(x, digits = 0)))
+    tidylog::mutate(dplyr::across(dplyr::where(is.numeric),
+                                  \(x) round(x, digits = 0))) |>
+    tidylog::ungroup()
   ##############################################################################
 
   ##############################################################################
@@ -245,7 +246,7 @@ explore_missings <- function(dat, id_var, grouping_var, path_save) {
   step3 <- dat |>
     naniar::miss_case_summary(order = FALSE)
   step3 <- step3 |>
-    dplyr::mutate(case = dat[[id_var]]) |>
+    tidylog::mutate(case = dat[[id_var]]) |>
     dplyr::arrange(desc(pct_miss), id_var)
   ##############################################################################
 
@@ -281,9 +282,9 @@ explore_missings <- function(dat, id_var, grouping_var, path_save) {
     function(x) {
       tryCatch(
         dat |>
-          dplyr::filter(.data[[grouping_var]] == x) |>
-          dplyr::select(-dplyr::any_of(c(id_var,
-                                         grouping_var))) |>
+          tidylog::filter(.data[[grouping_var]] == x) |>
+          tidylog::select(-dplyr::any_of(c(id_var,
+                                           grouping_var))) |>
           naniar::mcar_test(),
         error = function(e) NULL
       )

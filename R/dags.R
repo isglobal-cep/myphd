@@ -49,15 +49,15 @@ minimize_missings <- function(dat, meta, adjustment_sets,
     mapping_covars <- meta[meta$dag %in% x, ]$variable |>
       as.character()
     tmp <- dat |>
-      dplyr::select(dplyr::all_of(c(grouping_var,
-                                    mapping_covars)))
+      tidylog::select(dplyr::all_of(c(grouping_var,
+                                      mapping_covars)))
   })
 
   # List of dataframes with fractions of missing values by grouping variable,
   # for each adjustment set
   ret_miss <- suppressMessages(lapply(dfs_covars, function(x) {
     nans <- x |>
-      dplyr::group_split(.data[[grouping_var]], .keep = FALSE) |>
+      tidylog::group_split(.data[[grouping_var]], .keep = FALSE) |>
       lapply(function(y) {
         round(sum(is.na(y)) / (nrow(y) * ncol(y)) * 100, 0)
       }) |>
@@ -68,12 +68,12 @@ minimize_missings <- function(dat, meta, adjustment_sets,
     purrr::reduce(dplyr::bind_cols))
   colnames(ret_miss) <- paste0("adj_set_", 1:ncol(ret_miss))
   ret_miss <- ret_miss |>
-    dplyr::mutate({{grouping_var}} := levels_group_var) |>
-    dplyr::relocate(.data[[grouping_var]])
+    tidylog::mutate({{grouping_var}} := levels_group_var) |>
+    tidylog::relocate(.data[[grouping_var]])
 
   # Sum of missing values, for each adjustment set
   ret <- ret_miss |>
-    dplyr::select(-{{grouping_var}}) |>
+    tidylog::select(-{{grouping_var}}) |>
     colSums() |>
     which.min() |>
     as.integer()
@@ -125,12 +125,13 @@ from_dagitty_to_ggdag <- function(dag) {
 
   to_ggdag <- ggdag::tidy_dagitty(dag) |>
     (\(x) x$data) () |>
-    dplyr::select(name, to) |>
-    dplyr::rename(from = name) |>
-    dplyr::group_by(to) |>
-    dplyr::summarise(from_formula = paste(from, collapse = " + ")) |>
-    tidyr::drop_na(to) |>
-    tidyr::unite(dag_formula, to, from_formula, sep = " ~ ")
+    tidylog::select(name, to) |>
+    tidylog::rename(from = name) |>
+    tidylog::group_by(to) |>
+    tidylog::summarise(from_formula = paste(from, collapse = " + ")) |>
+    tidylog::drop_na(to) |>
+    tidyr::unite(dag_formula, to, from_formula, sep = " ~ ") |>
+    tidylog::ungroup()
 
   return(to_ggdag)
 }
@@ -168,6 +169,9 @@ from_dagitty_to_ggdag <- function(dag) {
 #'
 #' @export
 test_npsem <- function(dag, dat, meta, params) {
+  warning("This function has not been tested yet.",
+          call. = TRUE)
+
   # Step 1: extract adjustment set(s)
   dag_as <- dagitty::adjustmentSets(x = dag,
                                     type = params$type_mas,
@@ -176,15 +180,15 @@ test_npsem <- function(dag, dat, meta, params) {
   res <- lapply(dag_as, function(as) {
     ret <- list()
     ret$mapping_covars <- meta[meta$dag %in% as, ] |>
-      dplyr::distinct(dag, .keep_all = TRUE) |>
-      dplyr::select(variable) |>
+      tidylog::distinct(dag, .keep_all = TRUE) |>
+      tidylog::select(variable) |>
       c() |> unname() |> unlist() |> as.character()
     ret$adjustment_set <- as
 
     # Step 2: map nodes in DAG to variable names in dataset and extract columns
     covariates <- dat$covariates |>
-      dplyr::select(params$identifier,
-                    dplyr::all_of(ret$mapping_covars))
+      tidylog::select(params$identifier,
+                      dplyr::all_of(ret$mapping_covars))
     colnames(covariates) <- c(params$identifier,
                               meta[meta$variable %in% ret$mapping_covars, ]$dag |>
                                 as.character())
@@ -195,10 +199,10 @@ test_npsem <- function(dag, dat, meta, params) {
     ret$tests <- lapply(exposure_list, function(expo) {
       dat_test <- purrr::reduce(list(covariates,
                                      dat$exposures |>
-                                       dplyr::select(params$identifier,
-                                                     .data[[expo]]),
+                                       tidylog::select(params$identifier,
+                                                       .data[[expo]]),
                                      dat$outcome),
-                                dplyr::full_join,
+                                tidylog::full_join,
                                 by = params$identifier)
       test <- dagitty::localTests(x = dag,
                                   data = dat_test,

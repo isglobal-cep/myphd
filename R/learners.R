@@ -22,12 +22,12 @@ create_formula <- function(dat,
                            threshold_smooth, threshold_k) {
   # Extract covariates
   covariates_continuous <- dat |>
-    dplyr::select(dplyr::where(is.numeric)) |>
+    tidylog::select(dplyr::where(is.numeric)) |>
     colnames()
   covariates_continuous <- setdiff(covariates_continuous,
                                    c(outcome, exposure))
   covariates_factor <- dat |>
-    dplyr::select(!dplyr::where(is.numeric)) |>
+    tidylog::select(!dplyr::where(is.numeric)) |>
     colnames()
   covariates_factor <- setdiff(covariates_factor,
                                c(outcome, exposure))

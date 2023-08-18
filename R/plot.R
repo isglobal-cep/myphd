@@ -8,7 +8,7 @@
 plot_effect_estimates <- function(dat, size_points) {
   # Add type based on CI of effect estimate and round digits
   dat <- dat |>
-    dplyr::mutate(
+    tidylog::mutate(
       type = ifelse(
         (estimate - 1.96 * se) * (estimate + 1.96 * se) > 0,
         "significant", "non-significant"

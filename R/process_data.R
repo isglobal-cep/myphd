@@ -15,7 +15,7 @@ extract_cohort <- function(dat, id_var) {
   warning("Creating cohort variable from ID variable: it ",
           "assumes that the first 3 letters represent the cohort.")
   dat <- dat |>
-    dplyr::mutate(cohort = substr(.data[[id_var]], 1, 3))
+    tidylog::mutate(cohort = substr(.data[[id_var]], 1, 3))
   dat$cohort <- as.factor(dat$cohort)
 
   return(dat)
@@ -31,15 +31,15 @@ extract_cohort <- function(dat, id_var) {
 #' @export
 convert_time_season <- function(dat, cols) {
   ret <- dat |>
-    dplyr::mutate(dplyr::across(dplyr::any_of(cols),
-                                ~ lubridate::month(..1))) |>
-    dplyr::mutate(dplyr::across(dplyr::any_of(cols),
-                                ~ dplyr::case_when(
-                                  ..1 %in% c(12, 1, 2) ~ "winter",
-                                  ..1 %in% c(3, 4, 5) ~ "spring",
-                                  ..1 %in% c(6, 7, 8) ~ "summer",
-                                  ..1 %in% c(9, 10, 11) ~ "autumn"
-                                )))
+    tidylog::mutate(dplyr::across(dplyr::any_of(cols),
+                                  ~ lubridate::month(..1))) |>
+    tidylog::mutate(dplyr::across(dplyr::any_of(cols),
+                                  ~ dplyr::case_when(
+                                    ..1 %in% c(12, 1, 2) ~ "winter",
+                                    ..1 %in% c(3, 4, 5) ~ "spring",
+                                    ..1 %in% c(6, 7, 8) ~ "summer",
+                                    ..1 %in% c(9, 10, 11) ~ "autumn"
+                                  )))
 
   return(ret)
 }
@@ -97,29 +97,29 @@ preproc_data <- function(dat, covariates, outcome,
 
   for (step in names(dic_steps)) {
     dat_ret <- switch(step,
-      "llodq" = handle_llodq(dat = dat_ret,
-                             method = dic_steps$llodq$method),
-      "creatinine" = handle_creatinine_confounding(dat = dat_ret,
-                                                   covariates = covariates,
-                                                   id_var = id_var,
-                                                   var_names = creatinine_var_names,
-                                                   covariates_names = creatinine_covariates_names,
-                                                   creatinine = creatinine_name,
-                                                   method = dic_steps$creatinine$method,
-                                                   method_fit_args = dic_steps$creatinine$method_fit_args),
-      "missings" = handle_missing_values(dat = dat_ret,
-                                         covariates = covariates,
-                                         id_var = id_var,
-                                         by_var = by_var,
-                                         threshold_within = dic_steps$missings$threshold_within,
-                                         threshold_overall = dic_steps$missings$threshold_overall)$dat_imputed,
-      "standardization" = handle_standardization(dat = dat_ret,
-                                                 id_var = id_var, by_var = by_var,
-                                                 center_fun = dic_steps$standardization$center_fun,
-                                                 scale_fun = dic_steps$standardization$scale_fun),
-      "bound" = bound_outcome(dat = dat_ret,
-                              var = outcome),
-      stop("Invalid `step` option.")
+                      "llodq" = handle_llodq(dat = dat_ret,
+                                             method = dic_steps$llodq$method),
+                      "creatinine" = handle_creatinine_confounding(dat = dat_ret,
+                                                                   covariates = covariates,
+                                                                   id_var = id_var,
+                                                                   var_names = creatinine_var_names,
+                                                                   covariates_names = creatinine_covariates_names,
+                                                                   creatinine = creatinine_name,
+                                                                   method = dic_steps$creatinine$method,
+                                                                   method_fit_args = dic_steps$creatinine$method_fit_args),
+                      "missings" = handle_missing_values(dat = dat_ret,
+                                                         covariates = covariates,
+                                                         id_var = id_var,
+                                                         by_var = by_var,
+                                                         threshold_within = dic_steps$missings$threshold_within,
+                                                         threshold_overall = dic_steps$missings$threshold_overall)$dat_imputed,
+                      "standardization" = handle_standardization(dat = dat_ret,
+                                                                 id_var = id_var,
+                                                                 center_fun = dic_steps$standardization$center_fun,
+                                                                 scale_fun = dic_steps$standardization$scale_fun),
+                      "bound" = bound_outcome(dat = dat_ret,
+                                              var = outcome),
+                      stop("Invalid `step` option.")
     )
   } # End loop over steps
 
@@ -144,8 +144,6 @@ handle_creatinine_confounding <- function(dat, covariates,
                                           id_var,
                                           var_names, covariates_names, creatinine,
                                           method, method_fit_args) {
-  message("Removing effect of urine dilution on biomarkers.")
-
   # Covariate-adjusted standardization
   cas <- function() {
     warning("Creatinine values are currently predicted without weights.",
@@ -181,13 +179,13 @@ handle_creatinine_confounding <- function(dat, covariates,
       )
 
     # Step 3: compute `Cratio = exposure / (C_obs / Cpred)`
-    dat <- dplyr::full_join(dat, covariates[, c(id_var, creatinine, "cpred")],
-                            by = id_var) |>
-      dplyr::mutate(dplyr::across(
+    dat <- tidylog::full_join(dat, covariates[, c(id_var, creatinine, "cpred")],
+                              by = id_var) |>
+      tidylog::mutate(dplyr::across(
         dplyr::all_of(var_names),
         \(x) { x / (.data[[creatinine]] / cpred) }
       )) |>
-      dplyr::select(-dplyr::all_of(c(creatinine, "cpred")))
+      tidylog::select(-dplyr::all_of(c(creatinine, "cpred")))
 
     return(dat)
   } # End function cas
@@ -246,22 +244,22 @@ handle_missing_values <- function(dat, covariates,
   # Step 1: group by factor and remove variables with a high
   #         fraction of missing values within each group
   step1 <- dat |>
-    dplyr::select(-dplyr::all_of(id_var)) |>
-    dplyr::group_by(.data[[by_var]]) |>
+    tidylog::select(-dplyr::all_of(id_var)) |>
+    tidylog::group_by(.data[[by_var]]) |>
     naniar::miss_var_summary() |>
-    dplyr::filter(pct_miss >= threshold_within) |>
-    dplyr::ungroup()
+    tidylog::filter(pct_miss >= threshold_within) |>
+    tidylog::ungroup()
   dat <- dat |>
-    dplyr::select(-dplyr::all_of(step1$variable))
+    tidylog::select(-dplyr::all_of(step1$variable))
 
   # Step 2: remove variables with a high fraction of missing
   #         values overall
   step2 <- dat |>
-    dplyr::select(-dplyr::all_of(id_var)) |>
+    tidylog::select(-dplyr::all_of(id_var)) |>
     naniar::miss_var_summary() |>
-    dplyr::filter(pct_miss >= threshold_overall)
+    tidylog::filter(pct_miss >= threshold_overall)
   dat <- dat |>
-    dplyr::select(-dplyr::all_of(step2$variable))
+    tidylog::select(-dplyr::all_of(step2$variable))
 
   # Step 3: impute the remaining variables
   vis_miss_before <- naniar::vis_miss(dat)
@@ -269,12 +267,12 @@ handle_missing_values <- function(dat, covariates,
   ## Check whether to perform imputation by including additional variables
   if (!is.null(covariates)) {
     cols_to_remove <- colnames(covariates)
-    dat <- dplyr::full_join(
+    dat <- tidylog::full_join(
       dat, covariates,
       by = id_var,
       suffix = c("", ".y")
     ) |>
-      dplyr::select(-dplyr::ends_with(".y"))
+      tidylog::select(-dplyr::ends_with(".y"))
   }
 
   dat_imp <- missRanger::missRanger(data = dat,
@@ -284,7 +282,7 @@ handle_missing_values <- function(dat, covariates,
 
   if (!is.null(covariates)) {
     dat_imp <- dat_imp |>
-      dplyr::select(-dplyr::all_of(
+      tidylog::select(-dplyr::all_of(
         setdiff(cols_to_remove, id_var)
       ))
   }
@@ -304,7 +302,6 @@ handle_missing_values <- function(dat, covariates,
 #'
 #' @param dat
 #' @param id_var
-#' @param by_var
 #' @param center_fun
 #' @param scale_fun
 #'
@@ -312,17 +309,15 @@ handle_missing_values <- function(dat, covariates,
 #'
 #' @export
 handle_standardization <- function(dat,
-                                   id_var, by_var,
+                                   id_var,
                                    center_fun, scale_fun) {
-  message("Standardizing variables.")
-
   dat_ret <- dat |>
-    dplyr::select(-dplyr::any_of(c(id_var, by_var))) |>
-    robustHD::robStandardize(centerFun = center_fun,
-                             scaleFun = scale_fun) |>
-    tibble::as_tibble()
-  dat_ret[[id_var]] <- dat[[id_var]]
-  dat_ret <- dplyr::relocate(dat_ret, id_var)
+    tidylog::mutate(
+      dplyr::across(
+        dplyr::all_of(setdiff(colnames(dat), id_var)),
+        \(x) (x - center_fun(x)) / scale_fun(x)
+      )
+    )
 
   return(dat_ret)
 }

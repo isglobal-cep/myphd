@@ -253,11 +253,11 @@ edcs_information <- function() {
 
   edcs_info_df <- stack(edcs_info)
   edcs_info_df$col_names <- .names
-  edcs_info_df <- tidyr::pivot_wider(edcs_info_df,
-                                     names_from = col_names,
-                                     values_from = values)
-  edcs_info_df <- dplyr::rename(edcs_info_df,
-                                chem_id = ind)
+  edcs_info_df <- tidylog::pivot_wider(edcs_info_df,
+                                       names_from = col_names,
+                                       values_from = values)
+  edcs_info_df <- tidylog::rename(edcs_info_df,
+                                  chem_id = ind)
 
   return(data.table::as.data.table(edcs_info_df))
 }
