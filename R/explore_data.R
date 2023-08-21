@@ -67,8 +67,6 @@ explore_shift <- function(dat,
 #' the \link[gtsummary]{tbl_summary} function.
 #' * Detailed summary of continuous and categorical variables with
 #' the \link[gtsummary]{tbl_summary} function.
-#' * Visualization of variables' summaries with the
-#' \link[Hmisc]{summaryM} function.
 #' * Visualization of the correlation structure of the dataset using
 #' the \link[corrr]{correlate} and \link[corrr]{rplot} functions,
 #' with both Pearson's and Spearman's correlation.
@@ -88,10 +86,13 @@ describe_data <- function(dat, id_var, grouping_var) {
 
   ##############################################################################
   # Step 1: simple diagnose of numerical and categorical variables w/ `dlookr`
+  step1_cat <- NULL
   step1_num <- dlookr::diagnose_numeric(dat) |>
     dplyr::arrange(variables)
-  step1_cat <- dlookr::diagnose_category(dat) |>
-    dplyr::arrange(variables)
+  suppressWarnings(
+    step1_cat <- dlookr::diagnose_category(dat) |>
+      dplyr::arrange(variables)
+  )
   ##############################################################################
 
   ##############################################################################
@@ -122,8 +123,11 @@ describe_data <- function(dat, id_var, grouping_var) {
                                "{median} ({p25}, {p75})"
                              ),
                              gtsummary::all_categorical() ~ "{n} ({p}%)"
-                           )) |>
-    gtsummary::add_overall()
+                           ))
+  if (!is.null(grouping_var)) {
+    step3 <- step3 |>
+      gtsummary::add_overall()
+  }
   ##############################################################################
 
   ##############################################################################
@@ -141,28 +145,22 @@ describe_data <- function(dat, id_var, grouping_var) {
                                "{min}, {max}"
                              ),
                              gtsummary::all_categorical() ~ "{n} / {N} ({p}%)"
-                           )) |>
-    gtsummary::add_overall()
+                           ))
+  if (!is.null(grouping_var)) {
+    step4 <- step4 |>
+      gtsummary::add_overall()
+  }
   ##############################################################################
 
   ##############################################################################
-  # Step 5: visualize summaries w/ `summaryM` from `Hmisc`
-  vars <- setdiff(names(dat), grouping_var)
-  form <- as.formula(paste(paste(vars, collapse = '+'),
-                           '~',
-                           grouping_var))
-  step5 <- Hmisc::summaryM(formula = form, data = dat,
-                           test = TRUE,
-                           na.include = TRUE, overall = TRUE)
-  ##############################################################################
-
-  ##############################################################################
-  # Step 6: correlation structure variables
+  # Step 5: correlation structure variables
   corrs_pearson <- corrr::correlate(x = dat,
-                                    method = "pearson") |>
+                                    method = "pearson",
+                                    use = "everything") |>
     corrr::rearrange(absolute = TRUE)
   corrs_spearman <- corrr::correlate(x = dat,
-                                     method = "spearman") |>
+                                     method = "spearman",
+                                     use = "everything") |>
     corrr::rearrange(absolute = TRUE)
   viz_corr_pearson <- corrr::rplot(corrs_pearson,
                                    print_cor = TRUE) +
@@ -183,8 +181,7 @@ describe_data <- function(dat, id_var, grouping_var) {
                  cat = step2_cat),
     step3 = step3,
     step4 = step4,
-    step5 = step5,
-    step6 = list(corr_pearson = corrs_pearson,
+    step5 = list(corr_pearson = corrs_pearson,
                  viz_corr_pearson = viz_corr_pearson,
                  corr_spearman = corrs_spearman,
                  viz_corr_spearman = viz_corr_spearman)

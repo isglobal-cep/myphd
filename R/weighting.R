@@ -52,7 +52,7 @@ estimate_weights <- function(dat,
                             SL.library = method_args$sl_lib,
                             cvControl = list(
                               V = 3,
-                              shuffle = TRUE
+                              shuffle = FALSE
                             ),
                             discrete = FALSE,
                             use_kernel = method_args$use_kernel,
