@@ -8,7 +8,6 @@ handle_creatinine_confounding(
   dat,
   covariates,
   id_var,
-  var_names,
   covariates_names,
   creatinine,
   method,

@@ -66,18 +66,21 @@ convert_time_season <- function(dat, cols) {
 #' @param dat A dataframe containing the variables of interest. A tibble.
 #' @param covariates A dataframe containing additional variables. A tibble.
 #' @param outcome A string indicating the outcome variable. A string.
-#' @param creatinine_var_names
-#' @param creatinine_covariates_names
-#' @param creatinine_name
 #' @param dic_steps A nested named list of steps to perform. A list. It can
 #' include the following elements:
 #' * `llod`, to handle values <LOD/LOQ. A named list with elements:
 #'  * `method`, the method to be used. A string.
+#'  * `creatinine_threshold`, .
 #' * `missings`, to handle missing values. A named list with elements:
 #'  * `threshold_within`, the missing value threshold within each group. An integer.
 #'  * `threshold_overall`, the overall missing value threshold. An integer.
+#'  * `selected_covariates`, .
+#'  * `method_imputation`, .
 #' * `creatinine`, to handle confounding by dilution. A named list with elements:
-#'  * `method_args`, options for fitting the models. A list.
+#'  * `method`, .
+#'  * `method_fit_args`, options for fitting the models. A list.
+#'  * `creatinine_covariates_names`, .
+#'  * `creatinine_name`, .
 #' * `standardization`, to standardize variables. A named list with elements:
 #'  * `center_fun`, the centering function (e.g., `median`).
 #'  * `scale_fun`, the scaling function (e.g., `IQR`).
@@ -90,35 +93,45 @@ convert_time_season <- function(dat, cols) {
 #'
 #' @export
 preproc_data <- function(dat, covariates, outcome,
-                         creatinine_var_names, creatinine_covariates_names, creatinine_name,
                          dic_steps,
                          id_var, by_var) {
   dat_ret <- dat
 
   for (step in names(dic_steps)) {
     dat_ret <- switch(step,
-                      "llodq" = handle_llodq(dat = dat_ret,
-                                             method = dic_steps$llodq$method),
-                      "creatinine" = handle_creatinine_confounding(dat = dat_ret,
-                                                                   covariates = covariates,
-                                                                   id_var = id_var,
-                                                                   var_names = creatinine_var_names,
-                                                                   covariates_names = creatinine_covariates_names,
-                                                                   creatinine = creatinine_name,
-                                                                   method = dic_steps$creatinine$method,
-                                                                   method_fit_args = dic_steps$creatinine$method_fit_args),
-                      "missings" = handle_missing_values(dat = dat_ret,
-                                                         covariates = covariates,
-                                                         id_var = id_var,
-                                                         by_var = by_var,
-                                                         threshold_within = dic_steps$missings$threshold_within,
-                                                         threshold_overall = dic_steps$missings$threshold_overall)$dat_imputed,
-                      "standardization" = handle_standardization(dat = dat_ret,
-                                                                 id_var = id_var,
-                                                                 center_fun = dic_steps$standardization$center_fun,
-                                                                 scale_fun = dic_steps$standardization$scale_fun),
-                      "bound" = bound_outcome(dat = dat_ret,
-                                              var = outcome),
+                      "llodq" = handle_llodq(
+                        dat = dat_ret,
+                        method = dic_steps$llodq$method
+                      ),
+                      "creatinine" = handle_creatinine_confounding(
+                        dat = dat_ret,
+                        covariates = covariates,
+                        id_var = id_var,
+                        covariates_names = dic_steps$creatinine$creatinine_covariates_names,
+                        creatinine = dic_steps$creatinine$creatinine_name,
+                        method = dic_steps$creatinine$method,
+                        method_fit_args = dic_steps$creatinine$method_fit_args
+                      ),
+                      "missings" = handle_missing_values(
+                        dat = dat_ret,
+                        covariates = covariates,
+                        selected_covariates = dic_steps$missings$selected_covariates,
+                        id_var = id_var,
+                        by_var = by_var,
+                        threshold_within = dic_steps$missings$threshold_within,
+                        threshold_overall = dic_steps$missings$threshold_overall,
+                        method_imputation = dic_steps$missings$method_imputation
+                      )$dat_imputed,
+                      "standardization" = handle_standardization(
+                        dat = dat_ret,
+                        id_var = id_var,
+                        center_fun = dic_steps$standardization$center_fun,
+                        scale_fun = dic_steps$standardization$scale_fun
+                      ),
+                      "bound" = bound_outcome(
+                        dat = dat_ret,
+                        var = outcome
+                      ),
                       stop("Invalid `step` option.")
     )
   } # End loop over steps
@@ -142,8 +155,11 @@ preproc_data <- function(dat, covariates, outcome,
 #' @export
 handle_creatinine_confounding <- function(dat, covariates,
                                           id_var,
-                                          var_names, covariates_names, creatinine,
+                                          covariates_names, creatinine,
                                           method, method_fit_args) {
+  # List of variables to which the method should be applied
+  var_names <- setdiff(colnames(dat), id_var)
+
   # Covariate-adjusted standardization
   cas <- function() {
     warning("Creatinine values are currently predicted without weights.",
@@ -227,19 +243,23 @@ handle_llodq <- function(dat, method) {
 #'
 #' @param dat A dataframe containing the variables of interest. A tibble.
 #' @param covariates A dataframe containing additional variables. A tibble.
+#' @param selected_covariates
 #' @param id_var The variable name to be used to identify subjects. A string.
 #' @param by_var The variable name to group by. A string.
 #' @param threshold_within The missing value threshold within each group. An integer.
 #' @param threshold_overall The overall missing value threshold. An integer.
+#' @param method_imputation
 #'
 #' @return A named list containing the results of the steps described above.
 #' The imputed dataset is named `dat_imputed`.
 #'
 #' @export
-handle_missing_values <- function(dat, covariates,
+handle_missing_values <- function(dat,
+                                  covariates, selected_covariates,
                                   id_var, by_var,
                                   threshold_within,
-                                  threshold_overall) {
+                                  threshold_overall,
+                                  method_imputation) {
 
   # Step 1: group by factor and remove variables with a high
   #         fraction of missing values within each group
@@ -265,7 +285,9 @@ handle_missing_values <- function(dat, covariates,
   vis_miss_before <- naniar::vis_miss(dat)
 
   ## Check whether to perform imputation by including additional variables
-  if (!is.null(covariates)) {
+  cols_to_remove <- NULL
+  if (!is.null(covariates) & !method_imputation %in% c("univariate",
+                                                       "selected")) {
     cols_to_remove <- colnames(covariates)
     dat <- tidylog::full_join(
       dat, covariates,
@@ -273,14 +295,35 @@ handle_missing_values <- function(dat, covariates,
       suffix = c("", ".y")
     ) |>
       tidylog::select(-dplyr::ends_with(".y"))
+  } else if (!is.null(covariates) & method_imputation == "selected") {
+    cols_to_remove <- selected_covariates
+    dat <- tidylog::full_join(
+      dat,
+      covariates |>
+        dplyr::select(dplyr::all_of(c(id_var,
+                                      selected_covariates))),
+      by = id_var,
+      suffix = c("", ".y")
+    ) |>
+      tidylog::select(-dplyr::ends_with(".y"))
   }
 
-  dat_imp <- missRanger::missRanger(data = dat,
-                                    formula = as.formula(glue::glue(". ~ . -{id_var}")),
-                                    num.trees = 10,
-                                    pmm.k = 5)
+  dat_imp <- switch (method_imputation,
+                     "univariate" = missRanger::missRanger(data = dat,
+                                                           formula = as.formula(glue::glue(". ~ 1")),
+                                                           num.trees = 10,
+                                                           pmm.k = 5),
+                     "all" = missRanger::missRanger(data = dat,
+                                                    formula = as.formula(glue::glue(". ~ . -{id_var}")),
+                                                    num.trees = 10,
+                                                    pmm.k = 5),
+                     "selected" = missRanger::missRanger(data = dat,
+                                                         formula = as.formula(glue::glue(". ~ . -{id_var}")),
+                                                         num.trees = 10,
+                                                         pmm.k = 5)
+  )
 
-  if (!is.null(covariates)) {
+  if (!is.null(cols_to_remove)) {
     dat_imp <- dat_imp |>
       tidylog::select(-dplyr::all_of(
         setdiff(cols_to_remove, id_var)

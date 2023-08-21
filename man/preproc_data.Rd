@@ -4,17 +4,7 @@
 \alias{preproc_data}
 \title{Basic pre-processing of datasets}
 \usage{
-preproc_data(
-  dat,
-  covariates,
-  outcome,
-  creatinine_var_names,
-  creatinine_covariates_names,
-  creatinine_name,
-  dic_steps,
-  id_var,
-  by_var
-)
+preproc_data(dat, covariates, outcome, dic_steps, id_var, by_var)
 }
 \arguments{
 \item{dat}{A dataframe containing the variables of interest. A tibble.}
@@ -28,11 +18,17 @@ include the following elements:
 \itemize{
 \item \code{llod}, to handle values <LOD/LOQ. A named list with elements:
 \item \code{method}, the method to be used. A string.
+\item \code{creatinine_threshold}, .
 \item \code{missings}, to handle missing values. A named list with elements:
 \item \code{threshold_within}, the missing value threshold within each group. An integer.
 \item \code{threshold_overall}, the overall missing value threshold. An integer.
+\item \code{selected_covariates}, .
+\item \code{method_imputation}, .
 \item \code{creatinine}, to handle confounding by dilution. A named list with elements:
-\item \code{method_args}, options for fitting the models. A list.
+\item \code{method}, .
+\item \code{method_fit_args}, options for fitting the models. A list.
+\item \code{creatinine_covariates_names}, .
+\item \code{creatinine_name}, .
 \item \code{standardization}, to standardize variables. A named list with elements:
 \item \code{center_fun}, the centering function (e.g., \code{median}).
 \item \code{scale_fun}, the scaling function (e.g., \code{IQR}).

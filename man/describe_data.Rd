@@ -31,8 +31,6 @@ after grouping by a factor (e.g., cohort).
 the \link[gtsummary]{tbl_summary} function.
 \item Detailed summary of continuous and categorical variables with
 the \link[gtsummary]{tbl_summary} function.
-\item Visualization of variables' summaries with the
-\link[Hmisc]{summaryM} function.
 \item Visualization of the correlation structure of the dataset using
 the \link[corrr]{correlate} and \link[corrr]{rplot} functions,
 with both Pearson's and Spearman's correlation.

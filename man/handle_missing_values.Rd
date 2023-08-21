@@ -7,10 +7,12 @@
 handle_missing_values(
   dat,
   covariates,
+  selected_covariates,
   id_var,
   by_var,
   threshold_within,
-  threshold_overall
+  threshold_overall,
+  method_imputation
 )
 }
 \arguments{
@@ -25,6 +27,8 @@ handle_missing_values(
 \item{threshold_within}{The missing value threshold within each group. An integer.}
 
 \item{threshold_overall}{The overall missing value threshold. An integer.}
+
+\item{method_imputation}{}
 }
 \value{
 A named list containing the results of the steps described above.
