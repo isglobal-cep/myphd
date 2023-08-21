@@ -177,7 +177,7 @@ describe_data <- function(dat, id_var, grouping_var) {
       warning("Error while computing correlation matrix:\n", ee)
 
       corrr::correlate(x = dat,
-                       method = "pearson",
+                       method = "spearman",
                        use = "complete.obs") |>
         corrr::rearrange(absolute = TRUE)
     }
