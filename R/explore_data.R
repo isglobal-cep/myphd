@@ -154,14 +154,34 @@ describe_data <- function(dat, id_var, grouping_var) {
 
   ##############################################################################
   # Step 5: correlation structure variables
-  corrs_pearson <- corrr::correlate(x = dat,
-                                    method = "pearson",
-                                    use = "everything") |>
-    corrr::rearrange(absolute = TRUE)
-  corrs_spearman <- corrr::correlate(x = dat,
-                                     method = "spearman",
-                                     use = "everything") |>
-    corrr::rearrange(absolute = TRUE)
+  corrs_pearson <- tryCatch(
+    corrr::correlate(x = dat,
+                     method = "pearson",
+                     use = "everything") |>
+      corrr::rearrange(absolute = TRUE),
+    error = function(ee) {
+      warning("Error while computing correlation matrix:\n", ee)
+
+      corrr::correlate(x = dat,
+                       method = "pearson",
+                       use = "complete.obs") |>
+        corrr::rearrange(absolute = TRUE)
+    }
+  )
+  corrs_spearman <- tryCatch(
+    corrr::correlate(x = dat,
+                     method = "spearman",
+                     use = "everything") |>
+      corrr::rearrange(absolute = TRUE),
+    error = function(ee) {
+      warning("Error while computing correlation matrix:\n", ee)
+
+      corrr::correlate(x = dat,
+                       method = "pearson",
+                       use = "complete.obs") |>
+        corrr::rearrange(absolute = TRUE)
+    }
+  )
   viz_corr_pearson <- corrr::rplot(corrs_pearson,
                                    print_cor = TRUE) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(
