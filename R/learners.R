@@ -136,6 +136,7 @@ create_formula <- function(dat,
 #' @param outcome
 #' @param exposure The name of the variable corresponding to the exposure. A string.
 #' @param covariates A vector of covariates' names. A vector.
+#' @param id_var
 #' @param weights The `weights` element of the result of the call
 #' to [estimate_weights()]. A \link[WeightIt]{weightit} object.
 #' @param method
@@ -155,6 +156,7 @@ fit_model_weighted <- function(dat,
                                outcome,
                                exposure,
                                covariates,
+                               id_var,
                                weights,
                                method,
                                method_args) {
@@ -165,6 +167,7 @@ fit_model_weighted <- function(dat,
     outcome = outcome,
     exposure = exposure,
     covariates = covariates,
+    id_var = id_var,
     method = method,
     add_inter_exposure = method_args$add_inter_exposure,
     add_splines_exposure = method_args$add_splines_exposure,
