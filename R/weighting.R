@@ -7,8 +7,8 @@
 #'
 #' @param dat A dataframe containing the variables of interest. A tibble.
 #' @param exposure The name of the variable corresponding to the exposure. A string.
-#' @param covariates A vector of covariates' names.
-#' If not provided, they are extracted from `dat` excluding the exposure. A vector.
+#' @param covariates A vector of covariates' names. A vector.
+#' @param id_var
 #' @param method The method to be used to estimate the weights. A string.
 #' @param method_args A named list with the following variables:
 #' * `use_kernel`, whether to use kernel density estimation
@@ -26,6 +26,7 @@
 estimate_weights <- function(dat,
                              exposure,
                              covariates,
+                             id_var,
                              method,
                              method_args) {
   # Create formula from exposure and covariates
@@ -34,6 +35,7 @@ estimate_weights <- function(dat,
     outcome = NULL,
     exposure = exposure,
     covariates = covariates,
+    id_var = id_var,
     method = method,
     add_inter_exposure = NULL,
     add_splines_exposure = NULL,

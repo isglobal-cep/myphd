@@ -9,6 +9,7 @@ create_formula(
   outcome,
   exposure,
   covariates,
+  id_var,
   method,
   add_inter_exposure,
   add_splines_exposure,

@@ -4,6 +4,7 @@
 #' @param outcome
 #' @param exposure
 #' @param covariates
+#' @param id_var
 #' @param method
 #' @param add_inter_exposure
 #' @param add_splines_exposure
@@ -15,7 +16,7 @@
 #'
 #' @export
 create_formula <- function(dat,
-                           outcome, exposure, covariates,
+                           outcome, exposure, covariates, id_var,
                            method,
                            add_inter_exposure,
                            add_splines_exposure, df_splines,
@@ -25,12 +26,12 @@ create_formula <- function(dat,
     tidylog::select(dplyr::where(is.numeric)) |>
     colnames()
   covariates_continuous <- setdiff(covariates_continuous,
-                                   c(outcome, exposure))
+                                   c(outcome, exposure, id_var))
   covariates_factor <- dat |>
     tidylog::select(!dplyr::where(is.numeric)) |>
     colnames()
   covariates_factor <- setdiff(covariates_factor,
-                               c(outcome, exposure))
+                               c(outcome, exposure, id_var))
   assertthat::assert_that(identical(sort(covariates),
                                     sort(c(covariates_continuous, covariates_factor))),
                           msg = "The covariates do not match the originals.")
