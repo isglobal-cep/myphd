@@ -9,6 +9,7 @@ fit_model_weighted(
   outcome,
   exposure,
   covariates,
+  id_var,
   weights,
   method,
   method_args
