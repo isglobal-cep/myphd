@@ -51,7 +51,7 @@ method to be used to estimate the weights.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">estimate_weights</span><span class="op">(</span><span class="va">dat</span>, <span class="va">exposure</span>, <span class="va">covariates</span>, <span class="va">method</span>, <span class="va">method_args</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">estimate_weights</span><span class="op">(</span><span class="va">dat</span>, <span class="va">exposure</span>, <span class="va">covariates</span>, <span class="va">id_var</span>, <span class="va">method</span>, <span class="va">method_args</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -65,8 +65,7 @@ method to be used to estimate the weights.</p>
 
 
 <dt>covariates</dt>
-<dd><p>A vector of covariates' names.
-If not provided, they are extracted from <code>dat</code> excluding the exposure. A vector.</p></dd>
+<dd><p>A vector of covariates' names. A vector.</p></dd>
 
 
 <dt>method</dt>
