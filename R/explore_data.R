@@ -170,7 +170,7 @@ describe_data <- function(dat, id_var, grouping_var) {
                               use = use) |>
         corrr::rearrange(absolute = TRUE)
       computed <- TRUE
-      return(ret)
+      ret
     },
     error = function(ee) {
       warning("Error while computing correlation matrix:\n", ee)
@@ -182,7 +182,11 @@ describe_data <- function(dat, id_var, grouping_var) {
                                      print_cor = TRUE) +
       ggplot2::theme(axis.text.x = ggplot2::element_text(
         angle = 60, hjust = 1
-      ))
+      )) +
+      ggplot2::labs(
+        caption = paste0("Correlation use: ",
+                         use, ".")
+      )
   }
 
   ## Spearman
@@ -197,7 +201,7 @@ describe_data <- function(dat, id_var, grouping_var) {
                               use = use) |>
         corrr::rearrange(absolute = TRUE)
       computed <- TRUE
-      return(ret)
+      ret
     },
     error = function(ee) {
       warning("Error while computing correlation matrix:\n", ee)
@@ -209,7 +213,11 @@ describe_data <- function(dat, id_var, grouping_var) {
                                       print_cor = TRUE) +
       ggplot2::theme(axis.text.x = ggplot2::element_text(
         angle = 60, hjust = 1
-      ))
+      )) +
+      ggplot2::labs(
+        caption = paste0("Correlation use: ",
+                         use, ".")
+      )
   }
   ##############################################################################
 
