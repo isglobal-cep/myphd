@@ -4,7 +4,15 @@
 \alias{preproc_data}
 \title{Basic pre-processing of datasets}
 \usage{
-preproc_data(dat, covariates, outcome, dic_steps, id_var, by_var)
+preproc_data(
+  dat,
+  dat_desc = NULL,
+  covariates,
+  outcome,
+  dic_steps,
+  id_var,
+  by_var
+)
 }
 \arguments{
 \item{dat}{A dataframe containing the variables of interest. A tibble.}
@@ -16,7 +24,8 @@ preproc_data(dat, covariates, outcome, dic_steps, id_var, by_var)
 \item{dic_steps}{A nested named list of steps to perform. A list. It can
 include the following elements:
 \itemize{
-\item \code{llod}, to handle values <LOD/LOQ. A named list with elements:
+\item \code{llodq}, to handle values <LOD/LOQ. A named list with elements:
+\item \code{id_val}, .
 \item \code{method}, the method to be used. A string.
 \item \code{creatinine_threshold}, .
 \item \code{missings}, to handle missing values. A named list with elements:

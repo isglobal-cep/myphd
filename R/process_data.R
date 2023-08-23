@@ -68,7 +68,8 @@ convert_time_season <- function(dat, cols) {
 #' @param outcome A string indicating the outcome variable. A string.
 #' @param dic_steps A nested named list of steps to perform. A list. It can
 #' include the following elements:
-#' * `llod`, to handle values <LOD/LOQ. A named list with elements:
+#' * `llodq`, to handle values <LOD/LOQ. A named list with elements:
+#'  * `id_val`, .
 #'  * `method`, the method to be used. A string.
 #'  * `creatinine_threshold`, .
 #' * `missings`, to handle missing values. A named list with elements:
@@ -92,7 +93,7 @@ convert_time_season <- function(dat, cols) {
 #' @returns A pre-processed dataset. A tibble.
 #'
 #' @export
-preproc_data <- function(dat, covariates, outcome,
+preproc_data <- function(dat, dat_desc = NULL, covariates, outcome,
                          dic_steps,
                          id_var, by_var) {
   dat_ret <- dat
@@ -101,7 +102,10 @@ preproc_data <- function(dat, covariates, outcome,
     dat_ret <- switch(step,
                       "llodq" = handle_llodq(
                         dat = dat_ret,
-                        method = dic_steps$llodq$method
+                        dat_desc = dat_desc,
+                        id_val = dic_steps$llodq$id_val,
+                        method = dic_steps$llodq$method,
+                        creatinine_threshold = dic_steps$llodq$creatinine_threshold
                       ),
                       "creatinine" = handle_creatinine_confounding(
                         dat = dat_ret,
@@ -219,12 +223,39 @@ handle_creatinine_confounding <- function(dat, covariates,
 #' @description
 #'
 #' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param dat_desc
+#' @param id_val
 #' @param method
+#' @param creatinine_threshold
 #'
 #' @return
 #'
 #' @export
-handle_llodq <- function(dat, method) {
+handle_llodq <- function(dat, dat_desc, id_val,
+                         method, creatinine_threshold) {
+
+  # List of supported methods
+  supported <- list(
+    "truncated_normal"
+  )
+  if (!method %in% supported) {
+    stop(glue::glue("{method} is currently not supported.",
+                    method = method),
+         call. = TRUE)
+  }
+
+  # Checks
+  assertthat::assert_that(
+    nrow(dat) == nrow(dat_desc),
+    msg = "Mismatch in the number of rows between the provided datasets."
+  )
+  assertthat::assert_that(
+    ncol(dat) == ncol(dat_desc),
+    msg = "Mismatch in the number of columns between the provided datasets."
+  )
+
+  # Select and apply method
+  if (method == "truncated_normal") {} # End truncated_normal
 
   return(dat)
 }

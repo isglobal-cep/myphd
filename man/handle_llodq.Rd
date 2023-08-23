@@ -4,12 +4,12 @@
 \alias{handle_llodq}
 \title{Various strategies to handle values below the limit of detection/quantification}
 \usage{
-handle_llodq(dat, method)
+handle_llodq(dat, dat_desc, id_val, method, creatinine_threshold)
 }
 \arguments{
 \item{dat}{A dataframe containing the variables of interest. A tibble.}
 
-\item{method}{}
+\item{creatinine_threshold}{}
 }
 \description{
 Various strategies to handle values below the limit of detection/quantification
