@@ -72,6 +72,7 @@ convert_time_season <- function(dat, cols) {
 #'  * `id_val`, .
 #'  * `method`, the method to be used. A string.
 #'  * `creatinine_threshold`, .
+#'  * `tune_sigma`, .
 #' * `missings`, to handle missing values. A named list with elements:
 #'  * `threshold_within`, the missing value threshold within each group. An integer.
 #'  * `threshold_overall`, the overall missing value threshold. An integer.
@@ -102,15 +103,19 @@ preproc_data <- function(dat, dat_desc = NULL, covariates, outcome,
     dat_ret <- switch(step,
                       "llodq" = handle_llodq(
                         dat = dat_ret,
+                        id_var = id_var,
+                        by_var = by_var,
                         dat_desc = dat_desc,
                         id_val = dic_steps$llodq$id_val,
                         method = dic_steps$llodq$method,
-                        creatinine_threshold = dic_steps$llodq$creatinine_threshold
-                      ),
+                        creatinine_threshold = dic_steps$llodq$creatinine_threshold,
+                        tune_sigma = dic_steps$llodq$tune_sigma
+                      )$dat,
                       "creatinine" = handle_creatinine_confounding(
                         dat = dat_ret,
                         covariates = covariates,
                         id_var = id_var,
+                        by_var = by_var,
                         covariates_names = dic_steps$creatinine$creatinine_covariates_names,
                         creatinine = dic_steps$creatinine$creatinine_name,
                         method = dic_steps$creatinine$method,
@@ -148,7 +153,7 @@ preproc_data <- function(dat, dat_desc = NULL, covariates, outcome,
 #' @param dat
 #' @param covariates
 #' @param id_var
-#' @param var_names
+#' @param by_var
 #' @param covariates_names
 #' @param creatinine
 #' @param method
@@ -158,11 +163,11 @@ preproc_data <- function(dat, dat_desc = NULL, covariates, outcome,
 #'
 #' @export
 handle_creatinine_confounding <- function(dat, covariates,
-                                          id_var,
+                                          id_var, by_var,
                                           covariates_names, creatinine,
                                           method, method_fit_args) {
   # List of variables to which the method should be applied
-  var_names <- setdiff(colnames(dat), id_var)
+  var_names <- setdiff(colnames(dat), c(id_var, by_var))
 
   # Covariate-adjusted standardization
   cas <- function() {
@@ -223,16 +228,21 @@ handle_creatinine_confounding <- function(dat, covariates,
 #' @description
 #'
 #' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param id_var
+#' @param by_var
 #' @param dat_desc
 #' @param id_val
 #' @param method
 #' @param creatinine_threshold
+#' @param tune_sigma
 #'
 #' @return
 #'
 #' @export
-handle_llodq <- function(dat, dat_desc, id_val,
-                         method, creatinine_threshold) {
+handle_llodq <- function(dat, id_var, by_var,
+                         dat_desc, id_val,
+                         method, creatinine_threshold,
+                         tune_sigma) {
 
   # List of supported methods
   supported <- list(
@@ -253,11 +263,72 @@ handle_llodq <- function(dat, dat_desc, id_val,
     ncol(dat) == ncol(dat_desc),
     msg = "Mismatch in the number of columns between the provided datasets."
   )
+  assertthat::assert_that(
+    identical(dat[[id_var]], dat_desc[[id_var]]),
+    msg = "The order of the rows does not match between datasets."
+  )
+
+  ids <- dat[[id_var]]
+  dat <- tidylog::select(dat, -dplyr::all_of(c(id_var, by_var)))
+  dat_desc <- tidylog::select(dat_desc, -dplyr::all_of(id_var))
+  dat_imputed <- dat
+  estimates <- list()
 
   # Select and apply method
-  if (method == "truncated_normal") {} # End truncated_normal
+  if (method == "truncated_normal") {
+    # "Imputation" based on quantile regression (based on impQRILC.R)
+    # Loop over the samples/subjects
+    lapply(1:nrow(dat), function(idx) {
+      frac_nas <- sum(dat_desc[idx, ] == id_val) / ncol(dat_desc)
 
-  return(dat)
+      # Estimate mean and sd using quantile regression
+      upper_q <- 0.99
+      q_normal <- qnorm(
+        seq((frac_nas + 0.001),
+            (upper_q + 0.001),
+            (upper_q - frac_nas) / (upper_q * 100)),
+        mean = 0,
+        sd = 1
+      )
+      q_samples <- quantile(
+        dat[idx, ],
+        probs = seq(0.01,
+                    (upper_q + 0.001),
+                    0.01),
+        na.rm = TRUE
+      )
+      fit <- lm(q_samples ~ q_normal)
+      estimates[[idx]] <- fit
+      mean_fit <- fit$coefficients[1]
+      sd_fit <- as.numeric(fit$coefficients[2])
+
+      # Generate data from a multivariate distribution w/ MLE parameters
+      tmp <- tmvtnorm::rtmvnorm(
+        n = ncol(dat),
+        mean = mean_fit,
+        sigma = sd_fit * tune_sigma,
+        upper = qnorm((frac_nas + 0.001),
+                      mean = mean_fit,
+                      sd = sd_fit),
+        algorithm = c("gibbs")
+      ) # End data generation
+      sample_imputed <- dat[idx, ]
+      sample_imputed[which(dat_desc[idx, ] == id_val)] <- tmp[
+        which(dat_desc[idx, ] == id_val)
+      ]
+      dat_imputed[idx, ] <- sample_imputed
+    }) # End loop over samples
+  } # End truncated_normal method
+
+  # Tidy results
+  dat_imputed <- tibble::as_tibble(dat_imputed) |>
+    tidylog::mutate({{id_var}} := ids) |>
+    tidylog::relocate(.data[[id_var]])
+
+  return(list(
+    dat = dat_imputed,
+    fits = estimates
+  ))
 }
 
 #' Various strategies to handle missing values
@@ -313,6 +384,7 @@ handle_missing_values <- function(dat,
     tidylog::select(-dplyr::all_of(step2$variable))
 
   # Step 3: impute the remaining variables
+  dat <- tidylog::select(dat, -dplyr::all_of(by_var))
   vis_miss_before <- naniar::vis_miss(dat)
 
   ## Check whether to perform imputation by including additional variables
@@ -331,8 +403,8 @@ handle_missing_values <- function(dat,
     dat <- tidylog::full_join(
       dat,
       covariates |>
-        dplyr::select(dplyr::all_of(c(id_var,
-                                      selected_covariates))),
+        tidylog::select(dplyr::all_of(c(id_var,
+                                        selected_covariates))),
       by = id_var,
       suffix = c("", ".y")
     ) |>

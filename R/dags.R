@@ -34,22 +34,22 @@ find_common_confounders <- function(dag, type_mas, type_effect) {
 #' @param dat A dataframe containing the variables of interest. A tibble.
 #' @param meta A dataframe containing the metadata. A tibble.
 #' @param adjustment_sets A list of adjustment sets. A character vector.
-#' @param grouping_var
+#' @param by_var
 #'
 #' @returns An integer corresponding to the index of the adjustment
 #' set that minimizes the number of missing values.
 #'
 #' @export
 minimize_missings <- function(dat, meta, adjustment_sets,
-                              grouping_var) {
-  levels_group_var <- sort(levels(dat[[grouping_var]]))
+                              by_var) {
+  levels_group_var <- sort(levels(dat[[by_var]]))
 
   # List of dataframes with covariates from adjustment sets
   dfs_covars <- lapply(adjustment_sets, function(x) {
     mapping_covars <- meta[meta$dag %in% x, ]$variable |>
       as.character()
     tmp <- dat |>
-      tidylog::select(dplyr::all_of(c(grouping_var,
+      tidylog::select(dplyr::all_of(c(by_var,
                                       mapping_covars)))
   })
 
@@ -57,7 +57,7 @@ minimize_missings <- function(dat, meta, adjustment_sets,
   # for each adjustment set
   ret_miss <- suppressMessages(lapply(dfs_covars, function(x) {
     nans <- x |>
-      tidylog::group_split(.data[[grouping_var]], .keep = FALSE) |>
+      tidylog::group_split(.data[[by_var]], .keep = FALSE) |>
       lapply(function(y) {
         round(sum(is.na(y)) / (nrow(y) * ncol(y)) * 100, 0)
       }) |>
@@ -68,12 +68,12 @@ minimize_missings <- function(dat, meta, adjustment_sets,
     purrr::reduce(dplyr::bind_cols))
   colnames(ret_miss) <- paste0("adj_set_", 1:ncol(ret_miss))
   ret_miss <- ret_miss |>
-    tidylog::mutate({{grouping_var}} := levels_group_var) |>
-    tidylog::relocate(.data[[grouping_var]])
+    tidylog::mutate({{by_var}} := levels_group_var) |>
+    tidylog::relocate(.data[[by_var]])
 
   # Sum of missing values, for each adjustment set
   ret <- ret_miss |>
-    tidylog::select(-{{grouping_var}}) |>
+    tidylog::select(-{{by_var}}) |>
     colSums() |>
     which.min() |>
     as.integer()

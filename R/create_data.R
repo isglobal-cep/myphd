@@ -3,11 +3,11 @@
 #' @param dat
 #' @param var
 #' @param percentiles
-#' @param grouping_var
+#' @param by_var
 #'
 #' @return
 #' @export
-create_df_marginal_comparisons <- function(dat, var, percentiles, grouping_var) {
+create_df_marginal_comparisons <- function(dat, var, percentiles, by_var) {
   # Checks
   if (percentiles[1] < 0 | percentiles[2] > 1) {
     stop("The percentiles must lie between 0 and 1.",
@@ -16,7 +16,7 @@ create_df_marginal_comparisons <- function(dat, var, percentiles, grouping_var) 
 
   # Compute `low` and `high` values of the variable of interest, by group
   ret <- dat |>
-    tidylog::group_by(.data[[grouping_var]]) |>
+    tidylog::group_by(.data[[by_var]]) |>
     tidylog::mutate(
       low = quantile(.data[[var]], percentiles[1]),
       high = quantile(.data[[var]], percentiles[2])

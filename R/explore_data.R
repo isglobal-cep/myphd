@@ -74,13 +74,13 @@ explore_shift <- function(dat,
 #'
 #' @param dat A dataframe containing the variables of interest. A tibble.
 #' @param id_var The variable name to be used to identify subjects. A string.
-#' @param grouping_var The variable name to group by. A string.
+#' @param by_var The variable name to group by. A string.
 #'
 #' @return A nested named list containing the objects corresponding to the
 #' steps described above.
 #'
 #' @export
-describe_data <- function(dat, id_var, grouping_var) {
+describe_data <- function(dat, id_var, by_var) {
   dat <- dat |>
     tidylog::select(-dplyr::all_of(id_var))
 
@@ -98,17 +98,17 @@ describe_data <- function(dat, id_var, grouping_var) {
   ##############################################################################
   # Step 2: diagnose of numerical and categorical variables by factor w/ `dlookr`
   step2_num <- step2_cat <- NULL
-  if (!is.null(grouping_var)) {
+  if (!is.null(by_var)) {
     dat <- dat |>
-      tidylog::group_by(dplyr::across(grouping_var),
+      tidylog::group_by(dplyr::across(by_var),
                         .drop = FALSE)
     step2_num <- dlookr::diagnose_numeric(dat) |>
-      dplyr::arrange(variables, grouping_var)
+      dplyr::arrange(variables, by_var)
     suppressWarnings(
-      step2_cat <- dlookr::diagnose_category(dat, -grouping_var)
+      step2_cat <- dlookr::diagnose_category(dat, -by_var)
     )
     if (!is.null(step2_cat)) {
-      step2_cat <- dplyr::arrange(step2_cat, variables, grouping_var)
+      step2_cat <- dplyr::arrange(step2_cat, variables, by_var)
     }
     dat <- tidylog::ungroup(dat)
   }
@@ -117,14 +117,14 @@ describe_data <- function(dat, id_var, grouping_var) {
   ##############################################################################
   # Step 3: summary of variables w/ `gtsummary`
   step3 <- dat |>
-    gtsummary::tbl_summary(by = grouping_var,
+    gtsummary::tbl_summary(by = by_var,
                            statistic = list(
                              gtsummary::all_continuous() ~ c(
                                "{median} ({p25}, {p75})"
                              ),
                              gtsummary::all_categorical() ~ "{n} ({p}%)"
                            ))
-  if (!is.null(grouping_var)) {
+  if (!is.null(by_var)) {
     step3 <- step3 |>
       gtsummary::add_overall()
   }
@@ -133,7 +133,7 @@ describe_data <- function(dat, id_var, grouping_var) {
   ##############################################################################
   # Step 4: detailed summary of variables w/ `gtsummary`
   step4 <- dat |>
-    gtsummary::tbl_summary(by = grouping_var,
+    gtsummary::tbl_summary(by = by_var,
                            type = list(
                              gtsummary::all_continuous() ~ "continuous2",
                              gtsummary::all_categorical() ~ "categorical"
@@ -146,7 +146,7 @@ describe_data <- function(dat, id_var, grouping_var) {
                              ),
                              gtsummary::all_categorical() ~ "{n} / {N} ({p}%)"
                            ))
-  if (!is.null(grouping_var)) {
+  if (!is.null(by_var)) {
     step4 <- step4 |>
       gtsummary::add_overall()
   }
@@ -253,31 +253,31 @@ describe_data <- function(dat, id_var, grouping_var) {
 #'
 #' @param dat A dataframe containing the variables of interest. A tibble.
 #' @param id_var The variable name to be used to identify subjects. A string.
-#' @param grouping_var The variable name to group by. A string.
+#' @param by_var The variable name to group by. A string.
 #' @param path_save The path where to store the missingness report. A string.
 #'
 #' @return A named list containing the objects corresponding to the
 #' steps described above.
 #'
 #' @export
-explore_missings <- function(dat, id_var, grouping_var, path_save) {
+explore_missings <- function(dat, id_var, by_var, path_save) {
   # Step 1: checks
-  if (!grouping_var %in% colnames(dat)) {
+  if (!by_var %in% colnames(dat)) {
     stop("Grouping variable not found.", call. = TRUE)
   }
 
   ##############################################################################
   # Step 2: summary missings of variables by grouping variable (`naniar`)
   step2 <- dat |>
-    tidylog::group_by(.data[[grouping_var]]) |>
+    tidylog::group_by(.data[[by_var]]) |>
     naniar::miss_var_summary() |>
     tidylog::ungroup()
 
   step2_wide <- dat |>
-    tidylog::group_by(.data[[grouping_var]]) |>
+    tidylog::group_by(.data[[by_var]]) |>
     naniar::miss_var_summary() |>
     tidylog::select(-c(n_miss)) |>
-    tidylog::pivot_wider(names_from = c(grouping_var),
+    tidylog::pivot_wider(names_from = c(by_var),
                          values_from = c(pct_miss)) |>
     dplyr::arrange(variable) |>
     tidylog::mutate(dplyr::across(dplyr::where(is.numeric),
@@ -298,8 +298,8 @@ explore_missings <- function(dat, id_var, grouping_var, path_save) {
   # Step 4: visualize missingness reports
   plt <- visdat::vis_miss(dat,
                           show_perc = TRUE) +
-    ggplot2::scale_y_discrete(limits = dat[[grouping_var]],
-                              labels = dat[[grouping_var]])
+    ggplot2::scale_y_discrete(limits = dat[[by_var]],
+                              labels = dat[[by_var]])
   ggplot2::ggsave(filename = paste0(path_save,
                                     "vis_miss",
                                     ".png"),
@@ -309,7 +309,7 @@ explore_missings <- function(dat, id_var, grouping_var, path_save) {
                   bg = "white")
 
   plt <- naniar::gg_miss_fct(x = dat,
-                             fct = !! rlang::ensym(grouping_var))
+                             fct = !! rlang::ensym(by_var))
   ggplot2::ggsave(filename = paste0(path_save,
                                     "gg_miss",
                                     ".png"),
@@ -322,19 +322,19 @@ explore_missings <- function(dat, id_var, grouping_var, path_save) {
   ##############################################################################
   # Step 5: MCAR test
   step5 <- lapply(
-    levels(dat[[grouping_var]]),
+    levels(dat[[by_var]]),
     function(x) {
       tryCatch(
         dat |>
-          tidylog::filter(.data[[grouping_var]] == x) |>
+          tidylog::filter(.data[[by_var]] == x) |>
           tidylog::select(-dplyr::any_of(c(id_var,
-                                           grouping_var))) |>
+                                           by_var))) |>
           naniar::mcar_test(),
         error = function(e) NULL
       )
     }
   )
-  names(step5) <- levels(dat[[grouping_var]])
+  names(step5) <- levels(dat[[by_var]])
   ##############################################################################
 
   return(list(

@@ -4,14 +4,14 @@
 \alias{explore_missings}
 \title{A function to explore the missing values of a dataset}
 \usage{
-explore_missings(dat, id_var, grouping_var, path_save)
+explore_missings(dat, id_var, by_var, path_save)
 }
 \arguments{
 \item{dat}{A dataframe containing the variables of interest. A tibble.}
 
 \item{id_var}{The variable name to be used to identify subjects. A string.}
 
-\item{grouping_var}{The variable name to group by. A string.}
+\item{by_var}{The variable name to group by. A string.}
 
 \item{path_save}{The path where to store the missingness report. A string.}
 }

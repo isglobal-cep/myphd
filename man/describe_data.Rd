@@ -4,14 +4,14 @@
 \alias{describe_data}
 \title{A function to describe the used dataset}
 \usage{
-describe_data(dat, id_var, grouping_var)
+describe_data(dat, id_var, by_var)
 }
 \arguments{
 \item{dat}{A dataframe containing the variables of interest. A tibble.}
 
 \item{id_var}{The variable name to be used to identify subjects. A string.}
 
-\item{grouping_var}{The variable name to group by. A string.}
+\item{by_var}{The variable name to group by. A string.}
 }
 \value{
 A nested named list containing the objects corresponding to the
