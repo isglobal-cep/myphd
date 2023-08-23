@@ -66,7 +66,15 @@ Normalization (subtract the minimum and divide by the range).
 </ul></div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">preproc_data</span><span class="op">(</span><span class="va">dat</span>, <span class="va">covariates</span>, <span class="va">outcome</span>, <span class="va">dic_steps</span>, <span class="va">id_var</span>, <span class="va">by_var</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">preproc_data</span><span class="op">(</span></span>
+<span>  <span class="va">dat</span>,</span>
+<span>  dat_desc <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">covariates</span>,</span>
+<span>  <span class="va">outcome</span>,</span>
+<span>  <span class="va">dic_steps</span>,</span>
+<span>  <span class="va">id_var</span>,</span>
+<span>  <span class="va">by_var</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -85,7 +93,8 @@ Normalization (subtract the minimum and divide by the range).
 
 <dt>dic_steps</dt>
 <dd><p>A nested named list of steps to perform. A list. It can
-include the following elements:</p><ul><li><p><code>llod</code>, to handle values &lt;LOD/LOQ. A named list with elements:</p></li>
+include the following elements:</p><ul><li><p><code>llodq</code>, to handle values &lt;LOD/LOQ. A named list with elements:</p></li>
+<li><p><code>id_val</code>, .</p></li>
 <li><p><code>method</code>, the method to be used. A string.</p></li>
 <li><p><code>creatinine_threshold</code>, .</p></li>
 <li><p><code>missings</code>, to handle missing values. A named list with elements:</p></li>
