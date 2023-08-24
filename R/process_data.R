@@ -386,8 +386,7 @@ handle_llodq <- function(dat, id_var, by_var,
   dat_imputed <- tibble::as_tibble(dat_imputed)
 
   return(list(
-    dat = dat_imputed,
-    fits = estimates
+    dat = dat_imputed
   ))
 }
 
