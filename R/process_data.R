@@ -478,11 +478,13 @@ handle_missing_values <- function(dat,
       tidylog::select(-dplyr::ends_with(".y"))
   }
 
-  form <- ifelse(
-    by_var %in% cols_to_remove,
-    as.formula(glue::glue(". ~ . -{id_var}")),
-    as.formula(glue::glue(". ~ . -{id_var} -{by_var}"))
-  )
+  if (!is.null(cols_to_remove)) {
+    form <- ifelse(
+      by_var %in% cols_to_remove,
+      as.formula(glue::glue(". ~ . -{id_var}")),
+      as.formula(glue::glue(". ~ . -{id_var} -{by_var}"))
+    )
+  }
   dat_imp <- switch (method_imputation,
                      "univariate" = missRanger::missRanger(data = dat,
                                                            formula = as.formula(glue::glue(". ~ 1")),
