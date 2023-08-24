@@ -382,7 +382,7 @@ handle_llodq <- function(dat, id_var, by_var,
       )) # End mutate for replacement
   } # End replace method
 
-  # Tidy results
+  # Tidy results (in case of `dplyr::rowwise`)
   dat_imputed <- tibble::as_tibble(dat_imputed)
 
   return(list(
