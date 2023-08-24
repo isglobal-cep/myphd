@@ -283,6 +283,7 @@ handle_llodq <- function(dat, id_var, by_var,
   )
 
   ids <- dat[[id_var]]
+  groups <- dat[[by_var]]
   dat <- tidylog::select(dat, -dplyr::all_of(c(id_var, by_var)))
   estimates <- list()
 
@@ -385,8 +386,10 @@ handle_llodq <- function(dat, id_var, by_var,
 
   # Tidy results
   dat_imputed <- tibble::as_tibble(dat_imputed) |>
-    tidylog::mutate({{id_var}} := ids) |>
-    tidylog::relocate(.data[[id_var]])
+    tidylog::mutate({{id_var}} := ids,
+                    {{by_var}} := groups) |>
+    tidylog::relocate(.data[[id_var]],
+                      .data[[by_var]])
 
   return(list(
     dat = dat_imputed,
@@ -447,8 +450,9 @@ handle_missing_values <- function(dat,
     tidylog::select(-dplyr::all_of(step2$variable))
 
   # Step 3: impute the remaining variables
-  dat <- tidylog::select(dat, -dplyr::all_of(by_var))
-  vis_miss_before <- naniar::vis_miss(dat)
+  vis_miss_before <- naniar::vis_miss(
+    tidylog::select(dat, -dplyr::all_of(c(id_var, by_var)))
+  )
 
   ## Check whether to perform imputation by including additional variables
   cols_to_remove <- NULL
@@ -474,17 +478,22 @@ handle_missing_values <- function(dat,
       tidylog::select(-dplyr::ends_with(".y"))
   }
 
+  form <- ifelse(
+    by_var %in% cols_to_remove,
+    as.formula(glue::glue(". ~ . -{id_var}")),
+    as.formula(glue::glue(". ~ . -{id_var} -{by_var}"))
+  )
   dat_imp <- switch (method_imputation,
                      "univariate" = missRanger::missRanger(data = dat,
                                                            formula = as.formula(glue::glue(". ~ 1")),
                                                            num.trees = 10,
                                                            pmm.k = 5),
                      "all" = missRanger::missRanger(data = dat,
-                                                    formula = as.formula(glue::glue(". ~ . -{id_var}")),
+                                                    formula = form,
                                                     num.trees = 10,
                                                     pmm.k = 5),
                      "selected" = missRanger::missRanger(data = dat,
-                                                         formula = as.formula(glue::glue(". ~ . -{id_var}")),
+                                                         formula = form,
                                                          num.trees = 10,
                                                          pmm.k = 5)
   )
@@ -492,11 +501,13 @@ handle_missing_values <- function(dat,
   if (!is.null(cols_to_remove)) {
     dat_imp <- dat_imp |>
       tidylog::select(-dplyr::all_of(
-        setdiff(cols_to_remove, id_var)
+        setdiff(cols_to_remove, c(id_var, by_var))
       ))
   }
 
-  vis_miss_after <- naniar::vis_miss(dat_imp)
+  vis_miss_after <- naniar::vis_miss(tidylog::select(dat_imp,
+                                                     -dplyr::all_of(c(id_var,
+                                                                      by_var))))
 
   return(list(
     step1 = step1,
