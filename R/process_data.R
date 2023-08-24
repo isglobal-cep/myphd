@@ -99,7 +99,7 @@ convert_time_season <- function(dat, cols) {
 #'
 #' @export
 preproc_data <- function(dat, dat_desc = NULL, covariates, outcome,
-                         dat_llodq,
+                         dat_llodq = NULL,
                          dic_steps,
                          id_var, by_var) {
   dat_ret <- dat
