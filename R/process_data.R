@@ -282,11 +282,6 @@ handle_llodq <- function(dat, id_var, by_var,
     msg = "The order of the rows does not match between datasets."
   )
 
-  ids <- dat[[id_var]]
-  groups <- dat[[by_var]]
-  dat <- tidylog::select(dat, -dplyr::all_of(c(id_var, by_var)))
-  estimates <- list()
-
   # Select and apply method
   if (method == "truncated_normal") {
 
@@ -322,7 +317,6 @@ handle_llodq <- function(dat, id_var, by_var,
           na.rm = TRUE
         )
         fit <- lm(q_samples ~ q_normal)
-        estimates[[idx]] <- fit
         mean_fit <- as.numeric(fit$coefficients[1])
         sd_fit <- as.numeric(fit$coefficients[2])
 
@@ -369,10 +363,14 @@ handle_llodq <- function(dat, id_var, by_var,
       tidylog::select(-dplyr::all_of(frac_overall$variable))
 
     ## Impute remaining
+    vars_to_mutate <- setdiff(
+      colnames(dat),
+      c(id_var, by_var)
+    )
     dat_imputed <- dat |>
       dplyr::rowwise() |>
       tidylog::mutate(dplyr::across(
-        dplyr::everything(),
+        dplyr::all_of(vars_to_mutate),
         \(x) dplyr::case_when(
           is.na(x) & dat_desc[dplyr::row_number(),
                               dplyr::cur_column()] == id_val ~ as.numeric(
@@ -385,11 +383,7 @@ handle_llodq <- function(dat, id_var, by_var,
   } # End replace method
 
   # Tidy results
-  dat_imputed <- tibble::as_tibble(dat_imputed) |>
-    tidylog::mutate({{id_var}} := ids,
-                    {{by_var}} := groups) |>
-    tidylog::relocate(.data[[id_var]],
-                      .data[[by_var]])
+  dat_imputed <- tibble::as_tibble(dat_imputed)
 
   return(list(
     dat = dat_imputed,
