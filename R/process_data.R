@@ -274,7 +274,8 @@ handle_llodq <- function(dat, id_var, by_var,
     msg = "Mismatch in the number of rows between the provided datasets."
   )
   assertthat::assert_that(
-    ncol(dat) == ncol(dat_desc),
+    # `+1` because `dat` contains the `by_var`
+    ncol(dat) == (ncol(dat_desc) + 1),
     msg = "Mismatch in the number of columns between the provided datasets."
   )
   assertthat::assert_that(
