@@ -64,14 +64,18 @@ convert_time_season <- function(dat, cols) {
 #' }
 #'
 #' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param dat_desc
 #' @param covariates A dataframe containing additional variables. A tibble.
 #' @param outcome A string indicating the outcome variable. A string.
+#' @param dat_llodq
 #' @param dic_steps A nested named list of steps to perform. A list. It can
 #' include the following elements:
 #' * `llodq`, to handle values <LOD/LOQ. A named list with elements:
 #'  * `id_val`, .
 #'  * `method`, the method to be used. A string.
 #'  * `creatinine_threshold`, .
+#'  * `threshold_within`, .
+#'  * `threshold_overall`, .
 #'  * `tune_sigma`, .
 #' * `missings`, to handle missing values. A named list with elements:
 #'  * `threshold_within`, the missing value threshold within each group. An integer.
@@ -95,6 +99,7 @@ convert_time_season <- function(dat, cols) {
 #'
 #' @export
 preproc_data <- function(dat, dat_desc = NULL, covariates, outcome,
+                         dat_llodq,
                          dic_steps,
                          id_var, by_var) {
   dat_ret <- dat
@@ -108,7 +113,10 @@ preproc_data <- function(dat, dat_desc = NULL, covariates, outcome,
                         dat_desc = dat_desc,
                         id_val = dic_steps$llodq$id_val,
                         method = dic_steps$llodq$method,
+                        replacement_vals = dat_llodq,
                         creatinine_threshold = dic_steps$llodq$creatinine_threshold,
+                        frac_val_threshold_within = dic_steps$llodq$threshold_within,
+                        frac_val_threshold_overall = dic_steps$llodq$threshold_overall,
                         tune_sigma = dic_steps$llodq$tune_sigma
                       )$dat,
                       "creatinine" = handle_creatinine_confounding(
@@ -233,7 +241,10 @@ handle_creatinine_confounding <- function(dat, covariates,
 #' @param dat_desc
 #' @param id_val
 #' @param method
+#' @param replacement_vals
 #' @param creatinine_threshold
+#' @param frac_val_threshold_within
+#' @param frac_val_threshold_overall
 #' @param tune_sigma
 #'
 #' @return
@@ -241,12 +252,15 @@ handle_creatinine_confounding <- function(dat, covariates,
 #' @export
 handle_llodq <- function(dat, id_var, by_var,
                          dat_desc, id_val,
-                         method, creatinine_threshold,
+                         method,
+                         replacement_vals,
+                         creatinine_threshold,
+                         frac_val_threshold_within, frac_val_threshold_overall,
                          tune_sigma) {
 
   # List of supported methods
   supported <- list(
-    "truncated_normal"
+    "truncated_normal", "replace"
   )
   if (!method %in% supported) {
     stop(glue::glue("{method} is currently not supported.",
@@ -270,55 +284,104 @@ handle_llodq <- function(dat, id_var, by_var,
 
   ids <- dat[[id_var]]
   dat <- tidylog::select(dat, -dplyr::all_of(c(id_var, by_var)))
-  dat_desc <- tidylog::select(dat_desc, -dplyr::all_of(id_var))
-  dat_imputed <- dat
   estimates <- list()
 
   # Select and apply method
   if (method == "truncated_normal") {
-    # "Imputation" based on quantile regression (based on impQRILC.R)
+
+    warning(
+      "This method has not been tested yet.",
+      call. = TRUE
+    )
+
+    # Imputation based on quantile regression (based on impQRILC.R)
     # Loop over the samples/subjects
+    dat_desc <- tidylog::select(dat_desc, -dplyr::all_of(c(id_var, by_var)))
+    dat_imputed <- dat
     lapply(1:nrow(dat), function(idx) {
       frac_nas <- sum(dat_desc[idx, ] == id_val) / ncol(dat_desc)
 
-      # Estimate mean and sd using quantile regression
-      upper_q <- 0.99
-      q_normal <- qnorm(
-        seq((frac_nas + 0.001),
-            (upper_q + 0.001),
-            (upper_q - frac_nas) / (upper_q * 100)),
-        mean = 0,
-        sd = 1
-      )
-      q_samples <- quantile(
-        dat[idx, ],
-        probs = seq(0.01,
-                    (upper_q + 0.001),
-                    0.01),
-        na.rm = TRUE
-      )
-      fit <- lm(q_samples ~ q_normal)
-      estimates[[idx]] <- fit
-      mean_fit <- fit$coefficients[1]
-      sd_fit <- as.numeric(fit$coefficients[2])
+      if (frac_nas == 0) {
+        dat_imputed[idx, ] <- dat[idx, ]
+      } else {
+        # Estimate mean and sd using quantile regression
+        upper_q <- 0.99
+        q_normal <- qnorm(
+          seq((frac_nas + 0.001),
+              (upper_q + 0.001),
+              (upper_q - frac_nas) / (upper_q * 100)),
+          mean = 0,
+          sd = 1
+        )
+        q_samples <- quantile(
+          dat[idx, ],
+          probs = seq(0.001,
+                      (upper_q + 0.001),
+                      0.01),
+          na.rm = TRUE
+        )
+        fit <- lm(q_samples ~ q_normal)
+        estimates[[idx]] <- fit
+        mean_fit <- as.numeric(fit$coefficients[1])
+        sd_fit <- as.numeric(fit$coefficients[2])
 
-      # Generate data from a multivariate distribution w/ MLE parameters
-      tmp <- tmvtnorm::rtmvnorm(
-        n = ncol(dat),
-        mean = mean_fit,
-        sigma = sd_fit * tune_sigma,
-        upper = qnorm((frac_nas + 0.001),
-                      mean = mean_fit,
-                      sd = sd_fit),
-        algorithm = c("gibbs")
-      ) # End data generation
-      sample_imputed <- dat[idx, ]
-      sample_imputed[which(dat_desc[idx, ] == id_val)] <- tmp[
-        which(dat_desc[idx, ] == id_val)
-      ]
-      dat_imputed[idx, ] <- sample_imputed
+        # Generate data from a multivariate distribution w/ MLE parameters
+        tmp <- tmvtnorm::rtmvnorm(
+          n = ncol(dat),
+          mean = mean_fit,
+          sigma = sd_fit * tune_sigma,
+          upper = qnorm((frac_nas + 0.001),
+                        mean = mean_fit,
+                        sd = sd_fit),
+          algorithm = c("gibbs")
+        ) # End data generation
+        sample_imputed <- dat[idx, ]
+        sample_imputed[which(dat_desc[idx, ] == id_val)] <- tmp[
+          which(dat_desc[idx, ] == id_val)
+        ]
+        dat_imputed[idx, ] <- sample_imputed
+      }
     }) # End loop over samples
-  } # End truncated_normal method
+    # End truncated_normal method
+  } else if (method == "replace") {
+    # Imputation method where values <LOD/LOQ are replaced with e.g., LOD/2
+    ## Check fraction of missing values (within and overall)
+    dat_desc <- tidylog::select(dat_desc, -dplyr::all_of(id_var))
+    frac_within <- dat_desc
+    frac_within[frac_within == id_val] <- NA
+    frac_within <- frac_within |>
+      tidylog::group_by(.data[[by_var]]) |>
+      naniar::miss_var_summary() |>
+      tidylog::filter(pct_miss >= frac_val_threshold_within) |>
+      tidylog::ungroup()
+    dat <- dat |>
+      tidylog::select(-dplyr::all_of(frac_within$variable))
+    dat_desc <- tidylog::select(dat_desc, -dplyr::all_of(by_var))
+
+    frac_overall <- dat_desc
+    frac_overall[frac_overall == id_val] <- NA
+    frac_overall <- frac_overall |>
+      naniar::miss_var_summary() |>
+      tidylog::filter(pct_miss >= frac_val_threshold_overall) |>
+      tidylog::ungroup()
+    dat <- dat |>
+      tidylog::select(-dplyr::all_of(frac_overall$variable))
+
+    ## Impute remaining
+    dat_imputed <- dat |>
+      dplyr::rowwise() |>
+      tidylog::mutate(dplyr::across(
+        dplyr::everything(),
+        \(x) dplyr::case_when(
+          is.na(x) & dat_desc[dplyr::row_number(),
+                              dplyr::cur_column()] == id_val ~ as.numeric(
+                                replacement_vals[replacement_vals$var == dplyr::cur_column(),
+                                                 "val"]
+                              ) / 2,
+          TRUE ~ x
+        )
+      )) # End mutate for replacement
+  } # End replace method
 
   # Tidy results
   dat_imputed <- tibble::as_tibble(dat_imputed) |>

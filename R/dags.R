@@ -73,7 +73,7 @@ minimize_missings <- function(dat, meta, adjustment_sets,
 
   # Sum of missing values, for each adjustment set
   ret <- ret_miss |>
-    tidylog::select(-{{by_var}}) |>
+    tidylog::select(-.data[[by_var]]) |>
     colSums() |>
     which.min() |>
     as.integer()

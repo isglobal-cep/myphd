@@ -9,6 +9,7 @@ preproc_data(
   dat_desc = NULL,
   covariates,
   outcome,
+  dat_llodq,
   dic_steps,
   id_var,
   by_var
@@ -28,6 +29,8 @@ include the following elements:
 \item \code{id_val}, .
 \item \code{method}, the method to be used. A string.
 \item \code{creatinine_threshold}, .
+\item \code{threshold_within}, .
+\item \code{threshold_overall}, .
 \item \code{tune_sigma}, .
 \item \code{missings}, to handle missing values. A named list with elements:
 \item \code{threshold_within}, the missing value threshold within each group. An integer.

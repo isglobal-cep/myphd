@@ -11,7 +11,10 @@ handle_llodq(
   dat_desc,
   id_val,
   method,
+  replacement_vals,
   creatinine_threshold,
+  frac_val_threshold_within,
+  frac_val_threshold_overall,
   tune_sigma
 )
 }
