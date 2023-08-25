@@ -1,7 +1,5 @@
 
-# `myphd`: An R package for a PhD in my group
-
-[![DOI](https://zenodo.org/badge/588487421.svg)](https://zenodo.org/badge/latestdoi/588487421)
+# `myphd`: An R package for a PhD in my group <img src="man/figures/sticker.png" align="right" width="150"/>
 
 > A easy to use package for common tasks in epidemiology and causal
 > inference research projects.
