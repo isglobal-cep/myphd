@@ -57,7 +57,7 @@ method to be used to estimate the weights.</p>
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>dat</dt>
-<dd><p>A dataframe containing the variables of interest. A tibble.</p></dd>
+<dd><p>A dataframe containing the variables of interest. A dataframe.</p></dd>
 
 
 <dt>exposure</dt>
@@ -68,8 +68,12 @@ method to be used to estimate the weights.</p>
 <dd><p>A vector of covariates' names. A vector.</p></dd>
 
 
+<dt>id_var</dt>
+<dd><p>The variable name to be used to identify subjects. A string.</p></dd>
+
+
 <dt>method</dt>
-<dd><p>The method to be used to estimate the weights. A string.</p></dd>
+<dd><p>The method to be used by <a href="https://ngreifer.github.io/WeightIt/reference/weightit.html" class="external-link">weightit</a> to estimate the weights. A string.</p></dd>
 
 
 <dt>method_args</dt>

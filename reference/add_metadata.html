@@ -63,18 +63,29 @@ the dataset.</p>
 
 
 <dt>metadat</dt>
-<dd><p>A dataframe or tibble of metadata. A dataframe.</p></dd>
+<dd><p>A dataframe or tibble of metadata.
+Currently, the following fields are required:</p><ul><li><p><code>description</code>, a text description of the variable.</p></li>
+<li><p><code>remark</code>, any remark about the variable (e.g., if certain values were imputed).</p></li>
+<li><p><code>type</code>, type of variable (e.g., numerical).</p></li>
+<li><p><code>comments</code>, any other remark about the variable (e.g., unit of measurement).</p></li>
+<li><p><code>dag</code>, name of the variable as present in the DAG.</p></li>
+<li><p><code>period</code>, period of measurement of the variable (e.g., pregnancy).</p></li>
+<li><p><code>label</code>, labels of the levels in case of categorical variables,
+separated by a comma and a space.</p></li>
+<li><p><code>code</code>, levels of the variable if categorical, separated by a comma.
+A dataframe.</p></li>
+</ul></dd>
 
 
 <dt>categorical_types</dt>
-<dd></dd>
+<dd><p>Identifiers, as strings, of categorical types. A vector.</p></dd>
 
 </dl></div>
     <div id="value">
     <h2>Value</h2>
     
 
-<p>A tibble containing both data and metadata.</p>
+<p>A dataframe containing annotated variables.</p>
     </div>
 
   </div>
