@@ -7,7 +7,7 @@
 explore_shift(dat, shift_type, shift_amount)
 }
 \arguments{
-\item{dat}{A dataframe containing the variables of interest. A tibble.}
+\item{dat}{A dataframe containing the variables of interest. A dataframe.}
 
 \item{shift_type}{A string indicating whether to apply a
 multiplicative (\code{mul}) or additive (\code{add}) type of shift. A string.}

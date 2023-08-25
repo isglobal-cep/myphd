@@ -7,7 +7,7 @@
 explore_missings(dat, id_var, by_var, path_save)
 }
 \arguments{
-\item{dat}{A dataframe containing the variables of interest. A tibble.}
+\item{dat}{A dataframe containing the variables of interest. A dataframe.}
 
 \item{id_var}{The variable name to be used to identify subjects. A string.}
 

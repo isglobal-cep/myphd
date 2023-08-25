@@ -7,13 +7,13 @@
 minimize_missings(dat, meta, adjustment_sets, by_var)
 }
 \arguments{
-\item{dat}{A dataframe containing the variables of interest. A tibble.}
+\item{dat}{A dataframe containing the variables of interest. A dataframe.}
 
-\item{meta}{A dataframe containing the metadata. A tibble.}
+\item{meta}{A dataframe containing the metadata. A dataframe.}
 
 \item{adjustment_sets}{A list of adjustment sets. A character vector.}
 
-\item{by_var}{}
+\item{by_var}{The variable name to group by. A string.}
 }
 \value{
 An integer corresponding to the index of the adjustment

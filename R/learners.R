@@ -1,5 +1,7 @@
 #' Title
 #'
+#' @description
+#'
 #' @param dat
 #' @param outcome
 #' @param exposure
@@ -12,7 +14,7 @@
 #' @param threshold_smooth
 #' @param threshold_k
 #'
-#' @return
+#' @returns
 #'
 #' @export
 create_formula <- function(dat,
@@ -149,7 +151,7 @@ create_formula <- function(dat,
 #' * `threshold_k`, .
 #' @md
 #'
-#' @return
+#' @returns
 #'
 #' @export
 fit_model_weighted <- function(dat,
@@ -212,13 +214,15 @@ fit_model_weighted <- function(dat,
 
 #' Title
 #'
+#' @description
+#'
 #' @param dat A dataframe containing the variables of interest. A tibble.
 #' @param outcome
 #' @param exposure The name of the variable corresponding to the exposure. A string.
 #' @param covariates A vector of covariates' names. A vector.
 #' @param model
 #'
-#' @return
+#' @returns
 #'
 #' @export
 estimate_marginal_effects <- function(dat,

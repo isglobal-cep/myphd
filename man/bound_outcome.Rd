@@ -7,12 +7,12 @@
 bound_outcome(dat, var)
 }
 \arguments{
-\item{dat}{A dataframe containing the variables of interest. A tibble.}
+\item{dat}{A dataframe containing the variables of interest. A dataframe.}
 
 \item{var}{The variable name corresponding to the outcome to be bounded. A string.}
 }
 \value{
-A dataframe containing the bounded outcome. A tibble.
+A dataframe containing the bounded outcome.
 }
 \description{
 In order to be able to use e.g., TMLE, with a continuous outcome,

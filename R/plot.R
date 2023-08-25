@@ -1,8 +1,18 @@
-#' Title
+#' Plot effect estimates with confidence intervals
 #'
-#' @param dat
+#' @description
+#' Given a dataframe with columns `variable`, `estimate`, `se`,
+#' and a column for the size of the points, this function creates
+#' a sort of forest plot. The dataframe can contain as many rows as
+#' results to be plotted. The `variable` column can contain e.g., the
+#' names of the exposures, `estimate` is the point estimate obtained
+#' e.g., with a linear model, while `se` is the standard error of the estimate.
 #'
-#' @return
+#' @param dat A dataframe of results to be plotted. A dataframe.
+#' @param size_points Name of the column in `dat` to use to change
+#' the size of the points in the forest plot.
+#'
+#' @returns A \link[ggplot2]{ggplot} object.
 #'
 #' @export
 plot_effect_estimates <- function(dat, size_points) {

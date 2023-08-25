@@ -16,30 +16,47 @@ preproc_data(
 )
 }
 \arguments{
-\item{dat}{A dataframe containing the variables of interest. A tibble.}
+\item{dat}{A dataframe containing the variables of interest. A dataframe.}
 
-\item{covariates}{A dataframe containing additional variables. A tibble.}
+\item{dat_desc}{A optional dataframe containing the same variables but
+with information on the type of values (e.g., 2 for value <LOD).
+This is necessary to distinguish the type of missing values
+(e.g., missing because <LOD or because no sample was available). A dataframe.}
+
+\item{covariates}{A dataframe containing additional variables. A dataframe.}
 
 \item{outcome}{A string indicating the outcome variable. A string.}
 
-\item{dic_steps}{A nested named list of steps to perform. A list. It can
+\item{dat_llodq}{A optional dataframe containing the LOD/LOQ values (\code{val})
+for the variables (\code{var}) of interest. A dataframe.}
+
+\item{dic_steps}{A ordered, nested named list of steps to perform. A list. It can
 include the following elements:
 \itemize{
 \item \code{llodq}, to handle values <LOD/LOQ. A named list with elements:
-\item \code{id_val}, .
-\item \code{method}, the method to be used. A string.
-\item \code{creatinine_threshold}, .
-\item \code{threshold_within}, .
-\item \code{threshold_overall}, .
-\item \code{tune_sigma}, .
+\item \code{id_val}, which value in \code{dat_desc} should be considered. A integer.
+\item \code{method}, the method to be used. Currently, only a replacement
+approach is supported. A string.
+\item \code{creatinine_threshold}, subjects for which the creatinine levels are
+below this value will not be processed. Currently not used. A double.
+\item \code{threshold_within}, the threshold within each group for the
+fraction of values corresponding to \code{id_val}. An integer.
+\item \code{threshold_overall}, the overall threshold for the
+fraction of values corresponding to \code{id_val}. An integer.
+\item \code{tune_sigma}, currently not supported. A double.
 \item \code{missings}, to handle missing values. A named list with elements:
 \item \code{threshold_within}, the missing value threshold within each group. An integer.
 \item \code{threshold_overall}, the overall missing value threshold. An integer.
-\item \code{selected_covariates}, .
-\item \code{method_imputation}, .
+\item \code{selected_covariates}, a vector of covariates' names. A vector.
+\item \code{method_imputation}, method to be used to impute values.
+Currently, variables can be imputed in a univariate way (\code{univariate}), using
+selected covariates (\code{selected}), or all the covariates
+available in \code{covariates} (\code{all}). A string.
 \item \code{creatinine}, to handle confounding by dilution. A named list with elements:
-\item \code{method}, .
-\item \code{method_fit_args}, options for fitting the models. A list.
+\item \code{method}, the method to be used. Currently, only covariate-adjusted
+standardization is implemented (\code{cas}). A string.
+\item \code{method_fit_args}, options for fitting the models.
+Currently, only the family to be used within \link[stats]{glm}. A list.
 \item \code{creatinine_covariates_names}, .
 \item \code{creatinine_name}, .
 \item \code{standardization}, to standardize variables. A named list with elements:
@@ -60,15 +77,14 @@ This function performs basic pre-processing of a given dataset:
 \itemize{
 \item Data cleaning:
 \itemize{
-\item Removal of incorrect/unwanted variables.
-\item Remove of incorrect/unwanted subjects.
-\item Handling of missing values.
+\item Handling values below the limit of detection (LOD) or quantification (LOQ).
+\item Handling missing values.
 }
 \item Variable transformations:
 \itemize{
-\item Transformation (e.g., log-transformation, bound outcome).
-\item Standardization (zero mean and unit standard deviation).
-\item Normalization (subtract the minimum and divide by the range).
+\item Standardization (with custom center and scale functions).
+\item Correcting for urine dilution with creatinine.
+\item Outcome bounding (for e.g., TMLE).
 }
 }
 }

@@ -14,7 +14,7 @@ explore_balance(exposure, covariates, weights, threshold_cor = 0.1)
 \item{weights}{The \code{weights} element of the result of the call
 to \code{\link[=estimate_weights]{estimate_weights()}}. A \link[WeightIt]{weightit} object.}
 
-\item{threshold_cor}{The balance threshold. A double.}
+\item{threshold_cor}{The balance threshold (default is 0.1). A double.}
 }
 \value{
 A named list containing the exposure name and the results of the

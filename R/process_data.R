@@ -2,20 +2,19 @@
 #'
 #' @description
 #' This function extracts the cohort ID (e.g., SAB) from the subject ID
-#' (e.g., SubjectID). It assumes that the cohort ID corresponds to the first
-#' three letters of the subject ID.
+#' (e.g., SubjectID). By default it takes the first three characters.
 #'
-#' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param dat A dataframe containing the variables of interest. A dataframe.
 #' @param id_var The variable name to be used to identify subjects. A string.
+#' @param st Integer indicating the first element to be extracted (default is 1). An integer.
+#' @param en Integer indicating the last element to be extracted (default is 3). An integer.
 #'
-#' @return A dataframe containing a new column named `cohort`. A tibble.
+#' @returns A dataframe containing a new column named `cohort`. A dataframe.
 #'
 #' @export
-extract_cohort <- function(dat, id_var) {
-  warning("Creating cohort variable from ID variable: it ",
-          "assumes that the first 3 letters represent the cohort.")
+extract_cohort <- function(dat, id_var, st = 1, en = 3) {
   dat <- dat |>
-    tidylog::mutate(cohort = substr(.data[[id_var]], 1, 3))
+    tidylog::mutate(cohort = substr(.data[[id_var]], st, en))
   dat$cohort <- as.factor(dat$cohort)
 
   return(dat)
@@ -23,10 +22,10 @@ extract_cohort <- function(dat, id_var) {
 
 #' Convert time variables to season
 #'
-#' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param dat A dataframe containing the variables of interest. A dataframe.
 #' @param cols A vector of column names as strings. A vector.
 #'
-#' @return A dataframe with additional columns for seasons. A tibble.
+#' @returns A dataframe with additional columns for seasons. A dataframe.
 #'
 #' @export
 convert_time_season <- function(dat, cols) {
@@ -51,40 +50,52 @@ convert_time_season <- function(dat, cols) {
 #' \itemize{
 #'  \item Data cleaning:
 #'    \itemize{
-#'      \item Removal of incorrect/unwanted variables.
-#'      \item Remove of incorrect/unwanted subjects.
-#'      \item Handling of missing values.
+#'      \item Handling values below the limit of detection (LOD) or quantification (LOQ).
+#'      \item Handling missing values.
 #'    }
 #'  \item Variable transformations:
 #'  \itemize{
-#'      \item Transformation (e.g., log-transformation, bound outcome).
-#'      \item Standardization (zero mean and unit standard deviation).
-#'      \item Normalization (subtract the minimum and divide by the range).
+#'      \item Standardization (with custom center and scale functions).
+#'      \item Correcting for urine dilution with creatinine.
+#'      \item Outcome bounding (for e.g., TMLE).
 #'    }
 #' }
 #'
-#' @param dat A dataframe containing the variables of interest. A tibble.
-#' @param dat_desc
-#' @param covariates A dataframe containing additional variables. A tibble.
+#' @param dat A dataframe containing the variables of interest. A dataframe.
+#' @param dat_desc A optional dataframe containing the same variables but
+#' with information on the type of values (e.g., 2 for value <LOD).
+#' This is necessary to distinguish the type of missing values
+#' (e.g., missing because <LOD or because no sample was available). A dataframe.
+#' @param covariates A dataframe containing additional variables. A dataframe.
 #' @param outcome A string indicating the outcome variable. A string.
-#' @param dat_llodq
-#' @param dic_steps A nested named list of steps to perform. A list. It can
+#' @param dat_llodq A optional dataframe containing the LOD/LOQ values (`val`)
+#' for the variables (`var`) of interest. A dataframe.
+#' @param dic_steps A ordered, nested named list of steps to perform. A list. It can
 #' include the following elements:
 #' * `llodq`, to handle values <LOD/LOQ. A named list with elements:
-#'  * `id_val`, .
-#'  * `method`, the method to be used. A string.
-#'  * `creatinine_threshold`, .
-#'  * `threshold_within`, .
-#'  * `threshold_overall`, .
-#'  * `tune_sigma`, .
+#'  * `id_val`, which value in `dat_desc` should be considered. A integer.
+#'  * `method`, the method to be used. Currently, only a replacement
+#'  approach is supported. A string.
+#'  * `creatinine_threshold`, subjects for which the creatinine levels are
+#'  below this value will not be processed. Currently not used. A double.
+#'  * `threshold_within`, the threshold within each group for the
+#'  fraction of values corresponding to `id_val`. An integer.
+#'  * `threshold_overall`, the overall threshold for the
+#'  fraction of values corresponding to `id_val`. An integer.
+#'  * `tune_sigma`, currently not supported. A double.
 #' * `missings`, to handle missing values. A named list with elements:
 #'  * `threshold_within`, the missing value threshold within each group. An integer.
 #'  * `threshold_overall`, the overall missing value threshold. An integer.
-#'  * `selected_covariates`, .
-#'  * `method_imputation`, .
+#'  * `selected_covariates`, a vector of covariates' names. A vector.
+#'  * `method_imputation`, method to be used to impute values.
+#'  Currently, variables can be imputed in a univariate way (`univariate`), using
+#'  selected covariates (`selected`), or all the covariates
+#'  available in `covariates` (`all`). A string.
 #' * `creatinine`, to handle confounding by dilution. A named list with elements:
-#'  * `method`, .
-#'  * `method_fit_args`, options for fitting the models. A list.
+#'  * `method`, the method to be used. Currently, only covariate-adjusted
+#'  standardization is implemented (`cas`). A string.
+#'  * `method_fit_args`, options for fitting the models.
+#'  Currently, only the family to be used within \link[stats]{glm}. A list.
 #'  * `creatinine_covariates_names`, .
 #'  * `creatinine_name`, .
 #' * `standardization`, to standardize variables. A named list with elements:
@@ -158,6 +169,8 @@ preproc_data <- function(dat, dat_desc = NULL, covariates, outcome,
 
 #' Title
 #'
+#' @description
+#'
 #' @param dat
 #' @param covariates
 #' @param id_var
@@ -167,7 +180,7 @@ preproc_data <- function(dat, dat_desc = NULL, covariates, outcome,
 #' @param method
 #' @param method_fit_args
 #'
-#' @return
+#' @returns
 #'
 #' @export
 handle_creatinine_confounding <- function(dat, covariates,
@@ -235,7 +248,7 @@ handle_creatinine_confounding <- function(dat, covariates,
 #'
 #' @description
 #'
-#' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param dat A dataframe containing the variables of interest. A dataframe.
 #' @param id_var
 #' @param by_var
 #' @param dat_desc
@@ -247,7 +260,7 @@ handle_creatinine_confounding <- function(dat, covariates,
 #' @param frac_val_threshold_overall
 #' @param tune_sigma
 #'
-#' @return
+#' @returns
 #'
 #' @export
 handle_llodq <- function(dat, id_var, by_var,
@@ -402,8 +415,8 @@ handle_llodq <- function(dat, id_var, by_var,
 #' \link[missRanger]{missRanger} function.
 #' @md
 #'
-#' @param dat A dataframe containing the variables of interest. A tibble.
-#' @param covariates A dataframe containing additional variables. A tibble.
+#' @param dat A dataframe containing the variables of interest. A dataframe.
+#' @param covariates A dataframe containing additional variables. A dataframe.
 #' @param selected_covariates
 #' @param id_var The variable name to be used to identify subjects. A string.
 #' @param by_var The variable name to group by. A string.
@@ -411,7 +424,7 @@ handle_llodq <- function(dat, id_var, by_var,
 #' @param threshold_overall The overall missing value threshold. An integer.
 #' @param method_imputation
 #'
-#' @return A named list containing the results of the steps described above.
+#' @returns A named list containing the results of the steps described above.
 #' The imputed dataset is named `dat_imputed`.
 #'
 #' @export
@@ -520,7 +533,7 @@ handle_missing_values <- function(dat,
 #' @param center_fun
 #' @param scale_fun
 #'
-#' @return
+#' @returns
 #'
 #' @export
 handle_standardization <- function(dat,
@@ -544,10 +557,10 @@ handle_standardization <- function(dat,
 #' it is necessary to bound it between 0 and 1. This function performs
 #' the necessary steps.
 #'
-#' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param dat A dataframe containing the variables of interest. A dataframe.
 #' @param var The variable name corresponding to the outcome to be bounded. A string.
 #'
-#' @return A dataframe containing the bounded outcome. A tibble.
+#' @returns A dataframe containing the bounded outcome.
 #'
 #' @export
 bound_outcome <- function(dat, var) {

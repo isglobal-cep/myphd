@@ -7,12 +7,12 @@
 convert_time_season(dat, cols)
 }
 \arguments{
-\item{dat}{A dataframe containing the variables of interest. A tibble.}
+\item{dat}{A dataframe containing the variables of interest. A dataframe.}
 
 \item{cols}{A vector of column names as strings. A vector.}
 }
 \value{
-A dataframe with additional columns for seasons. A tibble.
+A dataframe with additional columns for seasons. A dataframe.
 }
 \description{
 Convert time variables to season

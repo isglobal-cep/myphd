@@ -16,9 +16,9 @@ handle_missing_values(
 )
 }
 \arguments{
-\item{dat}{A dataframe containing the variables of interest. A tibble.}
+\item{dat}{A dataframe containing the variables of interest. A dataframe.}
 
-\item{covariates}{A dataframe containing additional variables. A tibble.}
+\item{covariates}{A dataframe containing additional variables. A dataframe.}
 
 \item{id_var}{The variable name to be used to identify subjects. A string.}
 

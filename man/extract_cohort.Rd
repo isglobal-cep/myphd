@@ -4,18 +4,21 @@
 \alias{extract_cohort}
 \title{Extract the cohort label from the subject ID}
 \usage{
-extract_cohort(dat, id_var)
+extract_cohort(dat, id_var, st = 1, en = 3)
 }
 \arguments{
-\item{dat}{A dataframe containing the variables of interest. A tibble.}
+\item{dat}{A dataframe containing the variables of interest. A dataframe.}
 
 \item{id_var}{The variable name to be used to identify subjects. A string.}
+
+\item{st}{Integer indicating the first element to be extracted (default is 1). An integer.}
+
+\item{en}{Integer indicating the last element to be extracted (default is 3). An integer.}
 }
 \value{
-A dataframe containing a new column named \code{cohort}. A tibble.
+A dataframe containing a new column named \code{cohort}. A dataframe.
 }
 \description{
 This function extracts the cohort ID (e.g., SAB) from the subject ID
-(e.g., SubjectID). It assumes that the cohort ID corresponds to the first
-three letters of the subject ID.
+(e.g., SubjectID). By default it takes the first three characters.
 }

@@ -9,9 +9,9 @@ test_npsem(dag, dat, meta, params)
 \arguments{
 \item{dag}{A \link[dagitty]{dagitty} object.}
 
-\item{dat}{A dataframe containing the variables of interest. A tibble.}
+\item{dat}{A dataframe containing the variables of interest. A dataframe.}
 
-\item{meta}{A dataframe containing the metadata. A tibble.}
+\item{meta}{A dataframe containing the metadata. A dataframe.}
 
 \item{params}{A named list with the following variables:
 \itemize{

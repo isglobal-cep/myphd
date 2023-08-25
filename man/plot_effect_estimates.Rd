@@ -2,13 +2,24 @@
 % Please edit documentation in R/plot.R
 \name{plot_effect_estimates}
 \alias{plot_effect_estimates}
-\title{Title}
+\title{Plot effect estimates with confidence intervals}
 \usage{
 plot_effect_estimates(dat, size_points)
 }
 \arguments{
-\item{dat}{}
+\item{dat}{A dataframe of results to be plotted. A dataframe.}
+
+\item{size_points}{Name of the column in \code{dat} to use to change
+the size of the points in the forest plot.}
+}
+\value{
+A \link[ggplot2]{ggplot} object.
 }
 \description{
-Title
+Given a dataframe with columns \code{variable}, \code{estimate}, \code{se},
+and a column for the size of the points, this function creates
+a sort of forest plot. The dataframe can contain as many rows as
+results to be plotted. The \code{variable} column can contain e.g., the
+names of the exposures, \code{estimate} is the point estimate obtained
+e.g., with a linear model, while \code{se} is the standard error of the estimate.
 }

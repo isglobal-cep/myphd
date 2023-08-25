@@ -1,11 +1,19 @@
-#' Title
+#' Create dataframe for marginal comparisons
 #'
-#' @param dat
-#' @param var
-#' @param percentiles
-#' @param by_var
+#' @description
+#' Given a dataframe with the variable of interest and a vector of lower and
+#' upper percentiles, the function creates two new columns called `low` and
+#' `high` corresponding to the quantiles of interest.
 #'
-#' @return
+#' @param dat A dataframe containing the variables of interest. A dataframe.
+#' @param var The name of the variable of interest. A string.
+#' @param percentiles A vector with two elements corresponding to the
+#' lower and upper percentiles. A vector.
+#' @param by_var The variable name to group by. A string.
+#'
+#' @returns A dataframe with two new columns, `low` and `high`, to be used for
+#' marginal comparisons.
+#'
 #' @export
 create_df_marginal_comparisons <- function(dat, var, percentiles, by_var) {
   # Checks
@@ -61,10 +69,22 @@ create_mapping_labels <- function(labels, codes) {
 #' the dataset.
 #'
 #' @param dat A dataframe or tibble of data. A dataframe.
-#' @param metadat A dataframe or tibble of metadata. A dataframe.
-#' @param categorical_types
+#' @param metadat A dataframe or tibble of metadata.
+#' Currently, the following fields are required:
+#' * `description`, a text description of the variable.
+#' * `remark`, any remark about the variable (e.g., if certain values were imputed).
+#' * `type`, type of variable (e.g., numerical).
+#' * `comments`, any other remark about the variable (e.g., unit of measurement).
+#' * `dag`, name of the variable as present in the DAG.
+#' * `period`, period of measurement of the variable (e.g., pregnancy).
+#' * `label`, labels of the levels in case of categorical variables,
+#' separated by a comma and a space.
+#' * `code`, levels of the variable if categorical, separated by a comma.
+#' A dataframe.
+#' @param categorical_types Identifiers, as strings, of categorical types. A vector.
+#' @md
 #'
-#' @returns A tibble containing both data and metadata.
+#' @returns A dataframe containing annotated variables.
 #'
 #' @export
 add_metadata <- function(dat, metadat, categorical_types) {

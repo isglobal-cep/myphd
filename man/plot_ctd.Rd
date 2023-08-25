@@ -7,9 +7,9 @@
 plot_ctd(dat, group = NULL)
 }
 \arguments{
-\item{dat}{The CTD dataset. A tibble.}
+\item{dat}{The CTD dataset. A dataframe.}
 
-\item{group}{The faceting variable. A string.}
+\item{group}{The faceting variable (optional). A string.}
 }
 \value{
 A ggplot object.

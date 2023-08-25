@@ -31,10 +31,10 @@ find_common_confounders <- function(dag, type_mas, type_effect) {
 #' find the set that minimizes the number of missing values
 #' for the confounders.
 #'
-#' @param dat A dataframe containing the variables of interest. A tibble.
-#' @param meta A dataframe containing the metadata. A tibble.
+#' @param dat A dataframe containing the variables of interest. A dataframe.
+#' @param meta A dataframe containing the metadata. A dataframe.
 #' @param adjustment_sets A list of adjustment sets. A character vector.
-#' @param by_var
+#' @param by_var The variable name to group by. A string.
 #'
 #' @returns An integer corresponding to the index of the adjustment
 #' set that minimizes the number of missing values.
@@ -154,8 +154,8 @@ from_dagitty_to_ggdag <- function(dag) {
 #' @md
 #'
 #' @param dag A \link[dagitty]{dagitty} object.
-#' @param dat A dataframe containing the variables of interest. A tibble.
-#' @param meta A dataframe containing the metadata. A tibble.
+#' @param dat A dataframe containing the variables of interest. A dataframe.
+#' @param meta A dataframe containing the metadata. A dataframe.
 #' @param params A named list with the following variables:
 #' * `type_mas`, the type of adjustment set.
 #' * `type_effect`, the type of effect to be estimated.

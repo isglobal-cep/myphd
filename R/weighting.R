@@ -5,11 +5,11 @@
 #' \link[WeightIt]{weightit} function. The user can specify the
 #' method to be used to estimate the weights.
 #'
-#' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param dat A dataframe containing the variables of interest. A dataframe.
 #' @param exposure The name of the variable corresponding to the exposure. A string.
 #' @param covariates A vector of covariates' names. A vector.
-#' @param id_var
-#' @param method The method to be used to estimate the weights. A string.
+#' @param id_var The variable name to be used to identify subjects. A string.
+#' @param method The method to be used by \link[WeightIt]{weightit} to estimate the weights. A string.
 #' @param method_args A named list with the following variables:
 #' * `use_kernel`, whether to use kernel density estimation
 #' to estimate the numerator and denominator densities for the weights. A logical.
@@ -90,9 +90,9 @@ estimate_weights <- function(dat,
 #' @param covariates A vector of covariates' names. A vector.
 #' @param weights The `weights` element of the result of the call
 #' to [estimate_weights()]. A \link[WeightIt]{weightit} object.
-#' @param threshold_cor The balance threshold. A double.
+#' @param threshold_cor The balance threshold (default is 0.1). A double.
 #'
-#' @return A named list containing the exposure name and the results of the
+#' @returns A named list containing the exposure name and the results of the
 #' steps described above. A list.
 #'
 #' @export

@@ -6,12 +6,12 @@
 #' applying a shift function, that can be multiplicative or
 #' additive.
 #'
-#' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param dat A dataframe containing the variables of interest. A dataframe.
 #' @param shift_type A string indicating whether to apply a
 #' multiplicative (`mul`) or additive (`add`) type of shift. A string.
 #' @param shift_amount The shift value to be applied. A double.
 #'
-#' @return A \link[ggplot2]{ggplot} object.
+#' @returns A \link[ggplot2]{ggplot} object.
 #'
 #' @export
 explore_shift <- function(dat,
@@ -72,11 +72,11 @@ explore_shift <- function(dat,
 #' with both Pearson's and Spearman's correlation.
 #' @md
 #'
-#' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param dat A dataframe containing the variables of interest. A dataframe.
 #' @param id_var The variable name to be used to identify subjects. A string.
 #' @param by_var The variable name to group by. A string.
 #'
-#' @return A nested named list containing the objects corresponding to the
+#' @returns A nested named list containing the objects corresponding to the
 #' steps described above.
 #'
 #' @export
@@ -251,12 +251,12 @@ describe_data <- function(dat, id_var, by_var) {
 #' The null hypothesis in this test is that the data is MCAR.
 #' @md
 #'
-#' @param dat A dataframe containing the variables of interest. A tibble.
+#' @param dat A dataframe containing the variables of interest. A dataframe.
 #' @param id_var The variable name to be used to identify subjects. A string.
 #' @param by_var The variable name to group by. A string.
 #' @param path_save The path where to store the missingness report. A string.
 #'
-#' @return A named list containing the objects corresponding to the
+#' @returns A named list containing the objects corresponding to the
 #' steps described above.
 #'
 #' @export

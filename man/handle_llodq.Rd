@@ -19,7 +19,7 @@ handle_llodq(
 )
 }
 \arguments{
-\item{dat}{A dataframe containing the variables of interest. A tibble.}
+\item{dat}{A dataframe containing the variables of interest. A dataframe.}
 
 \item{tune_sigma}{}
 }

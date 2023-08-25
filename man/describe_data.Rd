@@ -7,7 +7,7 @@
 describe_data(dat, id_var, by_var)
 }
 \arguments{
-\item{dat}{A dataframe containing the variables of interest. A tibble.}
+\item{dat}{A dataframe containing the variables of interest. A dataframe.}
 
 \item{id_var}{The variable name to be used to identify subjects. A string.}
 

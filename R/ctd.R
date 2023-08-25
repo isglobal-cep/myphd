@@ -4,7 +4,7 @@
 #' @param filter_evidence Indicates whether to filter the type of
 #'                        direct evidence. A bool.
 #'
-#' @returns A tibble containing the CTD database.
+#' @returns A dataframe containing the CTD database.
 #'
 #' @export
 load_ctd <- function(path, filter_evidence) {
@@ -34,8 +34,8 @@ load_ctd <- function(path, filter_evidence) {
 #' Given a dataframe with the data from the CTD, create a bar plot of the
 #' categories.
 #'
-#' @param dat The CTD dataset. A tibble.
-#' @param group The faceting variable. A string.
+#' @param dat The CTD dataset. A dataframe.
+#' @param group The faceting variable (optional). A string.
 #'
 #' @returns A ggplot object.
 #'

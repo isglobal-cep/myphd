@@ -9,12 +9,25 @@ add_metadata(dat, metadat, categorical_types)
 \arguments{
 \item{dat}{A dataframe or tibble of data. A dataframe.}
 
-\item{metadat}{A dataframe or tibble of metadata. A dataframe.}
+\item{metadat}{A dataframe or tibble of metadata.
+Currently, the following fields are required:
+\itemize{
+\item \code{description}, a text description of the variable.
+\item \code{remark}, any remark about the variable (e.g., if certain values were imputed).
+\item \code{type}, type of variable (e.g., numerical).
+\item \code{comments}, any other remark about the variable (e.g., unit of measurement).
+\item \code{dag}, name of the variable as present in the DAG.
+\item \code{period}, period of measurement of the variable (e.g., pregnancy).
+\item \code{label}, labels of the levels in case of categorical variables,
+separated by a comma and a space.
+\item \code{code}, levels of the variable if categorical, separated by a comma.
+A dataframe.
+}}
 
-\item{categorical_types}{}
+\item{categorical_types}{Identifiers, as strings, of categorical types. A vector.}
 }
 \value{
-A tibble containing both data and metadata.
+A dataframe containing annotated variables.
 }
 \description{
 Given a dataset with observations as rows and variables as columns,

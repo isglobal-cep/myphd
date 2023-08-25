@@ -7,13 +7,15 @@
 estimate_weights(dat, exposure, covariates, id_var, method, method_args)
 }
 \arguments{
-\item{dat}{A dataframe containing the variables of interest. A tibble.}
+\item{dat}{A dataframe containing the variables of interest. A dataframe.}
 
 \item{exposure}{The name of the variable corresponding to the exposure. A string.}
 
 \item{covariates}{A vector of covariates' names. A vector.}
 
-\item{method}{The method to be used to estimate the weights. A string.}
+\item{id_var}{The variable name to be used to identify subjects. A string.}
+
+\item{method}{The method to be used by \link[WeightIt]{weightit} to estimate the weights. A string.}
 
 \item{method_args}{A named list with the following variables:
 \itemize{

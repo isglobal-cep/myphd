@@ -2,13 +2,26 @@
 % Please edit documentation in R/create_data.R
 \name{create_df_marginal_comparisons}
 \alias{create_df_marginal_comparisons}
-\title{Title}
+\title{Create dataframe for marginal comparisons}
 \usage{
 create_df_marginal_comparisons(dat, var, percentiles, by_var)
 }
 \arguments{
-\item{by_var}{}
+\item{dat}{A dataframe containing the variables of interest. A dataframe.}
+
+\item{var}{The name of the variable of interest. A string.}
+
+\item{percentiles}{A vector with two elements corresponding to the
+lower and upper percentiles. A vector.}
+
+\item{by_var}{The variable name to group by. A string.}
+}
+\value{
+A dataframe with two new columns, \code{low} and \code{high}, to be used for
+marginal comparisons.
 }
 \description{
-Title
+Given a dataframe with the variable of interest and a vector of lower and
+upper percentiles, the function creates two new columns called \code{low} and
+\code{high} corresponding to the quantiles of interest.
 }
