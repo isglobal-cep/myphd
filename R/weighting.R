@@ -48,9 +48,13 @@ estimate_weights <- function(dat,
   ret <- WeightIt::weightit(formula = as.formula(form),
                             data = dat,
                             method = method,
+                            stabilize = method_args$stabilize,
+                            by = method_args$by,
                             ps = NULL,
                             subclass = NULL,
                             missing = "ind",
+                            verbose = FALSE,
+                            include.obj = TRUE,
                             SL.library = method_args$sl_lib,
                             cvControl = list(
                               V = 3,
@@ -62,9 +66,7 @@ estimate_weights <- function(dat,
                               method_args$use_kernel == TRUE,
                               TRUE,
                               FALSE
-                            ),
-                            verbose = FALSE,
-                            include.obj = TRUE)
+                            ))
 
   return(list(
     weights = ret,
