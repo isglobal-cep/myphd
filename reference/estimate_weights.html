@@ -77,12 +77,15 @@ method to be used to estimate the weights.</p>
 
 
 <dt>method_args</dt>
-<dd><p>A named list with the following variables:</p><ul><li><p><code>use_kernel</code>, whether to use kernel density estimation
-to estimate the numerator and denominator densities for the weights. A logical.</p></li>
-<li><p><code>sl_discrete</code>, whether to use discrete SuperLearner, which
-selects the best performing method, or to find the optimal combination of predictions.</p></li>
+<dd><p>A named list with the following variables:</p><ul><li><p><code>stabilize</code>, whether to stabilize the weights or not.</p></li>
+<li><p><code>by</code>, a string containing the name of the variable
+for which weighting is to be done within categories.</p></li>
 <li><p><code>sl_lib</code>, either a vector of learners or <code>FALSE</code>, in which case
 it uses a fixed library of learners.</p></li>
+<li><p><code>sl_discrete</code>, whether to use discrete SuperLearner, which
+selects the best performing method, or to find the optimal combination of predictions.</p></li>
+<li><p><code>use_kernel</code>, whether to use kernel density estimation
+to estimate the numerator and denominator densities for the weights. A logical.</p></li>
 </ul></dd>
 
 </dl></div>
