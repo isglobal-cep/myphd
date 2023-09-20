@@ -11,12 +11,15 @@
 #' @param id_var The variable name to be used to identify subjects. A string.
 #' @param method The method to be used by \link[WeightIt]{weightit} to estimate the weights. A string.
 #' @param method_args A named list with the following variables:
-#' * `use_kernel`, whether to use kernel density estimation
-#' to estimate the numerator and denominator densities for the weights. A logical.
-#' * `sl_discrete`, whether to use discrete SuperLearner, which
-#' selects the best performing method, or to find the optimal combination of predictions.
+#' * `stabilize`, whether to stabilize the weights or not.
+#' * `by`, a string containing the name of the variable
+#' for which weighting is to be done within categories.
 #' * `sl_lib`, either a vector of learners or `FALSE`, in which case
 #' it uses a fixed library of learners.
+#' * `sl_discrete`, whether to use discrete SuperLearner, which
+#' selects the best performing method, or to find the optimal combination of predictions.
+#' * `use_kernel`, whether to use kernel density estimation
+#' to estimate the numerator and denominator densities for the weights. A logical.
 #' @md
 #'
 #' @returns A named list containing the estimated weights, and the names

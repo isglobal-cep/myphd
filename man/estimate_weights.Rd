@@ -19,12 +19,15 @@ estimate_weights(dat, exposure, covariates, id_var, method, method_args)
 
 \item{method_args}{A named list with the following variables:
 \itemize{
-\item \code{use_kernel}, whether to use kernel density estimation
-to estimate the numerator and denominator densities for the weights. A logical.
-\item \code{sl_discrete}, whether to use discrete SuperLearner, which
-selects the best performing method, or to find the optimal combination of predictions.
+\item \code{stabilize}, whether to stabilize the weights or not.
+\item \code{by}, a string containing the name of the variable
+for which weighting is to be done within categories.
 \item \code{sl_lib}, either a vector of learners or \code{FALSE}, in which case
 it uses a fixed library of learners.
+\item \code{sl_discrete}, whether to use discrete SuperLearner, which
+selects the best performing method, or to find the optimal combination of predictions.
+\item \code{use_kernel}, whether to use kernel density estimation
+to estimate the numerator and denominator densities for the weights. A logical.
 }}
 }
 \value{
