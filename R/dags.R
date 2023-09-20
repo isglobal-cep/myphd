@@ -46,7 +46,7 @@ minimize_missings <- function(dat, meta, adjustment_sets,
 
   # List of dataframes with covariates from adjustment sets
   dfs_covars <- lapply(adjustment_sets, function(x) {
-    mapping_covars <- meta[meta$dag %in% x, ]$variable |>
+    mapping_covars <- meta[get("dag", meta) %in% x,]$variable |>
       as.character()
     tmp <- dat |>
       tidylog::select(dplyr::all_of(c(by_var,
@@ -68,7 +68,11 @@ minimize_missings <- function(dat, meta, adjustment_sets,
     purrr::reduce(dplyr::bind_cols))
   colnames(ret_miss) <- paste0("adj_set_", 1:ncol(ret_miss))
   ret_miss <- ret_miss |>
-    tidylog::mutate({{by_var}} := levels_group_var) |>
+    tidylog::mutate({
+      {
+        by_var
+      }
+    } := levels_group_var) |>
     tidylog::relocate(.data[[by_var]])
 
   # Sum of missing values, for each adjustment set
@@ -94,9 +98,13 @@ visualize_dag <- function(dag) {
   ret <- dag |>
     ggdag::tidy_dagitty() |>
     ggdag::node_status() |>
-    ggplot2::ggplot(ggplot2::aes(x, y,
-                                 xend = xend, yend = yend,
-                                 color = status)) +
+    ggplot2::ggplot(ggplot2::aes(
+      x,
+      y,
+      xend = xend,
+      yend = yend,
+      color = status
+    )) +
     ggdag::geom_dag_edges() +
     ggdag::geom_dag_point() +
     geom_dag_text_repel() +
@@ -124,7 +132,7 @@ from_dagitty_to_ggdag <- function(dag) {
   dag <- dagitty::dagitty(dag)
 
   to_ggdag <- ggdag::tidy_dagitty(dag) |>
-    (\(x) x$data) () |>
+    (\(x) get("data", x)) () |>
     tidylog::select(name, to) |>
     tidylog::rename(from = name) |>
     tidylog::group_by(to) |>
@@ -173,13 +181,15 @@ test_npsem <- function(dag, dat, meta, params) {
           call. = TRUE)
 
   # Step 1: extract adjustment set(s)
-  dag_as <- dagitty::adjustmentSets(x = dag,
-                                    type = params$type_mas,
-                                    effect = params$type_effect)
+  dag_as <- dagitty::adjustmentSets(
+    x = dag,
+    type = get("type_mas", params),
+    effect = get("type_effect", params)
+  )
 
   res <- lapply(dag_as, function(as) {
     ret <- list()
-    ret$mapping_covars <- meta[meta$dag %in% as, ] |>
+    ret$mapping_covars <- meta[get("dag", meta) %in% as,] |>
       tidylog::distinct(dag, .keep_all = TRUE) |>
       tidylog::select(variable) |>
       c() |> unname() |> unlist() |> as.character()
@@ -189,25 +199,33 @@ test_npsem <- function(dag, dat, meta, params) {
     covariates <- dat$covariates |>
       tidylog::select(params$identifier,
                       dplyr::all_of(ret$mapping_covars))
-    colnames(covariates) <- c(params$identifier,
-                              meta[meta$variable %in% ret$mapping_covars, ]$dag |>
+    colnames(covariates) <- c(get("identifier", params),
+                              meta[get("variable", meta) %in% get("mapping_covars",
+                                                                  ret),]$dag |>
                                 as.character())
-    covariates <- covariates[, !duplicated(colnames(covariates))]
+    covariates <- covariates[,!duplicated(colnames(covariates))]
 
     # Step 3: test independencies for each exposure
-    exposure_list <- setdiff(colnames(dat$exposures), params$identifier)
+    exposure_list <- setdiff(colnames(get("exposures", dat)),
+                             get("identifier", params))
     ret$tests <- lapply(exposure_list, function(expo) {
-      dat_test <- purrr::reduce(list(covariates,
-                                     dat$exposures |>
-                                       tidylog::select(params$identifier,
-                                                       .data[[expo]]),
-                                     dat$outcome),
-                                tidylog::full_join,
-                                by = params$identifier)
-      test <- dagitty::localTests(x = dag,
-                                  data = dat_test,
-                                  type = "cis.loess",
-                                  R = 3)
+      dat_test <- purrr::reduce(
+        list(
+          covariates,
+          dat$exposures |>
+            tidylog::select(get("identifier", params),
+                            .data[[expo]]),
+          dat$outcome
+        ),
+        tidylog::full_join,
+        by = get("identifier", params)
+      )
+      test <- dagitty::localTests(
+        x = dag,
+        data = dat_test,
+        type = "cis.loess",
+        R = 3
+      )
       return(test)
     }) # End lapply over exposures
 

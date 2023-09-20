@@ -39,7 +39,7 @@ estimate_weights <- function(dat,
     exposure = exposure,
     covariates = covariates,
     id_var = id_var,
-    method = method,
+    method = NULL,
     add_inter_exposure = NULL,
     add_splines_exposure = NULL,
     df_splines = NULL,
@@ -48,28 +48,26 @@ estimate_weights <- function(dat,
   )
 
   # Estimate weights using `WeightIt`
-  ret <- WeightIt::weightit(formula = as.formula(form),
-                            data = dat,
-                            method = method,
-                            stabilize = method_args$stabilize,
-                            by = method_args$by,
-                            ps = NULL,
-                            subclass = NULL,
-                            missing = "ind",
-                            verbose = FALSE,
-                            include.obj = TRUE,
-                            SL.library = method_args$sl_lib,
-                            cvControl = list(
-                              V = 3,
-                              shuffle = FALSE
-                            ),
-                            discrete = FALSE,
-                            use_kernel = method_args$use_kernel,
-                            plot = ifelse(
-                              method_args$use_kernel == TRUE,
-                              TRUE,
-                              FALSE
-                            ))
+  ret <- WeightIt::weightit(
+    formula = as.formula(form),
+    data = dat,
+    method = method,
+    stabilize = get("stabilize", method_args),
+    by = get("by", method_args),
+    ps = NULL,
+    subclass = NULL,
+    missing = "ind",
+    verbose = FALSE,
+    include.obj = TRUE,
+    SL.library = get("sl_lib", method_args),
+    cvControl = list(V = 3,
+                     shuffle = FALSE),
+    discrete = FALSE,
+    use_kernel = get("use_kernel", method_args),
+    plot = ifelse(get("use_kernel", method_args) == TRUE,
+                  TRUE,
+                  FALSE)
+  )
 
   return(list(
     weights = ret,
@@ -106,12 +104,14 @@ explore_balance <- function(exposure,
                             weights,
                             threshold_cor = 0.1) {
   # Assessing balance numerically
-  tab <- cobalt::bal.tab(weights,
-                         stats = c("c"),
-                         un = TRUE,
-                         thresholds = c(cor = threshold_cor),
-                         int = TRUE,
-                         poly = 1)
+  tab <- cobalt::bal.tab(
+    weights,
+    stats = c("c"),
+    un = TRUE,
+    thresholds = c(cor = threshold_cor),
+    int = TRUE,
+    poly = 1
+  )
 
   # Assessing balance graphically
   graph <- lapply(covariates, function(x) {
@@ -121,13 +121,15 @@ explore_balance <- function(exposure,
   })
 
   # Summarizing balance in a Love plot
-  love <- cobalt::love.plot(weights,
-                            stats = c("c"),
-                            abs = FALSE,
-                            var.order = "unadjusted",
-                            thresholds = c(cor = threshold_cor),
-                            line = TRUE,
-                            title = exposure)
+  love <- cobalt::love.plot(
+    weights,
+    stats = c("c"),
+    abs = FALSE,
+    var.order = "unadjusted",
+    thresholds = c(cor = threshold_cor),
+    line = TRUE,
+    title = exposure
+  )
 
   return(list(
     exposure = exposure,

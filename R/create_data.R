@@ -15,24 +15,23 @@
 #' marginal comparisons.
 #'
 #' @export
-create_df_marginal_comparisons <- function(dat, var, percentiles, by_var) {
-  # Checks
-  if (percentiles[1] < 0 | percentiles[2] > 1) {
-    stop("The percentiles must lie between 0 and 1.",
-         call. = TRUE)
+create_df_marginal_comparisons <-
+  function(dat, var, percentiles, by_var) {
+    # Checks
+    if (percentiles[1] < 0 | percentiles[2] > 1) {
+      stop("The percentiles must lie between 0 and 1.",
+           call. = TRUE)
+    }
+
+    # Compute `low` and `high` values of the variable of interest, by group
+    ret <- dat |>
+      tidylog::group_by(.data[[by_var]]) |>
+      tidylog::mutate(low = quantile(.data[[var]], percentiles[1]),
+                      high = quantile(.data[[var]], percentiles[2])) |>
+      tidylog::ungroup()
+
+    return(ret)
   }
-
-  # Compute `low` and `high` values of the variable of interest, by group
-  ret <- dat |>
-    tidylog::group_by(.data[[by_var]]) |>
-    tidylog::mutate(
-      low = quantile(.data[[var]], percentiles[1]),
-      high = quantile(.data[[var]], percentiles[2])
-    ) |>
-    tidylog::ungroup()
-
-  return(ret)
-}
 
 #' Create a variable's dictionary for its labels
 #'
@@ -101,11 +100,9 @@ add_metadata <- function(dat, metadat, categorical_types) {
   metadat <- metadat |>
     tidylog::mutate(
       type = as.character(type),
-      type = ifelse(
-        type %in% categorical_types,
-        "categorical",
-        type
-      )
+      type = ifelse(type %in% categorical_types,
+                    "categorical",
+                    type)
     )
 
   # Add metadata to each column of dataset
@@ -117,23 +114,23 @@ add_metadata <- function(dat, metadat, categorical_types) {
     info <- metadat |>
       tidylog::filter(variable == x) |>
       as.list()
-    info$description <- .tidy_string(info$description)
-    info$remark <- .tidy_string(info$remark)
-    info$type <- stringr::str_to_lower(info$type)
-    info$comments <- stringr::str_to_lower(info$comments)
+    info$description <- .tidy_string(get("description", info))
+    info$remark <- .tidy_string(get("remark", info))
+    info$type <- stringr::str_to_lower(get("type", info))
+    info$comments <- stringr::str_to_lower(get("comments", info))
     info <- lapply(info, as.character)
 
     # Add metadata
-    attr(dat_modified[[x]], "label") <- info$description
-    attr(dat_modified[[x]], "units") <- info$comments
-    attr(dat_modified[[x]], "remarks") <- info$remark
-    attr(dat_modified[[x]], "dag_var") <- info$dag
-    attr(dat_modified[[x]], "period") <- info$period
-    if (info$type == "categorical") {
+    attr(dat_modified[[x]], "label") <- get("description", info)
+    attr(dat_modified[[x]], "units") <- get("comments", info)
+    attr(dat_modified[[x]], "remarks") <- get("remark", info)
+    attr(dat_modified[[x]], "dag_var") <- get("dag", info)
+    attr(dat_modified[[x]], "period") <- get("period", info)
+    if (get("type", info) == "categorical") {
       dat_modified[[x]] <- labelled::labelled(
         dat_modified[[x]],
-        labels = create_mapping_labels(info$label, info$code),
-        label = info$description
+        labels = create_mapping_labels(get("label", info), get("code", info)),
+        label = get("description", info)
       ) |>
         labelled::to_factor()
     }

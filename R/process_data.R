@@ -32,13 +32,15 @@ convert_time_season <- function(dat, cols) {
   ret <- dat |>
     tidylog::mutate(dplyr::across(dplyr::any_of(cols),
                                   ~ lubridate::month(..1))) |>
-    tidylog::mutate(dplyr::across(dplyr::any_of(cols),
-                                  ~ dplyr::case_when(
-                                    ..1 %in% c(12, 1, 2) ~ "winter",
-                                    ..1 %in% c(3, 4, 5) ~ "spring",
-                                    ..1 %in% c(6, 7, 8) ~ "summer",
-                                    ..1 %in% c(9, 10, 11) ~ "autumn"
-                                  )))
+    tidylog::mutate(dplyr::across(
+      dplyr::any_of(cols),
+      ~ dplyr::case_when(
+        ..1 %in% c(12, 1, 2) ~ "winter",
+        ..1 %in% c(3, 4, 5) ~ "spring",
+        ..1 %in% c(6, 7, 8) ~ "summer",
+        ..1 %in% c(9, 10, 11) ~ "autumn"
+      )
+    ))
 
   return(ret)
 }
@@ -109,58 +111,79 @@ convert_time_season <- function(dat, cols) {
 #' @returns A pre-processed dataset. A tibble.
 #'
 #' @export
-preproc_data <- function(dat, dat_desc = NULL, covariates, outcome,
+preproc_data <- function(dat,
+                         dat_desc = NULL,
+                         covariates,
+                         outcome,
                          dat_llodq = NULL,
                          dic_steps,
-                         id_var, by_var) {
+                         id_var,
+                         by_var) {
   dat_ret <- dat
 
   for (step in names(dic_steps)) {
-    dat_ret <- switch(step,
-                      "llodq" = handle_llodq(
-                        dat = dat_ret,
-                        id_var = id_var,
-                        by_var = by_var,
-                        dat_desc = dat_desc,
-                        id_val = dic_steps$llodq$id_val,
-                        method = dic_steps$llodq$method,
-                        replacement_vals = dat_llodq,
-                        creatinine_threshold = dic_steps$llodq$creatinine_threshold,
-                        frac_val_threshold_within = dic_steps$llodq$threshold_within,
-                        frac_val_threshold_overall = dic_steps$llodq$threshold_overall,
-                        tune_sigma = dic_steps$llodq$tune_sigma
-                      )$dat,
-                      "creatinine" = handle_creatinine_confounding(
-                        dat = dat_ret,
-                        covariates = covariates,
-                        id_var = id_var,
-                        by_var = by_var,
-                        covariates_names = dic_steps$creatinine$creatinine_covariates_names,
-                        creatinine = dic_steps$creatinine$creatinine_name,
-                        method = dic_steps$creatinine$method,
-                        method_fit_args = dic_steps$creatinine$method_fit_args
-                      ),
-                      "missings" = handle_missing_values(
-                        dat = dat_ret,
-                        covariates = covariates,
-                        selected_covariates = dic_steps$missings$selected_covariates,
-                        id_var = id_var,
-                        by_var = by_var,
-                        threshold_within = dic_steps$missings$threshold_within,
-                        threshold_overall = dic_steps$missings$threshold_overall,
-                        method_imputation = dic_steps$missings$method_imputation
-                      )$dat_imputed,
-                      "standardization" = handle_standardization(
-                        dat = dat_ret,
-                        id_var = id_var,
-                        center_fun = dic_steps$standardization$center_fun,
-                        scale_fun = dic_steps$standardization$scale_fun
-                      ),
-                      "bound" = bound_outcome(
-                        dat = dat_ret,
-                        var = outcome
-                      ),
-                      stop("Invalid `step` option.")
+    dat_ret <- switch(
+      step,
+      "llodq" = handle_llodq(
+        dat = dat_ret,
+        id_var = id_var,
+        by_var = by_var,
+        dat_desc = dat_desc,
+        id_val = get("id_val",
+                     get("llodq", dic_steps)),
+        method = get("method",
+                     get("llodq", dic_steps)),
+        replacement_vals = dat_llodq,
+        creatinine_threshold = get("creatinine_threshold",
+                                   get("llodq", dic_steps)),
+        frac_val_threshold_within = get("threshold_within",
+                                        get("llodq", dic_steps)),
+        frac_val_threshold_overall = get("threshold_overall",
+                                         get("llodq", dic_steps)),
+        tune_sigma = get("tune_sigma",
+                         get("llodq", dic_steps))
+      )$dat,
+      "creatinine" = handle_creatinine_confounding(
+        dat = dat_ret,
+        covariates = covariates,
+        id_var = id_var,
+        by_var = by_var,
+        covariates_names = get(
+          "creatinine_covariates_names",
+          get("creatinine", dic_steps)
+        ),
+        creatinine = get("creatinine_name",
+                         get("creatinine", dic_steps)),
+        method = get("method",
+                     get("creatinine", dic_steps)),
+        method_fit_args = get("method_fit_args",
+                              get("creatinine", dic_steps))
+      ),
+      "missings" = handle_missing_values(
+        dat = dat_ret,
+        covariates = covariates,
+        selected_covariates = get("selected_covariates",
+                                  get("missings", dic_steps)),
+        id_var = id_var,
+        by_var = by_var,
+        threshold_within = get("threshold_within",
+                               get("missings", dic_steps)),
+        threshold_overall = get("threshold_overall",
+                                get("missings", dic_steps)),
+        method_imputation = get("method_imputation",
+                                get("missings", dic_steps))
+      )$dat_imputed,
+      "standardization" = handle_standardization(
+        dat = dat_ret,
+        id_var = id_var,
+        center_fun = get("center_fun",
+                         get("standardization", dic_steps)),
+        scale_fun = get("scale_fun",
+                        get("standardization", dic_steps))
+      ),
+      "bound" = bound_outcome(dat = dat_ret,
+                              var = outcome),
+      stop("Invalid `step` option.")
     )
   } # End loop over steps
 
@@ -183,10 +206,14 @@ preproc_data <- function(dat, dat_desc = NULL, covariates, outcome,
 #' @returns
 #'
 #' @export
-handle_creatinine_confounding <- function(dat, covariates,
-                                          id_var, by_var,
-                                          covariates_names, creatinine,
-                                          method, method_fit_args) {
+handle_creatinine_confounding <- function(dat,
+                                          covariates,
+                                          id_var,
+                                          by_var,
+                                          covariates_names,
+                                          creatinine,
+                                          method,
+                                          method_fit_args) {
   # List of variables to which the method should be applied
   var_names <- setdiff(colnames(dat), c(id_var, by_var))
 
@@ -201,11 +228,17 @@ handle_creatinine_confounding <- function(dat, covariates,
     # Step 2: predict creatinine with weights
     ## Formula for model fitting
     form <- paste0(
-      creatinine, " ~ ",
-      paste0(setdiff(covariates_names$numerical, creatinine),
-             collapse = " + "), " + ",
+      creatinine,
+      " ~ ",
+      paste0(setdiff(
+        get("numerical", covariates_names), creatinine
+      ),
+      collapse = " + "),
+      " + ",
       paste0("factor(",
-             setdiff(covariates_names$categorical, creatinine),
+             setdiff(
+               get("categorical", covariates_names), creatinine
+             ),
              ")",
              collapse = " + ")
     )
@@ -214,23 +247,22 @@ handle_creatinine_confounding <- function(dat, covariates,
       formula = as.formula(form),
       data = covariates,
       weights = wts,
-      family = method_fit_args$family
+      family = get("family", method_fit_args)
     )
     ## Predicted creatinine values
     covariates <- covariates |>
-      modelr::add_predictions(
-        model = mod_creatine,
-        var = "cpred",
-        type = "response"
-      )
+      modelr::add_predictions(model = mod_creatine,
+                              var = "cpred",
+                              type = "response")
 
     # Step 3: compute `Cratio = exposure / (C_obs / Cpred)`
-    dat <- tidylog::full_join(dat, covariates[, c(id_var, creatinine, "cpred")],
-                              by = id_var) |>
-      tidylog::mutate(dplyr::across(
-        dplyr::all_of(var_names),
-        \(x) { x / (.data[[creatinine]] / cpred) }
-      )) |>
+    dat <-
+      tidylog::full_join(dat, covariates[, c(id_var, creatinine, "cpred")],
+                         by = id_var) |>
+      tidylog::mutate(dplyr::across(dplyr::all_of(var_names),
+                                    \(x) {
+                                      x / (.data[[creatinine]] / cpred)
+                                    })) |>
       tidylog::select(-dplyr::all_of(c(creatinine, "cpred")))
 
     return(dat)
@@ -238,8 +270,7 @@ handle_creatinine_confounding <- function(dat, covariates,
 
   dat_ret <- switch(method,
                     "cas" = cas(),
-                    stop("Invalid `method`.")
-  )
+                    stop("Invalid `method`."))
 
   return(dat_ret)
 }
@@ -263,18 +294,19 @@ handle_creatinine_confounding <- function(dat, covariates,
 #' @returns
 #'
 #' @export
-handle_llodq <- function(dat, id_var, by_var,
-                         dat_desc, id_val,
+handle_llodq <- function(dat,
+                         id_var,
+                         by_var,
+                         dat_desc,
+                         id_val,
                          method,
                          replacement_vals,
                          creatinine_threshold,
-                         frac_val_threshold_within, frac_val_threshold_overall,
+                         frac_val_threshold_within,
+                         frac_val_threshold_overall,
                          tune_sigma) {
-
   # List of supported methods
-  supported <- list(
-    "truncated_normal", "replace"
-  )
+  supported <- list("truncated_normal", "replace")
   if (!method %in% supported) {
     stop(glue::glue("{method} is currently not supported.",
                     method = method),
@@ -282,53 +314,42 @@ handle_llodq <- function(dat, id_var, by_var,
   }
 
   # Checks
-  assertthat::assert_that(
-    nrow(dat) == nrow(dat_desc),
-    msg = "Mismatch in the number of rows between the provided datasets."
-  )
-  assertthat::assert_that(
-    ncol(dat) == ncol(dat_desc),
-    msg = "Mismatch in the number of columns between the provided datasets."
-  )
-  assertthat::assert_that(
-    identical(dat[[id_var]], dat_desc[[id_var]]),
-    msg = "The order of the rows does not match between datasets."
-  )
+  assertthat::assert_that(nrow(dat) == nrow(dat_desc),
+                          msg = "Mismatch in the number of rows between the provided datasets.")
+  assertthat::assert_that(ncol(dat) == ncol(dat_desc),
+                          msg = "Mismatch in the number of columns between the provided datasets.")
+  assertthat::assert_that(identical(dat[[id_var]], dat_desc[[id_var]]),
+                          msg = "The order of the rows does not match between datasets.")
 
   # Select and apply method
   if (method == "truncated_normal") {
-
-    warning(
-      "This method has not been tested yet.",
-      call. = TRUE
-    )
+    warning("This method has not been tested yet.",
+            call. = TRUE)
 
     # Imputation based on quantile regression (based on impQRILC.R)
     # Loop over the samples/subjects
-    dat_desc <- tidylog::select(dat_desc, -dplyr::all_of(c(id_var, by_var)))
+    dat_desc <-
+      tidylog::select(dat_desc,-dplyr::all_of(c(id_var, by_var)))
     dat_imputed <- dat
     lapply(1:nrow(dat), function(idx) {
-      frac_nas <- sum(dat_desc[idx, ] == id_val) / ncol(dat_desc)
+      frac_nas <- sum(dat_desc[idx,] == id_val) / ncol(dat_desc)
 
       if (frac_nas == 0) {
-        dat_imputed[idx, ] <- dat[idx, ]
+        dat_imputed[idx,] <- dat[idx,]
       } else {
         # Estimate mean and sd using quantile regression
         upper_q <- 0.99
-        q_normal <- qnorm(
-          seq((frac_nas + 0.001),
-              (upper_q + 0.001),
-              (upper_q - frac_nas) / (upper_q * 100)),
-          mean = 0,
-          sd = 1
-        )
-        q_samples <- quantile(
-          dat[idx, ],
-          probs = seq(0.001,
-                      (upper_q + 0.001),
-                      0.01),
-          na.rm = TRUE
-        )
+        q_normal <- qnorm(seq((frac_nas + 0.001),
+                              (upper_q + 0.001),
+                              (upper_q - frac_nas) / (upper_q * 100)
+        ),
+        mean = 0,
+        sd = 1)
+        q_samples <- quantile(dat[idx,],
+                              probs = seq(0.001,
+                                          (upper_q + 0.001),
+                                          0.01),
+                              na.rm = TRUE)
         fit <- lm(q_samples ~ q_normal)
         mean_fit <- as.numeric(fit$coefficients[1])
         sd_fit <- as.numeric(fit$coefficients[2])
@@ -343,18 +364,16 @@ handle_llodq <- function(dat, id_var, by_var,
                         sd = sd_fit),
           algorithm = c("gibbs")
         ) # End data generation
-        sample_imputed <- dat[idx, ]
-        sample_imputed[which(dat_desc[idx, ] == id_val)] <- tmp[
-          which(dat_desc[idx, ] == id_val)
-        ]
-        dat_imputed[idx, ] <- sample_imputed
+        sample_imputed <- dat[idx,]
+        sample_imputed[which(dat_desc[idx,] == id_val)] <- tmp[which(dat_desc[idx,] == id_val)]
+        dat_imputed[idx,] <- sample_imputed
       }
     }) # End loop over samples
     # End truncated_normal method
   } else if (method == "replace") {
     # Imputation method where values <LOD/LOQ are replaced with e.g., LOD/2
     ## Check fraction of missing values (within and overall)
-    dat_desc <- tidylog::select(dat_desc, -dplyr::all_of(id_var))
+    dat_desc <- tidylog::select(dat_desc,-dplyr::all_of(id_var))
     frac_within <- dat_desc
     frac_within[frac_within == id_val] <- NA
     frac_within <- frac_within |>
@@ -364,7 +383,7 @@ handle_llodq <- function(dat, id_var, by_var,
       tidylog::ungroup()
     dat <- dat |>
       tidylog::select(-dplyr::all_of(frac_within$variable))
-    dat_desc <- tidylog::select(dat_desc, -dplyr::all_of(by_var))
+    dat_desc <- tidylog::select(dat_desc,-dplyr::all_of(by_var))
 
     frac_overall <- dat_desc
     frac_overall[frac_overall == id_val] <- NA
@@ -376,20 +395,16 @@ handle_llodq <- function(dat, id_var, by_var,
       tidylog::select(-dplyr::all_of(frac_overall$variable))
 
     ## Impute remaining
-    vars_to_mutate <- setdiff(
-      colnames(dat),
-      c(id_var, by_var)
-    )
+    vars_to_mutate <- setdiff(colnames(dat),
+                              c(id_var, by_var))
     dat_imputed <- dat |>
       dplyr::rowwise() |>
       tidylog::mutate(dplyr::across(
         dplyr::all_of(vars_to_mutate),
         \(x) dplyr::case_when(
           is.na(x) & dat_desc[dplyr::row_number(),
-                              dplyr::cur_column()] == id_val ~ as.numeric(
-                                replacement_vals[replacement_vals$var == dplyr::cur_column(),
-                                                 "val"]
-                              ) / 2,
+                              dplyr::cur_column()] == id_val ~ as.numeric(replacement_vals[replacement_vals$var == dplyr::cur_column(),
+                                                                                           "val"]) / 2,
           TRUE ~ x
         )
       )) # End mutate for replacement
@@ -398,9 +413,7 @@ handle_llodq <- function(dat, id_var, by_var,
   # Tidy results (in case of `dplyr::rowwise`)
   dat_imputed <- tibble::as_tibble(dat_imputed)
 
-  return(list(
-    dat = dat_imputed
-  ))
+  return(list(dat = dat_imputed))
 }
 
 #' Various strategies to handle missing values
@@ -429,12 +442,13 @@ handle_llodq <- function(dat, id_var, by_var,
 #'
 #' @export
 handle_missing_values <- function(dat,
-                                  covariates, selected_covariates,
-                                  id_var, by_var,
+                                  covariates,
+                                  selected_covariates,
+                                  id_var,
+                                  by_var,
                                   threshold_within,
                                   threshold_overall,
                                   method_imputation) {
-
   # Step 1: group by factor and remove variables with a high
   #         fraction of missing values within each group
   step1 <- dat |>
@@ -456,28 +470,28 @@ handle_missing_values <- function(dat,
     tidylog::select(-dplyr::all_of(step2$variable))
 
   # Step 3: impute the remaining variables
-  vis_miss_before <- naniar::vis_miss(
-    tidylog::select(dat, -dplyr::all_of(c(id_var, by_var)))
-  )
+  vis_miss_before <- naniar::vis_miss(tidylog::select(dat,-dplyr::all_of(c(id_var, by_var))))
 
   ## Check whether to perform imputation by including additional variables
   cols_to_remove <- NULL
   if (!is.null(covariates) & !method_imputation %in% c("univariate",
                                                        "selected")) {
     cols_to_remove <- colnames(covariates)
-    dat <- tidylog::full_join(
-      dat, covariates,
-      by = id_var,
-      suffix = c("", ".y")
-    ) |>
+    dat <- tidylog::full_join(dat,
+                              covariates,
+                              by = id_var,
+                              suffix = c("", ".y")) |>
       tidylog::select(-dplyr::ends_with(".y"))
-  } else if (!is.null(covariates) & method_imputation == "selected") {
+  } else if (!is.null(covariates) &
+             method_imputation == "selected") {
     cols_to_remove <- selected_covariates
     dat <- tidylog::full_join(
       dat,
       covariates |>
-        tidylog::select(dplyr::all_of(c(id_var,
-                                        selected_covariates))),
+        tidylog::select(dplyr::all_of(c(
+          id_var,
+          selected_covariates
+        ))),
       by = id_var,
       suffix = c("", ".y")
     ) |>
@@ -485,45 +499,49 @@ handle_missing_values <- function(dat,
   }
 
   if (!is.null(cols_to_remove)) {
-    form <- ifelse(
-      by_var %in% cols_to_remove,
-      as.formula(glue::glue(". ~ . -{id_var}")),
-      as.formula(glue::glue(". ~ . -{id_var} -{by_var}"))
-    )
+    form <- ifelse(by_var %in% cols_to_remove,
+                   as.formula(glue::glue(". ~ . -{id_var}")),
+                   as.formula(glue::glue(". ~ . -{id_var} -{by_var}")))
   }
-  dat_imp <- switch (method_imputation,
-                     "univariate" = missRanger::missRanger(data = dat,
-                                                           formula = as.formula(glue::glue(". ~ 1")),
-                                                           num.trees = 10,
-                                                           pmm.k = 5),
-                     "all" = missRanger::missRanger(data = dat,
-                                                    formula = form,
-                                                    num.trees = 10,
-                                                    pmm.k = 5),
-                     "selected" = missRanger::missRanger(data = dat,
-                                                         formula = form,
-                                                         num.trees = 10,
-                                                         pmm.k = 5)
+  dat_imp <- switch (
+    method_imputation,
+    "univariate" = missRanger::missRanger(
+      data = dat,
+      formula = as.formula(glue::glue(". ~ 1")),
+      num.trees = 10,
+      pmm.k = 5
+    ),
+    "all" = missRanger::missRanger(
+      data = dat,
+      formula = form,
+      num.trees = 10,
+      pmm.k = 5
+    ),
+    "selected" = missRanger::missRanger(
+      data = dat,
+      formula = form,
+      num.trees = 10,
+      pmm.k = 5
+    )
   )
 
   if (!is.null(cols_to_remove)) {
     dat_imp <- dat_imp |>
-      tidylog::select(-dplyr::all_of(
-        setdiff(cols_to_remove, c(id_var, by_var))
-      ))
+      tidylog::select(-dplyr::all_of(setdiff(cols_to_remove, c(id_var, by_var))))
   }
 
-  vis_miss_after <- naniar::vis_miss(tidylog::select(dat_imp,
-                                                     -dplyr::all_of(c(id_var,
-                                                                      by_var))))
+  vis_miss_after <- naniar::vis_miss(tidylog::select(dat_imp,-dplyr::all_of(c(id_var,
+                                                                              by_var))))
 
-  return(list(
-    step1 = step1,
-    step2 = step2,
-    dat_imputed = dat_imp,
-    vis_miss_before = vis_miss_before,
-    vis_miss_after = vis_miss_after
-  ))
+  return(
+    list(
+      step1 = step1,
+      step2 = step2,
+      dat_imputed = dat_imp,
+      vis_miss_before = vis_miss_before,
+      vis_miss_after = vis_miss_after
+    )
+  )
 }
 
 #' Title
@@ -540,12 +558,10 @@ handle_standardization <- function(dat,
                                    id_var,
                                    center_fun, scale_fun) {
   dat_ret <- dat |>
-    tidylog::mutate(
-      dplyr::across(
-        dplyr::all_of(setdiff(colnames(dat), id_var)),
-        \(x) (x - center_fun(x)) / scale_fun(x)
-      )
-    )
+    tidylog::mutate(dplyr::across(dplyr::all_of(setdiff(
+      colnames(dat), id_var
+    )),
+    \(x) (x - center_fun(x)) / scale_fun(x)))
 
   return(dat_ret)
 }

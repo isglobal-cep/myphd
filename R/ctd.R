@@ -13,14 +13,19 @@ load_ctd <- function(path, filter_evidence) {
 
   if (filter_evidence == TRUE) {
     ctd <- ctd |>
-      tidylog::filter(DirectEvidence %in% c("marker/mechanism",
-                                            "therapeutic",
-                                            "marker/mechanism|therapeutic"))
+      tidylog::filter(
+        DirectEvidence %in% c(
+          "marker/mechanism",
+          "therapeutic",
+          "marker/mechanism|therapeutic"
+        )
+      )
   }
 
   ctd <- ctd |>
     tidyr::separate_longer_delim(DiseaseCategories,
                                  delim = "|")
+
   ctd$DiseaseCategories <- factor(ctd$DiseaseCategories,
                                   levels = sort(unique(ctd$DiseaseCategories),
                                                 decreasing = TRUE))
@@ -44,10 +49,8 @@ plot_ctd <- function(dat, group = NULL) {
   plt <- dat |>
     tidylog::filter(DiseaseCategories != "") |>
     tidylog::group_by(DiseaseCategories) |>
-    ggplot2::ggplot(mapping = ggplot2::aes(
-      x = DiseaseCategories,
-      fill = factor(ChemicalName)
-    )) +
+    ggplot2::ggplot(mapping = ggplot2::aes(x = DiseaseCategories,
+                                           fill = factor(ChemicalName))) +
     ggplot2::geom_bar() +
     ggplot2::coord_flip() +
     ggplot2::theme_minimal() +
@@ -57,7 +60,7 @@ plot_ctd <- function(dat, group = NULL) {
 
   if (!is.null(group)) {
     plt <- plt +
-      ggplot2::facet_grid(~.data[[ group ]])
+      ggplot2::facet_grid( ~ .data[[group]])
   }
 
   return(plt)
