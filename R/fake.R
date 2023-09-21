@@ -18,12 +18,14 @@ create_fake_data <- function(dat) {
     lapply(dat, function(x) {
       if (class(x) == "numeric") {
         rnorm(nrow(dat),
-              mean = mean(x, na.rm = TRUE),
-              sd = sd(x, na.rm = TRUE))
+          mean = mean(x, na.rm = TRUE),
+          sd = sd(x, na.rm = TRUE)
+        )
       } else if (class(x) == "factor") {
         as.factor(sample(levels(x),
-                         nrow(dat),
-                         replace = T))
+          nrow(dat),
+          replace = T
+        ))
       }
     })
   )

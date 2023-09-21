@@ -20,14 +20,17 @@ create_df_marginal_comparisons <-
     # Checks
     if (percentiles[1] < 0 | percentiles[2] > 1) {
       stop("The percentiles must lie between 0 and 1.",
-           call. = TRUE)
+        call. = TRUE
+      )
     }
 
     # Compute `low` and `high` values of the variable of interest, by group
     ret <- dat |>
       tidylog::group_by(.data[[by_var]]) |>
-      tidylog::mutate(low = quantile(.data[[var]], percentiles[1]),
-                      high = quantile(.data[[var]], percentiles[2])) |>
+      tidylog::mutate(
+        low = quantile(.data[[var]], percentiles[1]),
+        high = quantile(.data[[var]], percentiles[2])
+      ) |>
       tidylog::ungroup()
 
     return(ret)
@@ -101,8 +104,9 @@ add_metadata <- function(dat, metadat, categorical_types) {
     tidylog::mutate(
       type = as.character(type),
       type = ifelse(type %in% categorical_types,
-                    "categorical",
-                    type)
+        "categorical",
+        type
+      )
     )
 
   # Add metadata to each column of dataset

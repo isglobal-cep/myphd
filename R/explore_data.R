@@ -17,12 +17,12 @@
 explore_shift <- function(dat,
                           shift_type,
                           shift_amount) {
-
   # Apply shift function
   shifted <- lapply(colnames(dat), function(x) {
     dd <- switch(shift_type,
-                 "mul" = dat[[x]] * shift_amount,
-                 "add" = dat[[x]] + shift_amount)
+      "mul" = dat[[x]] * shift_amount,
+      "add" = dat[[x]] + shift_amount
+    )
     return(dd)
   })
   shifted <- suppressWarnings(
@@ -42,12 +42,15 @@ explore_shift <- function(dat,
   # Compare distributions
   ret <- dat_gg |>
     tidylog::group_by(name) |>
-    ggplot2::ggplot(ggplot2::aes(x = name,
-                                 y = value,
-                                 fill = shifted)) +
+    ggplot2::ggplot(ggplot2::aes(
+      x = name,
+      y = value,
+      fill = shifted
+    )) +
     ggplot2::geom_violin() +
     ggplot2::facet_grid(shifted ~ .,
-                        scales = "free_y")
+      scales = "free_y"
+    )
 
   return(ret)
 }
@@ -101,7 +104,8 @@ describe_data <- function(dat, id_var, by_var) {
   if (!is.null(by_var)) {
     dat <- dat |>
       tidylog::group_by(dplyr::across(by_var),
-                        .drop = FALSE)
+        .drop = FALSE
+      )
     step2_num <- dlookr::diagnose_numeric(dat) |>
       dplyr::arrange(variables, by_var)
     suppressWarnings(
@@ -117,13 +121,15 @@ describe_data <- function(dat, id_var, by_var) {
   ##############################################################################
   # Step 3: summary of variables w/ `gtsummary`
   step3 <- dat |>
-    gtsummary::tbl_summary(by = by_var,
-                           statistic = list(
-                             gtsummary::all_continuous() ~ c(
-                               "{median} ({p25}, {p75})"
-                             ),
-                             gtsummary::all_categorical() ~ "{n} ({p}%)"
-                           ))
+    gtsummary::tbl_summary(
+      by = by_var,
+      statistic = list(
+        gtsummary::all_continuous() ~ c(
+          "{median} ({p25}, {p75})"
+        ),
+        gtsummary::all_categorical() ~ "{n} ({p}%)"
+      )
+    )
   if (!is.null(by_var)) {
     step3 <- step3 |>
       gtsummary::add_overall()
@@ -133,19 +139,21 @@ describe_data <- function(dat, id_var, by_var) {
   ##############################################################################
   # Step 4: detailed summary of variables w/ `gtsummary`
   step4 <- dat |>
-    gtsummary::tbl_summary(by = by_var,
-                           type = list(
-                             gtsummary::all_continuous() ~ "continuous2",
-                             gtsummary::all_categorical() ~ "categorical"
-                           ),
-                           statistic = list(
-                             gtsummary::all_continuous() ~ c(
-                               "{N_obs} ({p_nonmiss}%)",
-                               "{median} ({p25}, {p75})",
-                               "{min}, {max}"
-                             ),
-                             gtsummary::all_categorical() ~ "{n} / {N} ({p}%)"
-                           ))
+    gtsummary::tbl_summary(
+      by = by_var,
+      type = list(
+        gtsummary::all_continuous() ~ "continuous2",
+        gtsummary::all_categorical() ~ "categorical"
+      ),
+      statistic = list(
+        gtsummary::all_continuous() ~ c(
+          "{N_obs} ({p_nonmiss}%)",
+          "{median} ({p25}, {p75})",
+          "{min}, {max}"
+        ),
+        gtsummary::all_categorical() ~ "{n} / {N} ({p}%)"
+      )
+    )
   if (!is.null(by_var)) {
     step4 <- step4 |>
       gtsummary::add_overall()
@@ -164,28 +172,34 @@ describe_data <- function(dat, id_var, by_var) {
   while ((computed == FALSE) & (i <= length(uses))) {
     use <- uses[[i]]
     i <- i + 1
-    corrs_pearson <- tryCatch({
-      ret <- corrr::correlate(x = dat,
-                              method = "pearson",
-                              use = use) |>
-        corrr::rearrange(absolute = TRUE)
-      computed <- TRUE
-      ret
-    },
-    error = function(ee) {
-      warning("Error while computing correlation matrix:\n", ee)
-    }
+    corrs_pearson <- tryCatch(
+      {
+        ret <- corrr::correlate(
+          x = dat,
+          method = "pearson",
+          use = use
+        ) |>
+          corrr::rearrange(absolute = TRUE)
+        computed <- TRUE
+        ret
+      },
+      error = function(ee) {
+        warning("Error while computing correlation matrix:\n", ee)
+      }
     )
   } # End while for Pearson
   if (!is.null(corrs_pearson)) {
     viz_corr_pearson <- corrr::rplot(corrs_pearson,
-                                     print_cor = TRUE) +
+      print_cor = TRUE
+    ) +
       ggplot2::theme(axis.text.x = ggplot2::element_text(
         angle = 60, hjust = 1
       )) +
       ggplot2::labs(
-        caption = paste0("Correlation use: ",
-                         use, ".")
+        caption = paste0(
+          "Correlation use: ",
+          use, "."
+        )
       )
   }
 
@@ -195,43 +209,55 @@ describe_data <- function(dat, id_var, by_var) {
   while ((computed == FALSE) & (i <= length(uses))) {
     use <- uses[[i]]
     i <- i + 1
-    corrs_spearman <- tryCatch({
-      ret <- corrr::correlate(x = dat,
-                              method = "spearman",
-                              use = use) |>
-        corrr::rearrange(absolute = TRUE)
-      computed <- TRUE
-      ret
-    },
-    error = function(ee) {
-      warning("Error while computing correlation matrix:\n", ee)
-    }
+    corrs_spearman <- tryCatch(
+      {
+        ret <- corrr::correlate(
+          x = dat,
+          method = "spearman",
+          use = use
+        ) |>
+          corrr::rearrange(absolute = TRUE)
+        computed <- TRUE
+        ret
+      },
+      error = function(ee) {
+        warning("Error while computing correlation matrix:\n", ee)
+      }
     )
   } # End while for Spearman
   if (!is.null(corrs_spearman)) {
     viz_corr_spearman <- corrr::rplot(corrs_spearman,
-                                      print_cor = TRUE) +
+      print_cor = TRUE
+    ) +
       ggplot2::theme(axis.text.x = ggplot2::element_text(
         angle = 60, hjust = 1
       )) +
       ggplot2::labs(
-        caption = paste0("Correlation use: ",
-                         use, ".")
+        caption = paste0(
+          "Correlation use: ",
+          use, "."
+        )
       )
   }
   ##############################################################################
 
   return(list(
-    step1 = list(num = step1_num,
-                 cat = step1_cat),
-    step2 = list(num = step2_num,
-                 cat = step2_cat),
+    step1 = list(
+      num = step1_num,
+      cat = step1_cat
+    ),
+    step2 = list(
+      num = step2_num,
+      cat = step2_cat
+    ),
     step3 = step3,
     step4 = step4,
-    step5 = list(corr_pearson = corrs_pearson,
-                 viz_corr_pearson = viz_corr_pearson,
-                 corr_spearman = corrs_spearman,
-                 viz_corr_spearman = viz_corr_spearman)
+    step5 = list(
+      corr_pearson = corrs_pearson,
+      viz_corr_pearson = viz_corr_pearson,
+      corr_spearman = corrs_spearman,
+      viz_corr_spearman = viz_corr_spearman
+    )
   ))
 }
 
@@ -277,11 +303,15 @@ explore_missings <- function(dat, id_var, by_var, path_save) {
     tidylog::group_by(.data[[by_var]]) |>
     naniar::miss_var_summary() |>
     tidylog::select(-c(n_miss)) |>
-    tidylog::pivot_wider(names_from = c(by_var),
-                         values_from = c(pct_miss)) |>
+    tidylog::pivot_wider(
+      names_from = c(by_var),
+      values_from = c(pct_miss)
+    ) |>
     dplyr::arrange(variable) |>
-    tidylog::mutate(dplyr::across(dplyr::where(is.numeric),
-                                  \(x) round(x, digits = 0))) |>
+    tidylog::mutate(dplyr::across(
+      dplyr::where(is.numeric),
+      \(x) round(x, digits = 0)
+    )) |>
     tidylog::ungroup()
   ##############################################################################
 
@@ -297,26 +327,39 @@ explore_missings <- function(dat, id_var, by_var, path_save) {
   ##############################################################################
   # Step 4: visualize missingness reports
   plt <- visdat::vis_miss(dat,
-                          show_perc = TRUE) +
-    ggplot2::scale_y_discrete(limits = dat[[by_var]],
-                              labels = dat[[by_var]])
-  ggplot2::ggsave(filename = paste0(path_save,
-                                    "vis_miss",
-                                    ".png"),
-                  dpi = 720,
-                  height = 15,
-                  width = 30,
-                  bg = "white")
+    show_perc = TRUE
+  ) +
+    ggplot2::scale_y_discrete(
+      limits = dat[[by_var]],
+      labels = dat[[by_var]]
+    )
+  ggplot2::ggsave(
+    filename = paste0(
+      path_save,
+      "vis_miss",
+      ".png"
+    ),
+    dpi = 720,
+    height = 15,
+    width = 30,
+    bg = "white"
+  )
 
-  plt <- naniar::gg_miss_fct(x = dat,
-                             fct = !! rlang::ensym(by_var))
-  ggplot2::ggsave(filename = paste0(path_save,
-                                    "gg_miss",
-                                    ".png"),
-                  dpi = 720,
-                  height = 15,
-                  width = 30,
-                  bg = "white")
+  plt <- naniar::gg_miss_fct(
+    x = dat,
+    fct = !!rlang::ensym(by_var)
+  )
+  ggplot2::ggsave(
+    filename = paste0(
+      path_save,
+      "gg_miss",
+      ".png"
+    ),
+    dpi = 720,
+    height = 15,
+    width = 30,
+    bg = "white"
+  )
   ##############################################################################
 
   ##############################################################################
@@ -327,8 +370,10 @@ explore_missings <- function(dat, id_var, by_var, path_save) {
       tryCatch(
         dat |>
           tidylog::filter(.data[[by_var]] == x) |>
-          tidylog::select(-dplyr::any_of(c(id_var,
-                                           by_var))) |>
+          tidylog::select(-dplyr::any_of(c(
+            id_var,
+            by_var
+          ))) |>
           naniar::mcar_test(),
         error = function(e) NULL
       )

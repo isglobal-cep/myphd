@@ -16,11 +16,11 @@ knitr::opts_chunk$set(
 
 ```{r, echo=FALSE, include=FALSE, results='asis'}
 cat(
-  badger::badge_doi("10.5281/zenodo.8075025", color = "blue"), 
-  badger::badge_repostatus(status = "Active"), 
-  badger::badge_license(license = NULL), 
-  badger::badge_coveralls(ref = "google/benchmark"), 
-  badger::badge_codecov(ref = "rcannood/princurve"), 
+  badger::badge_doi("10.5281/zenodo.8075025", color = "blue"),
+  badger::badge_repostatus(status = "Active"),
+  badger::badge_license(license = NULL),
+  badger::badge_coveralls(ref = "google/benchmark"),
+  badger::badge_codecov(ref = "rcannood/princurve"),
   badger::badge_github_actions(ref = "rossellhayes/ipa")
 )
 ```

@@ -60,13 +60,16 @@ estimate_weights <- function(dat,
     verbose = FALSE,
     include.obj = TRUE,
     SL.library = get("sl_lib", method_args),
-    cvControl = list(V = 3,
-                     shuffle = FALSE),
+    cvControl = list(
+      V = 3,
+      shuffle = FALSE
+    ),
     discrete = FALSE,
     use_kernel = get("use_kernel", method_args),
     plot = ifelse(get("use_kernel", method_args) == TRUE,
-                  TRUE,
-                  FALSE)
+      TRUE,
+      FALSE
+    )
   )
 
   return(list(
@@ -116,8 +119,9 @@ explore_balance <- function(exposure,
   # Assessing balance graphically
   graph <- lapply(covariates, function(x) {
     cobalt::bal.plot(weights,
-                     var.name = x,
-                     which = "both")
+      var.name = x,
+      which = "both"
+    )
   })
 
   # Summarizing balance in a Love plot

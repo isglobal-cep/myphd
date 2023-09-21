@@ -32,30 +32,45 @@ create_formula <- function(dat,
   covariates_continuous <- dat |>
     tidylog::select(dplyr::where(is.numeric)) |>
     colnames()
-  covariates_continuous <- setdiff(covariates_continuous,
-                                   c(outcome, exposure, id_var))
+  covariates_continuous <- setdiff(
+    covariates_continuous,
+    c(outcome, exposure, id_var)
+  )
   covariates_factor <- dat |>
     tidylog::select(!dplyr::where(is.numeric)) |>
     colnames()
-  covariates_factor <- setdiff(covariates_factor,
-                               c(outcome, exposure, id_var))
-  assertthat::assert_that(identical(sort(covariates),
-                                    sort(
-                                      c(covariates_continuous, covariates_factor)
-                                    )),
-                          msg = "The covariates do not match the originals.")
+  covariates_factor <- setdiff(
+    covariates_factor,
+    c(outcome, exposure, id_var)
+  )
+  assertthat::assert_that(
+    identical(
+      sort(covariates),
+      sort(
+        c(covariates_continuous, covariates_factor)
+      )
+    ),
+    msg = "The covariates do not match the originals."
+  )
   assertthat::assert_that(!exposure %in% covariates,
-                          msg = "The exposure was found among the covariates.")
+    msg = "The exposure was found among the covariates."
+  )
 
   # Create formula (weights estimation)
   if (is.null(outcome)) {
-    form <- paste0(exposure,
-                   " ~ ",
-                   paste0(covariates_continuous,
-                          collapse = " + "))
-    form <- paste0(form, " + ",
-                   paste0(covariates_factor,
-                          collapse = " + "))
+    form <- paste0(
+      exposure,
+      " ~ ",
+      paste0(covariates_continuous,
+        collapse = " + "
+      )
+    )
+    form <- paste0(
+      form, " + ",
+      paste0(covariates_factor,
+        collapse = " + "
+      )
+    )
 
     return(form)
   } # End formula weights estimation
@@ -72,19 +87,24 @@ create_formula <- function(dat,
         exposure
       ),
       ifelse(add_inter_exposure == TRUE,
-             " * ", " + "),
+        " * ", " + "
+      ),
       "(",
       paste0(covariates_continuous,
-             collapse = " + "),
+        collapse = " + "
+      ),
       ")"
     )
     ## Step 2: add remaining covariates
-    form <- paste0(form,
-                   " + ",
-                   paste0("factor(",
-                          covariates_factor,
-                          ")",
-                          collapse = " + "))
+    form <- paste0(
+      form,
+      " + ",
+      paste0("factor(",
+        covariates_factor,
+        ")",
+        collapse = " + "
+      )
+    )
   } else if (method %in% c("gam")) {
     less_than_y <- apply(dat[, covariates_continuous], 2, function(x) {
       length(unique(x)) < threshold_smooth
@@ -92,8 +112,9 @@ create_formula <- function(dat,
     threshold_k <-
       lapply(covariates_continuous[less_than_y], function(x) {
         ifelse(length(unique(dat[[x]])) < threshold_k,
-               length(unique(dat[[x]])) - 1,
-               threshold_k)
+          length(unique(dat[[x]])) - 1,
+          threshold_k
+        )
       }) |>
       unlist()
     form <- paste0(
@@ -104,9 +125,10 @@ create_formula <- function(dat,
       ")",
       " + ",
       paste0("s(",
-             covariates_continuous[!less_than_y],
-             ")",
-             collapse = " + "),
+        covariates_continuous[!less_than_y],
+        ")",
+        collapse = " + "
+      ),
       " + ",
       paste0(
         "s(",
@@ -118,11 +140,13 @@ create_formula <- function(dat,
       ),
       " + ",
       paste0(covariates_factor,
-             collapse = " + ")
+        collapse = " + "
+      )
     )
   } else {
     stop(glue::glue("The {method} method is not currently supported.",
-                    method = method))
+      method = method
+    ))
   } # End formula outcome model
 
   return(form)

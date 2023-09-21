@@ -12,9 +12,11 @@
 #'
 #' @export
 find_common_confounders <- function(dag, type_mas, type_effect) {
-  adj_sets <- dagitty::adjustmentSets(x = dag,
-                                      type = type_mas,
-                                      effect = type_effect)
+  adj_sets <- dagitty::adjustmentSets(
+    x = dag,
+    type = type_mas,
+    effect = type_effect
+  )
   common_nodes <- adj_sets |>
     unlist() |>
     unname() |>
@@ -46,11 +48,13 @@ minimize_missings <- function(dat, meta, adjustment_sets,
 
   # List of dataframes with covariates from adjustment sets
   dfs_covars <- lapply(adjustment_sets, function(x) {
-    mapping_covars <- meta[get("dag", meta) %in% x,]$variable |>
+    mapping_covars <- meta[get("dag", meta) %in% x, ]$variable |>
       as.character()
     tmp <- dat |>
-      tidylog::select(dplyr::all_of(c(by_var,
-                                      mapping_covars)))
+      tidylog::select(dplyr::all_of(c(
+        by_var,
+        mapping_covars
+      )))
   })
 
   # List of dataframes with fractions of missing values by grouping variable,
@@ -68,11 +72,7 @@ minimize_missings <- function(dat, meta, adjustment_sets,
     purrr::reduce(dplyr::bind_cols))
   colnames(ret_miss) <- paste0("adj_set_", 1:ncol(ret_miss))
   ret_miss <- ret_miss |>
-    tidylog::mutate({
-      {
-        by_var
-      }
-    } := levels_group_var) |>
+    tidylog::mutate({{ by_var }} := levels_group_var) |>
     tidylog::relocate(.data[[by_var]])
 
   # Sum of missing values, for each adjustment set
@@ -132,7 +132,7 @@ from_dagitty_to_ggdag <- function(dag) {
   dag <- dagitty::dagitty(dag)
 
   to_ggdag <- ggdag::tidy_dagitty(dag) |>
-    (\(x) get("data", x)) () |>
+    (\(x) get("data", x))() |>
     tidylog::select(name, to) |>
     tidylog::rename(from = name) |>
     tidylog::group_by(to) |>
@@ -178,7 +178,8 @@ from_dagitty_to_ggdag <- function(dag) {
 #' @export
 test_npsem <- function(dag, dat, meta, params) {
   warning("This function has not been tested yet.",
-          call. = TRUE)
+    call. = TRUE
+  )
 
   # Step 1: extract adjustment set(s)
   dag_as <- dagitty::adjustmentSets(
@@ -189,32 +190,45 @@ test_npsem <- function(dag, dat, meta, params) {
 
   res <- lapply(dag_as, function(as) {
     ret <- list()
-    ret$mapping_covars <- meta[get("dag", meta) %in% as,] |>
+    ret$mapping_covars <- meta[get("dag", meta) %in% as, ] |>
       tidylog::distinct(dag, .keep_all = TRUE) |>
       tidylog::select(variable) |>
-      c() |> unname() |> unlist() |> as.character()
+      c() |>
+      unname() |>
+      unlist() |>
+      as.character()
     ret$adjustment_set <- as
 
     # Step 2: map nodes in DAG to variable names in dataset and extract columns
     covariates <- dat$covariates |>
-      tidylog::select(params$identifier,
-                      dplyr::all_of(ret$mapping_covars))
-    colnames(covariates) <- c(get("identifier", params),
-                              meta[get("variable", meta) %in% get("mapping_covars",
-                                                                  ret),]$dag |>
-                                as.character())
-    covariates <- covariates[,!duplicated(colnames(covariates))]
+      tidylog::select(
+        params$identifier,
+        dplyr::all_of(ret$mapping_covars)
+      )
+    colnames(covariates) <- c(
+      get("identifier", params),
+      meta[get("variable", meta) %in% get(
+        "mapping_covars",
+        ret
+      ), ]$dag |>
+        as.character()
+    )
+    covariates <- covariates[, !duplicated(colnames(covariates))]
 
     # Step 3: test independencies for each exposure
-    exposure_list <- setdiff(colnames(get("exposures", dat)),
-                             get("identifier", params))
+    exposure_list <- setdiff(
+      colnames(get("exposures", dat)),
+      get("identifier", params)
+    )
     ret$tests <- lapply(exposure_list, function(expo) {
       dat_test <- purrr::reduce(
         list(
           covariates,
           dat$exposures |>
-            tidylog::select(get("identifier", params),
-                            .data[[expo]]),
+            tidylog::select(
+              get("identifier", params),
+              .data[[expo]]
+            ),
           dat$outcome
         ),
         tidylog::full_join,

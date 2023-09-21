@@ -12,17 +12,18 @@ options <- list(
 #' @rdname theme_dag
 #' @export
 theme_dag <- function() {
-  ggdag::theme_dag(base_family = options$book.base_family,
-                   legend.position = "bottom",
-                   legend.key.size = ggplot2::unit(7, "cm"),
-                   legend.key.height = ggplot2::unit(7, "cm"),
-                   legend.key.width = ggplot2::unit(7, "cm"),
-                   legend.title = ggplot2::element_text(
-                     size = options$book.base_size * 3
-                   ),
-                   legend.text = ggplot2::element_text(
-                     size = options$book.base_size * 3
-                   )
+  ggdag::theme_dag(
+    base_family = options$book.base_family,
+    legend.position = "bottom",
+    legend.key.size = ggplot2::unit(7, "cm"),
+    legend.key.height = ggplot2::unit(7, "cm"),
+    legend.key.width = ggplot2::unit(7, "cm"),
+    legend.title = ggplot2::element_text(
+      size = options$book.base_size * 3
+    ),
+    legend.text = ggplot2::element_text(
+      size = options$book.base_size * 3
+    )
   )
 }
 

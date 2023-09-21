@@ -24,11 +24,14 @@ load_ctd <- function(path, filter_evidence) {
 
   ctd <- ctd |>
     tidyr::separate_longer_delim(DiseaseCategories,
-                                 delim = "|")
+      delim = "|"
+    )
 
   ctd$DiseaseCategories <- factor(ctd$DiseaseCategories,
-                                  levels = sort(unique(ctd$DiseaseCategories),
-                                                decreasing = TRUE))
+    levels = sort(unique(ctd$DiseaseCategories),
+      decreasing = TRUE
+    )
+  )
 
   return(ctd)
 }
@@ -49,18 +52,22 @@ plot_ctd <- function(dat, group = NULL) {
   plt <- dat |>
     tidylog::filter(DiseaseCategories != "") |>
     tidylog::group_by(DiseaseCategories) |>
-    ggplot2::ggplot(mapping = ggplot2::aes(x = DiseaseCategories,
-                                           fill = factor(ChemicalName))) +
+    ggplot2::ggplot(mapping = ggplot2::aes(
+      x = DiseaseCategories,
+      fill = factor(ChemicalName)
+    )) +
     ggplot2::geom_bar() +
     ggplot2::coord_flip() +
     ggplot2::theme_minimal() +
     ggplot2::labs(x = "Disease categories") +
-    colorspace::scale_fill_discrete_qualitative(name = "Chemicals",
-                                                palette = "Dynamic")
+    colorspace::scale_fill_discrete_qualitative(
+      name = "Chemicals",
+      palette = "Dynamic"
+    )
 
   if (!is.null(group)) {
     plt <- plt +
-      ggplot2::facet_grid( ~ .data[[group]])
+      ggplot2::facet_grid(~ .data[[group]])
   }
 
   return(plt)
