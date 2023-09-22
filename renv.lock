@@ -3360,16 +3360,20 @@
     },
     "yulab.utils": {
       "Package": "yulab.utils",
-      "Version": "0.0.9",
+      "Version": "0.1.0",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
+        "cli",
+        "digest",
+        "fs",
         "memoise",
         "rlang",
         "stats",
+        "tools",
         "utils"
       ],
-      "Hash": "2435cde407c69abd057343ab6ce386d0"
+      "Hash": "792b3c5bc98f04a7d49cbd8c55fe0770"
     },
     "zip": {
       "Package": "zip",
