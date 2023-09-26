@@ -622,6 +622,54 @@ handle_missing_values <- function(dat,
   )
 }
 
+
+#' Title
+#'
+#' @param dat
+#' @param id_var
+#' @param transformation_fun
+#'
+#' @return
+#'
+#' @export
+handle_transformation <- function(dat, id_var, transformation_fun) {
+  # When log-transforming, original variable should be strictly positive
+  if (deparse(transformation_fun) %in% c(log, log10, log2, log1p, logb)) {
+    res <- dat |>
+      tidylog::select(-dplyr::all_of(id_var)) |>
+      tidylog::gather() |>
+      tidylog::group_by(key) |>
+      tidylog::summarise(
+        res = any(value[!is.na(value)] <= 0)
+      )
+
+    if (sum(res$res) > 0) {
+      warning(
+        paste0(
+          "One or more variables contain negative values.",
+          " Log-transformation is not appropriate in this case."
+        ),
+        call. = TRUE
+      )
+
+      cat(
+        res[res$res == TRUE, ]$key,
+        sep = "\n"
+      )
+    }
+  } # End check negative values for log-transformation
+
+  dat_ret <- dat |>
+    tidylog::mutate(dplyr::across(
+      dplyr::all_of(setdiff(
+        colnames(dat), id_var
+      )),
+      \(x) transformation_fun(x)
+    ))
+
+  return(dat_ret)
+}
+
 #' Title
 #'
 #' @param dat

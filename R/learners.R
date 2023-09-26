@@ -9,6 +9,7 @@
 #' @param id_var
 #' @param method
 #' @param add_inter_exposure
+#' @param add_inter_exposure_specific
 #' @param add_splines_exposure
 #' @param df_splines
 #' @param threshold_smooth
@@ -24,6 +25,7 @@ create_formula <- function(dat,
                            id_var,
                            method,
                            add_inter_exposure,
+                           add_inter_exposure_specific,
                            add_splines_exposure,
                            df_splines,
                            threshold_smooth,
@@ -34,14 +36,14 @@ create_formula <- function(dat,
     colnames()
   covariates_continuous <- setdiff(
     covariates_continuous,
-    c(outcome, exposure, id_var)
+    c(outcome, exposure, id_var, add_inter_exposure_specific)
   )
   covariates_factor <- dat |>
     tidylog::select(!dplyr::where(is.numeric)) |>
     colnames()
   covariates_factor <- setdiff(
     covariates_factor,
-    c(outcome, exposure, id_var)
+    c(outcome, exposure, id_var, add_inter_exposure_specific)
   )
   assertthat::assert_that(
     identical(
@@ -56,7 +58,9 @@ create_formula <- function(dat,
     msg = "The exposure was found among the covariates."
   )
 
+  ##############################################################################
   # Create formula (weights estimation)
+  ##############################################################################
   if (is.null(outcome)) {
     form <- paste0(
       exposure,
@@ -75,8 +79,12 @@ create_formula <- function(dat,
     return(form)
   } # End formula weights estimation
 
+  ##############################################################################
   # Create formula (outcome model)
+  ##############################################################################
+  #################################
   if (method %in% c("lm", "glm")) {
+  #################################
     ## Step 1: add outcome, exposure, and continuous covariates
     form <- paste0(
       outcome,
@@ -86,26 +94,48 @@ create_formula <- function(dat,
         paste0("splines::ns(", exposure, ", df = ", df_splines, ")"),
         exposure
       ),
-      ifelse(add_inter_exposure == TRUE,
-        " * ", " + "
+      ifelse(
+        length(add_inter_exposure_specific) > 0,
+        paste0(
+          " * (",
+          paste0(
+            add_inter_exposure_specific,
+            collapse = " * "
+          ),
+          ")"
+        ),
+        ""
       ),
-      "(",
-      paste0(covariates_continuous,
-        collapse = " + "
-      ),
-      ")"
-    )
-    ## Step 2: add remaining covariates
-    form <- paste0(
-      form,
-      " + ",
-      paste0("factor(",
-        covariates_factor,
-        ")",
-        collapse = " + "
+      ifelse(
+        length(covariates_continuous) > 0,
+        paste0(
+          ifelse(add_inter_exposure == TRUE,
+                 " * ", " + "
+          ),
+          "(",
+          paste0(covariates_continuous,
+                 collapse = " + "
+          ),
+          ")"
+        ),
+        ""
       )
     )
+    ## Step 2: add remaining covariates
+    if (length(covariates_factor) > 0) {
+      form <- paste0(
+        form,
+        " + ",
+        paste0("factor(",
+               covariates_factor,
+               ")",
+               collapse = " + "
+        )
+      )
+    }
+  ##################################
   } else if (method %in% c("gam")) {
+  ##################################
     less_than_y <- apply(dat[, covariates_continuous], 2, function(x) {
       length(unique(x)) < threshold_smooth
     })
@@ -143,7 +173,9 @@ create_formula <- function(dat,
         collapse = " + "
       )
     )
+  ########
   } else {
+  ########
     stop(glue::glue("The {method} method is not currently supported.",
       method = method
     ))
