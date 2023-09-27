@@ -175,6 +175,7 @@ preproc_data <- function(dat,
         ####################################
         dat = dat_ret,
         id_var = id_var,
+        by_var = by_var,
         transformation_fun = dic_steps$transform$transformation_fun
       ),
       ###########################################
@@ -182,6 +183,7 @@ preproc_data <- function(dat,
         ###########################################
         dat = dat_ret,
         id_var = id_var,
+        by_var = by_var,
         center_fun = dic_steps$standardization$center_fun,
         scale_fun = dic_steps$standardization$scale_fun
       ),
@@ -611,12 +613,13 @@ handle_creatinine_confounding <- function(dat,
 #'
 #' @param dat
 #' @param id_var
+#' @param by_var
 #' @param transformation_fun
 #'
 #' @return
 #'
 #' @export
-handle_transformation <- function(dat, id_var, transformation_fun) {
+handle_transformation <- function(dat, id_var, by_var, transformation_fun) {
   # When log-transforming, original variable should be strictly positive
   if (deparse(transformation_fun) %in% c(log, log10, log2, log1p, logb)) {
     res <- dat |>
@@ -646,7 +649,7 @@ handle_transformation <- function(dat, id_var, transformation_fun) {
   dat_ret <- dat |>
     tidylog::mutate(dplyr::across(
       dplyr::all_of(setdiff(
-        colnames(dat), id_var
+        colnames(dat), c(id_var, by_var)
       )),
       \(x) transformation_fun(x)
     ))
@@ -658,6 +661,7 @@ handle_transformation <- function(dat, id_var, transformation_fun) {
 #'
 #' @param dat
 #' @param id_var
+#' @param by_var
 #' @param center_fun
 #' @param scale_fun
 #'
@@ -665,12 +669,12 @@ handle_transformation <- function(dat, id_var, transformation_fun) {
 #'
 #' @export
 handle_standardization <- function(dat,
-                                   id_var,
+                                   id_var, by_var,
                                    center_fun, scale_fun) {
   dat_ret <- dat |>
     tidylog::mutate(dplyr::across(
       dplyr::all_of(setdiff(
-        colnames(dat), id_var
+        colnames(dat), c(id_var, by_var)
       )),
       \(x) (x - center_fun(x)) / scale_fun(x)
     ))
