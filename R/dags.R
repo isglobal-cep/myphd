@@ -48,7 +48,7 @@ minimize_missings <- function(dat, meta, adjustment_sets,
 
   # List of dataframes with covariates from adjustment sets
   dfs_covars <- lapply(adjustment_sets, function(x) {
-    mapping_covars <- meta[get("dag", meta) %in% x, ]$variable |>
+    mapping_covars <- meta[meta$dag %in% x, ]$variable |>
       as.character()
     tmp <- dat |>
       tidylog::select(dplyr::all_of(c(
@@ -132,7 +132,7 @@ from_dagitty_to_ggdag <- function(dag) {
   dag <- dagitty::dagitty(dag)
 
   to_ggdag <- ggdag::tidy_dagitty(dag) |>
-    (\(x) get("data", x))() |>
+    (\(x) x$data)() |>
     tidylog::select(name, to) |>
     tidylog::rename(from = name) |>
     tidylog::group_by(to) |>
@@ -184,13 +184,13 @@ test_npsem <- function(dag, dat, meta, params) {
   # Step 1: extract adjustment set(s)
   dag_as <- dagitty::adjustmentSets(
     x = dag,
-    type = get("type_mas", params),
-    effect = get("type_effect", params)
+    type = params$type_mas,
+    effect = params$type_effect
   )
 
   res <- lapply(dag_as, function(as) {
     ret <- list()
-    ret$mapping_covars <- meta[get("dag", meta) %in% as, ] |>
+    ret$mapping_covars <- meta[meta$dag %in% as, ] |>
       tidylog::distinct(dag, .keep_all = TRUE) |>
       tidylog::select(variable) |>
       c() |>
@@ -206,19 +206,16 @@ test_npsem <- function(dag, dat, meta, params) {
         dplyr::all_of(ret$mapping_covars)
       )
     colnames(covariates) <- c(
-      get("identifier", params),
-      meta[get("variable", meta) %in% get(
-        "mapping_covars",
-        ret
-      ), ]$dag |>
+      params$identifier,
+      meta[meta$variable %in% ret$mapping_covars, ]$dag |>
         as.character()
     )
     covariates <- covariates[, !duplicated(colnames(covariates))]
 
     # Step 3: test independencies for each exposure
     exposure_list <- setdiff(
-      colnames(get("exposures", dat)),
-      get("identifier", params)
+      colnames(dat$exposures),
+      params$identifier
     )
     ret$tests <- lapply(exposure_list, function(expo) {
       dat_test <- purrr::reduce(
@@ -226,13 +223,13 @@ test_npsem <- function(dag, dat, meta, params) {
           covariates,
           dat$exposures |>
             tidylog::select(
-              get("identifier", params),
+              params$identifier,
               .data[[expo]]
             ),
           dat$outcome
         ),
         tidylog::full_join,
-        by = get("identifier", params)
+        by = params$identifier
       )
       test <- dagitty::localTests(
         x = dag,

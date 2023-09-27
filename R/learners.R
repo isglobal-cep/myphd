@@ -84,7 +84,7 @@ create_formula <- function(dat,
   ##############################################################################
   #################################
   if (method %in% c("lm", "glm")) {
-  #################################
+    #################################
     ## Step 1: add outcome, exposure, and continuous covariates
     form <- paste0(
       outcome,
@@ -110,11 +110,11 @@ create_formula <- function(dat,
         length(covariates_continuous) > 0,
         paste0(
           ifelse(add_inter_exposure == TRUE,
-                 " * ", " + "
+            " * ", " + "
           ),
           "(",
           paste0(covariates_continuous,
-                 collapse = " + "
+            collapse = " + "
           ),
           ")"
         ),
@@ -127,15 +127,15 @@ create_formula <- function(dat,
         form,
         " + ",
         paste0("factor(",
-               covariates_factor,
-               ")",
-               collapse = " + "
+          covariates_factor,
+          ")",
+          collapse = " + "
         )
       )
     }
-  ##################################
+    ##################################
   } else if (method %in% c("gam")) {
-  ##################################
+    ##################################
     less_than_y <- apply(dat[, covariates_continuous], 2, function(x) {
       length(unique(x)) < threshold_smooth
     })
@@ -173,9 +173,9 @@ create_formula <- function(dat,
         collapse = " + "
       )
     )
-  ########
+    ########
   } else {
-  ########
+    ########
     stop(glue::glue("The {method} method is not currently supported.",
       method = method
     ))
@@ -225,11 +225,11 @@ fit_model_weighted <- function(dat,
     covariates = covariates,
     id_var = id_var,
     method = method,
-    add_inter_exposure = get("add_inter_exposure", method_args),
-    add_splines_exposure = get("add_splines_exposure", method_args),
-    df_splines = get("df_splines", method_args),
-    threshold_smooth = get("threshold_smooth", method_args),
-    threshold_k = get("threshold_k", method_args)
+    add_inter_exposure = method_args$add_inter_exposure,
+    add_splines_exposure = method_args$add_splines_exposure,
+    df_splines = method_args$df_splines,
+    threshold_smooth = method_args$threshold_smooth,
+    threshold_k = method_args$threshold_k
   )
 
   # Fit model
@@ -238,14 +238,14 @@ fit_model_weighted <- function(dat,
       formula = as.formula(form),
       data = dat,
       weights = weights,
-      family = get("family", method_args)
+      family = method_args$family
     )
   } else if (method == "orm") {
 
   } else if (method == "gam") {
     fit <- mgcv::bam(
       formula = as.formula(form),
-      family = get("family", method_args),
+      family = method_args$family,
       data = dat,
       weights = weights,
       method = "fREML",

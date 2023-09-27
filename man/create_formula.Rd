@@ -12,6 +12,7 @@ create_formula(
   id_var,
   method,
   add_inter_exposure,
+  add_inter_exposure_specific,
   add_splines_exposure,
   df_splines,
   threshold_smooth,

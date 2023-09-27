@@ -127,102 +127,54 @@ preproc_data <- function(dat,
     dat_ret <- switch(step,
       #######################
       "llodq" = handle_llodq(
-      #######################
+        #######################
         dat = dat_ret,
         id_var = id_var,
         by_var = by_var,
         dat_desc = dat_desc,
-        id_val = get(
-          "id_val",
-          get("llodq", dic_steps)
-        ),
-        method = get(
-          "method",
-          get("llodq", dic_steps)
-        ),
+        id_val = dic_steps$llodq$id_val,
+        method = dic_steps$llodq$method,
         replacement_vals = dat_llodq,
-        creatinine_threshold = get(
-          "creatinine_threshold",
-          get("llodq", dic_steps)
-        ),
-        frac_val_threshold_within = get(
-          "threshold_within",
-          get("llodq", dic_steps)
-        ),
-        frac_val_threshold_overall = get(
-          "threshold_overall",
-          get("llodq", dic_steps)
-        ),
-        tune_sigma = get(
-          "tune_sigma",
-          get("llodq", dic_steps)
-        )
+        creatinine_threshold = dic_steps$llodq$creatinine_threshold,
+        frac_val_threshold_within = dic_steps$llodq$threshold_within,
+        frac_val_threshold_overall = dic_steps$llodq$threshold_overall,
+        tune_sigma = dic_steps$llodq$tune_sigma
       )$dat,
       #############################################
       "creatinine" = handle_creatinine_confounding(
-      #############################################
+        #############################################
         dat = dat_ret,
         covariates = covariates,
         id_var = id_var,
         by_var = by_var,
-        covariates_names = get(
-          "creatinine_covariates_names",
-          get("creatinine", dic_steps)
-        ),
-        creatinine = get(
-          "creatinine_name",
-          get("creatinine", dic_steps)
-        ),
-        method = get(
-          "method",
-          get("creatinine", dic_steps)
-        ),
-        method_fit_args = get(
-          "method_fit_args",
-          get("creatinine", dic_steps)
-        )
+        covariates_names = dic_steps$creatinine$creatinine_covariates_names,
+        creatinine = dic_steps$creatinine$creatinine_name,
+        method = dic_steps$creatinine$method,
+        method_fit_args = dic_steps$creatinine$method_fit_args
       ),
       ###################################
       "missings" = handle_missing_values(
-      ###################################
+        ###################################
         dat = dat_ret,
         covariates = covariates,
-        selected_covariates = get(
-          "selected_covariates",
-          get("missings", dic_steps)
-        ),
+        selected_covariates = dic_steps$missings$selected_covariates,
         id_var = id_var,
         by_var = by_var,
-        threshold_within = get(
-          "threshold_within",
-          get("missings", dic_steps)
-        ),
-        threshold_overall = get(
-          "threshold_overall",
-          get("missings", dic_steps)
-        ),
-        method_imputation = get(
-          "method_imputation",
-          get("missings", dic_steps)
-        )
+        threshold_within = dic_steps$missings$threshold_within,
+        threshold_overall = dic_steps$missings$threshold_overall,
+        method_imputation = dic_steps$missings$method_imputation
       )$dat_imputed,
       ###########################################
       "standardization" = handle_standardization(
-      ###########################################
+        ###########################################
         dat = dat_ret,
         id_var = id_var,
-        center_fun = get(
-          "center_fun",
-          get("standardization", dic_steps)
-        ),
-        scale_fun = get(
-          "scale_fun",
-          get("standardization", dic_steps)
-        )
+        center_fun = dic_steps$standardization$center_fun,
+        scale_fun = dic_steps$standardization$scale_fun
       ),
       ########################
       "bound" = bound_outcome(
-      ########################
+        ########################
         dat = dat_ret,
         var = outcome
       ),
@@ -276,14 +228,14 @@ handle_creatinine_confounding <- function(dat,
       " ~ ",
       paste0(
         setdiff(
-          get("numerical", covariates_names), creatinine
+          covariates_names$numerical, creatinine
         ),
         collapse = " + "
       ),
       " + ",
       paste0("factor(",
         setdiff(
-          get("categorical", covariates_names), creatinine
+          covariates_names$categorical, creatinine
         ),
         ")",
         collapse = " + "
@@ -294,7 +246,7 @@ handle_creatinine_confounding <- function(dat,
       formula = as.formula(form),
       data = covariates,
       weights = wts,
-      family = get("family", method_fit_args)
+      family = method_fit_args$family
     )
     ## Predicted creatinine values
     covariates <- covariates |>

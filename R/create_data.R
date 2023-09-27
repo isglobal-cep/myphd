@@ -118,23 +118,23 @@ add_metadata <- function(dat, metadat, categorical_types) {
     info <- metadat |>
       tidylog::filter(variable == x) |>
       as.list()
-    info$description <- .tidy_string(get("description", info))
-    info$remark <- .tidy_string(get("remark", info))
-    info$type <- stringr::str_to_lower(get("type", info))
-    info$comments <- stringr::str_to_lower(get("comments", info))
+    info$description <- .tidy_string(info$description)
+    info$remark <- .tidy_string(info$remark)
+    info$type <- stringr::str_to_lower(info$type)
+    info$comments <- stringr::str_to_lower(info$comments)
     info <- lapply(info, as.character)
 
     # Add metadata
-    attr(dat_modified[[x]], "label") <- get("description", info)
-    attr(dat_modified[[x]], "units") <- get("comments", info)
-    attr(dat_modified[[x]], "remarks") <- get("remark", info)
-    attr(dat_modified[[x]], "dag_var") <- get("dag", info)
-    attr(dat_modified[[x]], "period") <- get("period", info)
-    if (get("type", info) == "categorical") {
+    attr(dat_modified[[x]], "label") <- info$description
+    attr(dat_modified[[x]], "units") <- info$comments
+    attr(dat_modified[[x]], "remarks") <- info$remark
+    attr(dat_modified[[x]], "dag_var") <- info$dag
+    attr(dat_modified[[x]], "period") <- info$period
+    if (info$type == "categorical") {
       dat_modified[[x]] <- labelled::labelled(
         dat_modified[[x]],
-        labels = create_mapping_labels(get("label", info), get("code", info)),
-        label = get("description", info)
+        labels = create_mapping_labels(info$label, info$code),
+        label = info$description
       ) |>
         labelled::to_factor()
     }
