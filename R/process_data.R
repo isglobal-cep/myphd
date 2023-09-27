@@ -464,12 +464,20 @@ handle_missing_values <- function(dat,
       methodStand = "iqr",
       addRandom = FALSE,
       useImputedDist = FALSE,
-      weightDist = FALSE
+      weightDist = FALSE,
+      imp_var = FALSE
     ),
     # http://statistikat.github.io/VIM/reference/irmi.html
     "vim.irmi" = VIM::irmi(),
     # http://statistikat.github.io/VIM/reference/regressionImp.html
     "vim.reg" = VIM::regressionImp()
+  ) |>
+    tibble::as_tibble()
+
+  assertthat::assert_that(
+    identical(
+      dat[[id_var]], dat_imp[[id_var]]
+    )
   )
   ##############################################################################
 
