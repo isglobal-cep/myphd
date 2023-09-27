@@ -475,9 +475,8 @@ handle_missing_values <- function(dat,
     tibble::as_tibble()
 
   assertthat::assert_that(
-    identical(
-      dat[[id_var]], dat_imp[[id_var]]
-    )
+    identical(dat[[id_var]], dat_imp[[id_var]]),
+    msg = "The order of the rows does not match between datasets."
   )
   ##############################################################################
 
@@ -526,6 +525,13 @@ handle_creatinine_confounding <- function(dat,
                                           creatinine,
                                           method,
                                           method_fit_args) {
+  if (!is.null(covariates)) {
+    assertthat::assert_that(
+      nrow(dat) == nrow(covariates),
+      msg = "The number of rows does not match between datasets."
+    )
+  }
+
   # List of variables to which the method should be applied
   var_names <- setdiff(colnames(dat), c(id_var, by_var))
 
@@ -536,7 +542,7 @@ handle_creatinine_confounding <- function(dat,
     )
 
     # Step 1: estimate weights for creatinine
-    wts <- rep(1, times = nrow(covariates))
+    wts <- rep(1, times = nrow(dat))
 
     # Step 2: predict creatinine with weights
     ## Formula for model fitting
