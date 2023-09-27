@@ -4,8 +4,7 @@ Removal of variables with a fraction of missing values greater than
 the chosen threshold, within each group.
 Removal of variables with a fraction of missing values greater than
 the chosen threshold, for the entire dataset.
-Imputation of the remaining variables with Random Forests using the
-missRanger function.
+Imputation of the remaining variables.
 
 "><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -55,8 +54,7 @@ missRanger function.
 the chosen threshold, within each group.</p></li>
 <li><p>Removal of variables with a fraction of missing values greater than
 the chosen threshold, for the entire dataset.</p></li>
-<li><p>Imputation of the remaining variables with Random Forests using the
-<a href="https://rdrr.io/pkg/missRanger/man/missRanger.html" class="external-link">missRanger</a> function.</p></li>
+<li><p>Imputation of the remaining variables.</p></li>
 </ul></div>
 
     <div id="ref-usage">
@@ -68,7 +66,8 @@ the chosen threshold, for the entire dataset.</p></li>
 <span>  <span class="va">by_var</span>,</span>
 <span>  <span class="va">threshold_within</span>,</span>
 <span>  <span class="va">threshold_overall</span>,</span>
-<span>  <span class="va">method_imputation</span></span>
+<span>  <span class="va">method_imputation</span>,</span>
+<span>  <span class="va">k</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -98,8 +97,8 @@ the chosen threshold, for the entire dataset.</p></li>
 <dd><p>The overall missing value threshold. An integer.</p></dd>
 
 
-<dt>method_imputation</dt>
-<dd></dd>
+<dt>k</dt>
+<dd><p>Number of nearest neighbors used for kNN.</p></dd>
 
 </dl></div>
     <div id="value">
