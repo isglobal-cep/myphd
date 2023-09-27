@@ -12,7 +12,8 @@ handle_missing_values(
   by_var,
   threshold_within,
   threshold_overall,
-  method_imputation
+  method_imputation,
+  k
 )
 }
 \arguments{
@@ -28,7 +29,7 @@ handle_missing_values(
 
 \item{threshold_overall}{The overall missing value threshold. An integer.}
 
-\item{method_imputation}{}
+\item{k}{Number of nearest neighbors used for kNN.}
 }
 \value{
 A named list containing the results of the steps described above.
@@ -41,7 +42,6 @@ Given a dataset, this function performs the following steps:
 the chosen threshold, within each group.
 \item Removal of variables with a fraction of missing values greater than
 the chosen threshold, for the entire dataset.
-\item Imputation of the remaining variables with Random Forests using the
-\link[missRanger]{missRanger} function.
+\item Imputation of the remaining variables.
 }
 }
