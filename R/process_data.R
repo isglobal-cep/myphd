@@ -90,6 +90,7 @@ convert_time_season <- function(dat, cols) {
 #' * `missings`, to handle missing values. A named list with elements:
 #'  * `threshold_within`, the missing value threshold within each group. An integer.
 #'  * `threshold_overall`, the overall missing value threshold. An integer.
+#'  * `use_additional_covariates`, .
 #'  * `selected_covariates`, a vector of covariates' names. A vector.
 #'  * `method_imputation`, method to be used to impute values. A string.
 #'  * `k`, the number of nearest neighbors to use for kNN. An integer.
@@ -148,6 +149,7 @@ preproc_data <- function(dat,
         ###################################
         dat = dat_ret,
         covariates = covariates,
+        use_additional_covariates = dic_steps$missings$use_additional_covariates,
         selected_covariates = dic_steps$missings$selected_covariates,
         id_var = id_var,
         by_var = by_var,
@@ -370,6 +372,7 @@ handle_llodq <- function(dat,
 #'
 #' @param dat A dataframe containing the variables of interest. A dataframe.
 #' @param covariates A dataframe containing additional variables. A dataframe.
+#' @param use_additional_covariates
 #' @param selected_covariates
 #' @param id_var The variable name to be used to identify subjects. A string.
 #' @param by_var The variable name to group by. A string.
@@ -384,6 +387,7 @@ handle_llodq <- function(dat,
 #' @export
 handle_missing_values <- function(dat,
                                   covariates,
+                                  use_additional_covariates,
                                   selected_covariates,
                                   id_var,
                                   by_var,
@@ -425,7 +429,7 @@ handle_missing_values <- function(dat,
 
   ## Check whether to perform imputation by including additional variables
   cols_to_remove <- NULL
-  if (!is.null(covariates)) {
+  if (use_additional_covariates == TRUE) {
     cols_to_remove <- ifelse(is.null(selected_covariates),
       colnames(covariates),
       selected_covariates
