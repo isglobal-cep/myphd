@@ -7,13 +7,15 @@
 handle_missing_values(
   dat,
   covariates,
+  use_additional_covariates,
   selected_covariates,
   id_var,
   by_var,
   threshold_within,
   threshold_overall,
   method_imputation,
-  k
+  k,
+  path_save_res
 )
 }
 \arguments{
@@ -30,6 +32,8 @@ handle_missing_values(
 \item{threshold_overall}{The overall missing value threshold. An integer.}
 
 \item{k}{Number of nearest neighbors used for kNN.}
+
+\item{path_save_res}{}
 }
 \value{
 A named list containing the results of the steps described above.

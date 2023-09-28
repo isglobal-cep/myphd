@@ -4,7 +4,7 @@
 \alias{handle_standardization}
 \title{Title}
 \usage{
-handle_standardization(dat, id_var, center_fun, scale_fun)
+handle_standardization(dat, id_var, by_var, center_fun, scale_fun)
 }
 \arguments{
 \item{scale_fun}{}

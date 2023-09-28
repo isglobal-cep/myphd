@@ -47,9 +47,11 @@ fraction of values corresponding to \code{id_val}. An integer.
 \item \code{missings}, to handle missing values. A named list with elements:
 \item \code{threshold_within}, the missing value threshold within each group. An integer.
 \item \code{threshold_overall}, the overall missing value threshold. An integer.
+\item \code{use_additional_covariates}, .
 \item \code{selected_covariates}, a vector of covariates' names. A vector.
 \item \code{method_imputation}, method to be used to impute values. A string.
 \item \code{k}, the number of nearest neighbors to use for kNN. An integer.
+\item \code{path_save_res}, path to directory where to save figures.
 Currently, variables can be imputed in a univariate way (\code{univariate}), using
 selected covariates (\code{selected}), or all the covariates
 available in \code{covariates} (\code{all}). A string.
@@ -60,6 +62,7 @@ standardization is implemented (\code{cas}). A string.
 Currently, only the family to be used within \link[stats]{glm}. A list.
 \item \code{creatinine_covariates_names}, .
 \item \code{creatinine_name}, .
+\item \code{path_save_res}, path to directory where to save figures.
 \item \code{transform}, to transform variables. A named list with elements:
 \item \code{transformation_fun}, the transformation function (e.g., \code{log}).
 \item \code{standardization}, to standardize variables. A named list with elements:

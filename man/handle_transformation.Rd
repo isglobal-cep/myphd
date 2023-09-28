@@ -4,7 +4,7 @@
 \alias{handle_transformation}
 \title{Title}
 \usage{
-handle_transformation(dat, id_var, transformation_fun)
+handle_transformation(dat, id_var, by_var, transformation_fun)
 }
 \arguments{
 \item{transformation_fun}{}

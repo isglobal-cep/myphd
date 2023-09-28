@@ -94,6 +94,7 @@ convert_time_season <- function(dat, cols) {
 #'  * `selected_covariates`, a vector of covariates' names. A vector.
 #'  * `method_imputation`, method to be used to impute values. A string.
 #'  * `k`, the number of nearest neighbors to use for kNN. An integer.
+#'  * `path_save_res`, path to directory where to save figures.
 #'  Currently, variables can be imputed in a univariate way (`univariate`), using
 #'  selected covariates (`selected`), or all the covariates
 #'  available in `covariates` (`all`). A string.
@@ -104,6 +105,7 @@ convert_time_season <- function(dat, cols) {
 #'  Currently, only the family to be used within \link[stats]{glm}. A list.
 #'  * `creatinine_covariates_names`, .
 #'  * `creatinine_name`, .
+#'  * `path_save_res`, path to directory where to save figures.
 #' * `transform`, to transform variables. A named list with elements:
 #'  * `transformation_fun`, the transformation function (e.g., `log`).
 #' * `standardization`, to standardize variables. A named list with elements:
@@ -156,7 +158,8 @@ preproc_data <- function(dat,
         threshold_within = dic_steps$missings$threshold_within,
         threshold_overall = dic_steps$missings$threshold_overall,
         method_imputation = dic_steps$missings$method_imputation,
-        k = dic_steps$missings$k
+        k = dic_steps$missings$k,
+        path_save_res = dic_steps$missings$path_save_res
       )$dat_imputed,
       #############################################
       "creatinine" = handle_creatinine_confounding(
@@ -168,7 +171,8 @@ preproc_data <- function(dat,
         covariates_names = dic_steps$creatinine$creatinine_covariates_names,
         creatinine = dic_steps$creatinine$creatinine_name,
         method = dic_steps$creatinine$method,
-        method_fit_args = dic_steps$creatinine$method_fit_args
+        method_fit_args = dic_steps$creatinine$method_fit_args,
+        path_save_res = dic_steps$creatinine$path_save_res
       ),
       ####################################
       "transform" = handle_transformation(
@@ -382,6 +386,7 @@ handle_llodq <- function(dat,
 #' @param threshold_overall The overall missing value threshold. An integer.
 #' @param method_imputation
 #' @param k Number of nearest neighbors used for kNN.
+#' @param path_save_res
 #'
 #' @returns A named list containing the results of the steps described above.
 #' The imputed dataset is named `dat_imputed`.
@@ -396,7 +401,8 @@ handle_missing_values <- function(dat,
                                   threshold_within,
                                   threshold_overall,
                                   method_imputation,
-                                  k) {
+                                  k,
+                                  path_save_res) {
   if (sum(is.na(dat)) == 0) {
     message("No missing values found.\n")
 
@@ -404,6 +410,20 @@ handle_missing_values <- function(dat,
       dat_imputed = dat
     ))
   }
+
+  vis_miss_before <- naniar::vis_miss(
+    tidylog::select(
+      dat, -dplyr::all_of(c(id_var, by_var))
+    ),
+    cluster = FALSE,
+    show_perc = TRUE,
+    show_perc_col = TRUE
+  ) +
+    ggplot2::theme(
+      legend.position = "right",
+      panel.grid = ggplot2::element_blank(),
+      axis.text.x.top = ggplot2::element_text(vjust = -0.7)
+    )
 
   # Step 1: group by factor and remove variables with a high
   #         fraction of missing values within each group
@@ -426,9 +446,6 @@ handle_missing_values <- function(dat,
     tidylog::select(-dplyr::all_of(step2$variable))
 
   # Step 3: impute the remaining variables
-  vis_miss_before <-
-    naniar::vis_miss(tidylog::select(dat, -dplyr::all_of(c(id_var, by_var))))
-
   ## Check whether to perform imputation by including additional variables
   cols_to_remove <- NULL
   if (use_additional_covariates == TRUE) {
@@ -491,10 +508,21 @@ handle_missing_values <- function(dat,
       tidylog::select(-dplyr::all_of(setdiff(cols_to_remove, c(id_var, by_var))))
   }
 
-  vis_miss_after <- naniar::vis_miss(tidylog::select(dat_imp, -dplyr::all_of(c(
-    id_var,
-    by_var
-  ))))
+  vis_miss_after <- naniar::vis_miss(
+    tidylog::select(
+      dat_imp, -dplyr::all_of(c(id_var, by_var))
+    ),
+    cluster = FALSE,
+    show_perc = TRUE,
+    show_perc_col = TRUE
+  ) +
+    ggplot2::theme(
+      legend.position = "right",
+      panel.grid = ggplot2::element_blank(),
+      axis.text.x.top = ggplot2::element_text(vjust = -0.7)
+    )
+
+  # Step 4: save figures
 
   return(
     list(
@@ -519,6 +547,7 @@ handle_missing_values <- function(dat,
 #' @param creatinine
 #' @param method
 #' @param method_fit_args
+#' @param path_save_res
 #'
 #' @returns
 #'
@@ -530,7 +559,8 @@ handle_creatinine_confounding <- function(dat,
                                           covariates_names,
                                           creatinine,
                                           method,
-                                          method_fit_args) {
+                                          method_fit_args,
+                                          path_save_res) {
   if (!is.null(covariates)) {
     assertthat::assert_that(
       nrow(dat) == nrow(covariates),
@@ -577,6 +607,9 @@ handle_creatinine_confounding <- function(dat,
       weights = wts,
       family = method_fit_args$family
     )
+    ## Check fitted model
+    check_model(model = mod_creatine,
+                path_save_res = path_save_res)
     ## Predicted creatinine values
     covariates <- covariates |>
       modelr::add_predictions(

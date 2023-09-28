@@ -12,11 +12,12 @@ handle_creatinine_confounding(
   covariates_names,
   creatinine,
   method,
-  method_fit_args
+  method_fit_args,
+  path_save_res
 )
 }
 \arguments{
-\item{method_fit_args}{}
+\item{path_save_res}{}
 }
 \description{
 Title
