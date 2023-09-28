@@ -61,13 +61,15 @@ the chosen threshold, for the entire dataset.</p></li>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">handle_missing_values</span><span class="op">(</span></span>
 <span>  <span class="va">dat</span>,</span>
 <span>  <span class="va">covariates</span>,</span>
+<span>  <span class="va">use_additional_covariates</span>,</span>
 <span>  <span class="va">selected_covariates</span>,</span>
 <span>  <span class="va">id_var</span>,</span>
 <span>  <span class="va">by_var</span>,</span>
 <span>  <span class="va">threshold_within</span>,</span>
 <span>  <span class="va">threshold_overall</span>,</span>
 <span>  <span class="va">method_imputation</span>,</span>
-<span>  <span class="va">k</span></span>
+<span>  <span class="va">k</span>,</span>
+<span>  <span class="va">path_save_res</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -99,6 +101,10 @@ the chosen threshold, for the entire dataset.</p></li>
 
 <dt>k</dt>
 <dd><p>Number of nearest neighbors used for kNN.</p></dd>
+
+
+<dt>path_save_res</dt>
+<dd></dd>
 
 </dl></div>
     <div id="value">

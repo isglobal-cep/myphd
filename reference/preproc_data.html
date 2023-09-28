@@ -118,9 +118,11 @@ fraction of values corresponding to <code>id_val</code>. An integer.</p></li>
 <li><p><code>missings</code>, to handle missing values. A named list with elements:</p></li>
 <li><p><code>threshold_within</code>, the missing value threshold within each group. An integer.</p></li>
 <li><p><code>threshold_overall</code>, the overall missing value threshold. An integer.</p></li>
+<li><p><code>use_additional_covariates</code>, .</p></li>
 <li><p><code>selected_covariates</code>, a vector of covariates' names. A vector.</p></li>
 <li><p><code>method_imputation</code>, method to be used to impute values. A string.</p></li>
-<li><p><code>k</code>, the number of nearest neighbors to use for kNN. An integer.
+<li><p><code>k</code>, the number of nearest neighbors to use for kNN. An integer.</p></li>
+<li><p><code>path_save_res</code>, path to directory where to save figures.
 Currently, variables can be imputed in a univariate way (<code>univariate</code>), using
 selected covariates (<code>selected</code>), or all the covariates
 available in <code>covariates</code> (<code>all</code>). A string.</p></li>
@@ -131,6 +133,7 @@ standardization is implemented (<code>cas</code>). A string.</p></li>
 Currently, only the family to be used within <a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a>. A list.</p></li>
 <li><p><code>creatinine_covariates_names</code>, .</p></li>
 <li><p><code>creatinine_name</code>, .</p></li>
+<li><p><code>path_save_res</code>, path to directory where to save figures.</p></li>
 <li><p><code>transform</code>, to transform variables. A named list with elements:</p></li>
 <li><p><code>transformation_fun</code>, the transformation function (e.g., <code>log</code>).</p></li>
 <li><p><code>standardization</code>, to standardize variables. A named list with elements:</p></li>
