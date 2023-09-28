@@ -608,8 +608,8 @@ handle_creatinine_confounding <- function(dat,
       family = method_fit_args$family
     )
     ## Check fitted model
-    check_model(model = mod_creatine,
-                path_save_res = path_save_res)
+    check_mod_creat <- check_model(model = mod_creatine,
+                                   path_save_res = path_save_res)
     ## Predicted creatinine values
     covariates <- covariates |>
       modelr::add_predictions(

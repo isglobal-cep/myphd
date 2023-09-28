@@ -101,4 +101,6 @@ check_model <- function(model, path_save_res) {
     filename = path_save_res,
     plot = ret
   )
+
+  return(ret)
 }
