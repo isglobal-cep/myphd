@@ -29,6 +29,7 @@ to \code{\link[=estimate_weights]{estimate_weights()}}. A \link[WeightIt]{weight
 \itemize{
 \item \code{family}, .
 \item \code{add_inter_exposure}, .
+\item \code{add_inter_exposure_specific}, .
 \item \code{add_splines_exposure}, .
 \item \code{df_splines}, .
 \item \code{threshold_smooth}, .

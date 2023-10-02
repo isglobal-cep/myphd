@@ -49,7 +49,8 @@ create_formula <- function(dat,
     identical(
       sort(covariates),
       sort(
-        c(covariates_continuous, covariates_factor)
+        c(covariates_continuous, covariates_factor,
+          add_inter_exposure_specific)
       )
     ),
     msg = "The covariates do not match the originals."
@@ -199,6 +200,7 @@ create_formula <- function(dat,
 #' @param method_args A named list with the following variables:
 #' * `family`, .
 #' * `add_inter_exposure`, .
+#' * `add_inter_exposure_specific`, .
 #' * `add_splines_exposure`, .
 #' * `df_splines`, .
 #' * `threshold_smooth`, .
