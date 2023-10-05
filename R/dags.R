@@ -61,7 +61,7 @@ minimize_missings <- function(dat, meta, adjustment_sets,
   # for each adjustment set
   ret_miss <- suppressMessages(lapply(dfs_covars, function(x) {
     nans <- x |>
-      tidylog::group_split(.data[[by_var]], .keep = FALSE) |>
+      dplyr::group_split(.data[[by_var]], .keep = FALSE) |>
       lapply(function(y) {
         round(sum(is.na(y)) / (nrow(y) * ncol(y)) * 100, 0)
       }) |>
