@@ -2,7 +2,7 @@
 % Please edit documentation in R/learners.R
 \name{create_formula}
 \alias{create_formula}
-\title{Title}
+\title{Programmatic way of constructing model formulas}
 \usage{
 create_formula(
   dat,
@@ -20,8 +20,35 @@ create_formula(
 )
 }
 \arguments{
+\item{dat}{A dataframe containing the variables of interest. A dataframe.}
+
+\item{outcome}{A string indicating the outcome variable. A string.}
+
+\item{exposure}{A string indicating the exposure variable. A string.}
+
+\item{covariates}{A list of covariate names. A list or vector.}
+
+\item{id_var}{The variable name to be used to identify subjects. A string.}
+
+\item{method}{The name of the model to be fitted (e.g., \code{glm}). A string.}
+
+\item{add_inter_exposure}{Whether to add an interaction between the exposure
+and all the covariates. A bool.}
+
+\item{add_inter_exposure_specific}{A list of covariate names for which
+an interaction with the exposure is desired. A list or vector.}
+
+\item{add_splines_exposure}{Whether to model the exposure with natural splines. A bool.}
+
+\item{df_splines}{The degrees of freedom for the natural splines. An integer.}
+
+\item{threshold_smooth}{For GAMs, threshold for the number of unique values
+of continuous variables. If the number of unique values is greater or equal than
+this variable, the dimension of the basis used to represent the smooth term (\code{k}),
+is chosen automatically. An integer.}
+
 \item{threshold_k}{}
 }
 \description{
-Title
+Programmatic way of constructing model formulas
 }

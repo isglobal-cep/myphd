@@ -20,7 +20,7 @@ An integer corresponding to the index of the adjustment
 set that minimizes the number of missing values.
 }
 \description{
-Given a dataset and a list of adjustment sets
+Given a dataframe and a list of adjustment sets
 identified with the \link[dagitty]{adjustmentSets} function,
 find the set that minimizes the number of missing values
 for the confounders.

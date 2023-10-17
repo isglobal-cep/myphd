@@ -55,10 +55,10 @@ explore_shift <- function(dat,
   return(ret)
 }
 
-#' A function to describe the used dataset
+#' A function to describe the used dataframe
 #'
 #' @description
-#' Given a dataset, this function performs the following steps:
+#' Given a dataframe, this function performs the following steps:
 #' * Simple diagnose of numerical and categorical
 #' variables with the \link[dlookr]{diagnose_numeric} and
 #' \link[dlookr]{diagnose_category} functions, respectively.
@@ -70,7 +70,7 @@ explore_shift <- function(dat,
 #' the \link[gtsummary]{tbl_summary} function.
 #' * Detailed summary of continuous and categorical variables with
 #' the \link[gtsummary]{tbl_summary} function.
-#' * Visualization of the correlation structure of the dataset using
+#' * Visualization of the correlation structure of the dataframe using
 #' the \link[corrr]{correlate} and \link[corrr]{rplot} functions,
 #' with both Pearson's and Spearman's correlation.
 #' @md
@@ -261,10 +261,10 @@ describe_data <- function(dat, id_var, by_var) {
   ))
 }
 
-#' A function to explore the missing values of a dataset
+#' A function to explore the missing values of a dataframe
 #'
 #' @description
-#' Given a dataset, this function performs the following steps:
+#' Given a dataframe, this function performs the following steps:
 #' * Summary of missing values for the variables, grouped by a factor,
 #' using the \link[naniar]{miss_var_summary} function.
 #' The information is the same as that provided in the previous step,

@@ -1,15 +1,15 @@
-#' Create a fake dataset based on a real one
+#' Create a fake dataframe based on a real one
 #'
 #' @description
-#' Given a dataset with variables as columns, this function creates a
-#' random dataset that can be stored on the local machine
+#' Given a dataframe with variables as columns, this function creates a
+#' random dataframe that can be stored on the local machine
 #' without security and privacy issues. The type of the
 #' variables is matched.
 #'
-#' @param dat A dataset with variables as columns.
+#' @param dat A dataframe with variables as columns.
 #' A \link[data.table]{data.table} object.
 #'
-#' @returns A random dataset with matching variables.
+#' @returns A random dataframe with matching variables.
 #' A \link[data.table]{data.table} object.
 #'
 #' @export

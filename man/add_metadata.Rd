@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_data.R
 \name{add_metadata}
 \alias{add_metadata}
-\title{Add metadata to dataset}
+\title{Add metadata to dataframe}
 \usage{
 add_metadata(dat, metadat, categorical_types)
 }
@@ -30,8 +30,8 @@ A dataframe.
 A dataframe containing annotated variables.
 }
 \description{
-Given a dataset with observations as rows and variables as columns,
-and given a dataset of metadata with variables as rows and
+Given a dataframe with observations as rows and variables as columns,
+and given a dataframe of metadata with variables as rows and
 information as columns, add metadata to the variables present in
-the dataset.
+the dataframe.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/process_data.R
 \name{preproc_data}
 \alias{preproc_data}
-\title{Basic pre-processing of datasets}
+\title{Basic pre-processing of dataframes}
 \usage{
 preproc_data(
   dat,
@@ -76,10 +76,10 @@ Currently, only the family to be used within \link[stats]{glm}. A list.
 \item{by_var}{The variable name to group by. A string.}
 }
 \value{
-A pre-processed dataset. A tibble.
+A pre-processed dataframe. A dataframe.
 }
 \description{
-This function performs basic pre-processing of a given dataset:
+This function performs basic pre-processing of a given dataframe:
 \itemize{
 \item Data cleaning:
 \itemize{

@@ -1,18 +1,23 @@
-#' Title
+#' Programmatic way of constructing model formulas
 #'
 #' @description
 #'
-#' @param dat
-#' @param outcome
-#' @param exposure
-#' @param covariates
-#' @param id_var
-#' @param method
-#' @param add_inter_exposure
-#' @param add_inter_exposure_specific
-#' @param add_splines_exposure
-#' @param df_splines
-#' @param threshold_smooth
+#' @param dat A dataframe containing the variables of interest. A dataframe.
+#' @param outcome A string indicating the outcome variable. A string.
+#' @param exposure A string indicating the exposure variable. A string.
+#' @param covariates A list of covariate names. A list or vector.
+#' @param id_var The variable name to be used to identify subjects. A string.
+#' @param method The name of the model to be fitted (e.g., `glm`). A string.
+#' @param add_inter_exposure Whether to add an interaction between the exposure
+#' and all the covariates. A bool.
+#' @param add_inter_exposure_specific A list of covariate names for which
+#' an interaction with the exposure is desired. A list or vector.
+#' @param add_splines_exposure Whether to model the exposure with natural splines. A bool.
+#' @param df_splines The degrees of freedom for the natural splines. An integer.
+#' @param threshold_smooth For GAMs, threshold for the number of unique values
+#' of continuous variables. If the number of unique values is greater or equal than
+#' this variable, the dimension of the basis used to represent the smooth term (`k`),
+#' is chosen automatically. An integer.
 #' @param threshold_k
 #'
 #' @returns
@@ -49,8 +54,10 @@ create_formula <- function(dat,
     identical(
       sort(covariates),
       sort(
-        c(covariates_continuous, covariates_factor,
-          add_inter_exposure_specific)
+        c(
+          covariates_continuous, covariates_factor,
+          add_inter_exposure_specific
+        )
       )
     ),
     msg = "The covariates do not match the originals."
@@ -189,22 +196,22 @@ create_formula <- function(dat,
 #'
 #' @description
 #'
-#' @param dat A dataframe containing the variables of interest. A tibble.
-#' @param outcome
-#' @param exposure The name of the variable corresponding to the exposure. A string.
-#' @param covariates A vector of covariates' names. A vector.
-#' @param id_var
+#' @param dat A dataframe containing the variables of interest. A dataframe.
+#' @param outcome A string indicating the outcome variable. A string.
+#' @param exposure A string indicating the exposure variable. A string.
+#' @param covariates A list of covariate names. A list or vector.
+#' @param id_var The variable name to be used to identify subjects. A string.
 #' @param weights The `weights` element of the result of the call
 #' to [estimate_weights()]. A \link[WeightIt]{weightit} object.
-#' @param method
+#' @param method The name of the model to be fitted (e.g., `glm`). A string.
 #' @param method_args A named list with the following variables:
-#' * `family`, .
-#' * `add_inter_exposure`, .
-#' * `add_inter_exposure_specific`, .
-#' * `add_splines_exposure`, .
-#' * `df_splines`, .
-#' * `threshold_smooth`, .
-#' * `threshold_k`, .
+#' * `family`, family to be used within the model to be fitted.
+#' * `add_inter_exposure`, check argument in [create_formula()].
+#' * `add_inter_exposure_specific`, check argument in [create_formula()].
+#' * `add_splines_exposure`, check argument in [create_formula()].
+#' * `df_splines`, check argument in [create_formula()].
+#' * `threshold_smooth`, check argument in [create_formula()].
+#' * `threshold_k`, check argument in [create_formula()].
 #' @md
 #'
 #' @returns
@@ -267,24 +274,4 @@ fit_model_weighted <- function(dat,
   } # End if `method`
 
   return(list(fit = fit))
-}
-
-#' Title
-#'
-#' @description
-#'
-#' @param dat A dataframe containing the variables of interest. A tibble.
-#' @param outcome
-#' @param exposure The name of the variable corresponding to the exposure. A string.
-#' @param covariates A vector of covariates' names. A vector.
-#' @param model
-#'
-#' @returns
-#'
-#' @export
-estimate_marginal_effects <- function(dat,
-                                      outcome,
-                                      exposure,
-                                      covariates,
-                                      model) {
 }

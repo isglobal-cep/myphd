@@ -37,15 +37,15 @@ handle_missing_values(
 }
 \value{
 A named list containing the results of the steps described above.
-The imputed dataset is named \code{dat_imputed}.
+The imputed dataframe is named \code{dat_imputed}.
 }
 \description{
-Given a dataset, this function performs the following steps:
+Given a dataframe, this function performs the following steps:
 \itemize{
 \item Removal of variables with a fraction of missing values greater than
 the chosen threshold, within each group.
 \item Removal of variables with a fraction of missing values greater than
-the chosen threshold, for the entire dataset.
+the chosen threshold, for the entire dataframe.
 \item Imputation of the remaining variables.
 }
 }

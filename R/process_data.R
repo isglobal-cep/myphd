@@ -47,10 +47,10 @@ convert_time_season <- function(dat, cols) {
   return(ret)
 }
 
-#' Basic pre-processing of datasets
+#' Basic pre-processing of dataframes
 #'
 #' @description
-#' This function performs basic pre-processing of a given dataset:
+#' This function performs basic pre-processing of a given dataframe:
 #' \itemize{
 #'  \item Data cleaning:
 #'    \itemize{
@@ -116,7 +116,7 @@ convert_time_season <- function(dat, cols) {
 #' @param by_var The variable name to group by. A string.
 #' @md
 #'
-#' @returns A pre-processed dataset. A tibble.
+#' @returns A pre-processed dataframe. A dataframe.
 #'
 #' @export
 preproc_data <- function(dat,
@@ -247,13 +247,13 @@ handle_llodq <- function(dat,
 
   # Checks
   assertthat::assert_that(nrow(dat) == nrow(dat_desc),
-    msg = "Mismatch in the number of rows between the provided datasets."
+    msg = "Mismatch in the number of rows between the provided dataframes."
   )
   assertthat::assert_that(ncol(dat) == ncol(dat_desc),
-    msg = "Mismatch in the number of columns between the provided datasets."
+    msg = "Mismatch in the number of columns between the provided dataframes."
   )
   assertthat::assert_that(identical(dat[[id_var]], dat_desc[[id_var]]),
-    msg = "The order of the rows does not match between datasets."
+    msg = "The order of the rows does not match between dataframes."
   )
 
   # Select and apply method
@@ -368,11 +368,11 @@ handle_llodq <- function(dat,
 #' Various strategies to handle missing values
 #'
 #' @description
-#' Given a dataset, this function performs the following steps:
+#' Given a dataframe, this function performs the following steps:
 #' * Removal of variables with a fraction of missing values greater than
 #' the chosen threshold, within each group.
 #' * Removal of variables with a fraction of missing values greater than
-#' the chosen threshold, for the entire dataset.
+#' the chosen threshold, for the entire dataframe.
 #' * Imputation of the remaining variables.
 #' @md
 #'
@@ -389,7 +389,7 @@ handle_llodq <- function(dat,
 #' @param path_save_res
 #'
 #' @returns A named list containing the results of the steps described above.
-#' The imputed dataset is named `dat_imputed`.
+#' The imputed dataframe is named `dat_imputed`.
 #'
 #' @export
 handle_missing_values <- function(dat,
@@ -499,7 +499,7 @@ handle_missing_values <- function(dat,
 
   assertthat::assert_that(
     identical(dat[[id_var]], dat_imp[[id_var]]),
-    msg = "The order of the rows does not match between datasets."
+    msg = "The order of the rows does not match between dataframes."
   )
   ##############################################################################
 
@@ -564,7 +564,7 @@ handle_creatinine_confounding <- function(dat,
   if (!is.null(covariates)) {
     assertthat::assert_that(
       nrow(dat) == nrow(covariates),
-      msg = "The number of rows does not match between datasets."
+      msg = "The number of rows does not match between dataframes."
     )
   }
 
@@ -608,8 +608,10 @@ handle_creatinine_confounding <- function(dat,
       family = method_fit_args$family
     )
     ## Check fitted model
-    check_mod_creat <- check_model(model = mod_creatine,
-                                   path_save_res = path_save_res)
+    check_mod_creat <- check_model(
+      model = mod_creatine,
+      path_save_res = path_save_res
+    )
     ## Predicted creatinine values
     covariates <- covariates |>
       modelr::add_predictions(

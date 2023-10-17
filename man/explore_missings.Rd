@@ -2,7 +2,7 @@
 % Please edit documentation in R/explore_data.R
 \name{explore_missings}
 \alias{explore_missings}
-\title{A function to explore the missing values of a dataset}
+\title{A function to explore the missing values of a dataframe}
 \usage{
 explore_missings(dat, id_var, by_var, path_save)
 }
@@ -20,7 +20,7 @@ A named list containing the objects corresponding to the
 steps described above.
 }
 \description{
-Given a dataset, this function performs the following steps:
+Given a dataframe, this function performs the following steps:
 \itemize{
 \item Summary of missing values for the variables, grouped by a factor,
 using the \link[naniar]{miss_var_summary} function.

@@ -2,13 +2,15 @@
 % Please edit documentation in R/checks.R
 \name{check_model}
 \alias{check_model}
-\title{Title}
+\title{Tidy checks for model fit}
 \usage{
 check_model(model, path_save_res)
 }
 \arguments{
-\item{path_save_res}{}
+\item{model}{A fitted model. An object of class corresponding to the chosen model.}
+
+\item{path_save_res}{A optional path to directory to save figures. A string.}
 }
 \description{
-Title
+Tidy checks for model fit
 }

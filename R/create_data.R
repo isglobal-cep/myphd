@@ -62,13 +62,13 @@ create_mapping_labels <- function(labels, codes) {
   return(ret)
 }
 
-#' Add metadata to dataset
+#' Add metadata to dataframe
 #'
 #' @description
-#' Given a dataset with observations as rows and variables as columns,
-#' and given a dataset of metadata with variables as rows and
+#' Given a dataframe with observations as rows and variables as columns,
+#' and given a dataframe of metadata with variables as rows and
 #' information as columns, add metadata to the variables present in
-#' the dataset.
+#' the dataframe.
 #'
 #' @param dat A dataframe or tibble of data. A dataframe.
 #' @param metadat A dataframe or tibble of metadata.
@@ -109,7 +109,7 @@ add_metadata <- function(dat, metadat, categorical_types) {
       )
     )
 
-  # Add metadata to each column of dataset
+  # Add metadata to each column of dataframe
   for (x in names(dat_modified)) {
     # Extract and tidy metadata for each variable
     if (nrow(metadat |> tidylog::filter(variable == x)) == 0) {

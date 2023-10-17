@@ -21,7 +21,7 @@ A named list containing the exposure name and the results of the
 steps described above. A list.
 }
 \description{
-Given a dataset, this function performs the following steps:
+Given a dataframe, this function performs the following steps:
 \itemize{
 \item Generate balance statistics on covariates in relation to a
 exposure variable, using the \link[cobalt]{bal.tab} function.

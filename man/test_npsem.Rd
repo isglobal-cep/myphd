@@ -27,16 +27,16 @@ the \link[dagitty]{localTests} function for each adjustment set
 and each exposure. A list.
 }
 \description{
-Given a graphical model (e.g., a DAG) and a dataset, this function
+Given a graphical model (e.g., a DAG) and a dataframe, this function
 derives the testable implications and it tests them against
-the given dataset. It is a wrapper around the \link[dagitty]{localTests}
+the given dataframe. It is a wrapper around the \link[dagitty]{localTests}
 function to take into account the following points:
 \itemize{
 \item A single DAG can result in multiple adjustment sets, and we
 might want to test all of them.
 \item The DAG might have been built using nodes with names that differ
-from the variables in the dataset, so we need to map them.
-\item We might have multiple exposure variables in the dataset,
+from the variables in the dataframe, so we need to map them.
+\item We might have multiple exposure variables in the dataframe,
 and only one exposure node in the DAG. So we might want to
 test all of them.
 }

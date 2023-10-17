@@ -1,7 +1,9 @@
-#' Title
+#' Tidy checks for model fit
 #'
-#' @param model
-#' @param path_save_res
+#' @description
+#'
+#' @param model A fitted model. An object of class corresponding to the chosen model.
+#' @param path_save_res A optional path to directory to save figures. A string.
 #'
 #' @return
 #'
@@ -17,9 +19,12 @@ check_model <- function(model, path_save_res) {
         VIF >= 10 ~ "High (>=10)"
       ),
       col = factor(col,
-                   levels = c("Low (<5)",
-                              "Moderate (<10)",
-                              "High (>=10)"))
+        levels = c(
+          "Low (<5)",
+          "Moderate (<10)",
+          "High (>=10)"
+        )
+      )
     ) |>
     dplyr::arrange(dplyr::desc(VIF)) |>
     ggplot2::ggplot(mapping = ggplot2::aes(
@@ -67,15 +72,19 @@ check_model <- function(model, path_save_res) {
     ggplot2::ggplot() +
     ggplot2::geom_density(
       data = preds[preds$name != "y", ],
-      mapping = ggplot2::aes(x = value,
-                             group = name,
-                             color = col)
+      mapping = ggplot2::aes(
+        x = value,
+        group = name,
+        color = col
+      )
     ) +
     ggplot2::geom_density(
       data = preds[preds$name == "y", ],
-      mapping = ggplot2::aes(x = value,
-                             group = name,
-                             color = col)
+      mapping = ggplot2::aes(
+        x = value,
+        group = name,
+        color = col
+      )
     ) +
     ggplot2::scale_color_manual(
       values = c(
@@ -95,12 +104,19 @@ check_model <- function(model, path_save_res) {
   # Combine and save plots
   ret <- patchwork::wrap_plots(
     preds, multicorr,
-    ncol = 2
+    ncol = 1
   )
-  ggplot2::ggsave(
-    filename = path_save_res,
-    plot = ret
-  )
+  if (!is.null(path_save_res)) {
+    ggplot2::ggsave(
+      filename = path_save_res,
+      plot = ret,
+      width = 10,
+      height = 10
+    )
+  }
 
-  return(ret)
+  return(list(
+    preds = preds,
+    multicorr = multicorr
+  ))
 }

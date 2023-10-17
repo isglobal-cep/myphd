@@ -28,7 +28,7 @@ find_common_confounders <- function(dag, type_mas, type_effect) {
 #' Select confounders to minimize missing values
 #'
 #' @description
-#' Given a dataset and a list of adjustment sets
+#' Given a dataframe and a list of adjustment sets
 #' identified with the \link[dagitty]{adjustmentSets} function,
 #' find the set that minimizes the number of missing values
 #' for the confounders.
@@ -148,15 +148,15 @@ from_dagitty_to_ggdag <- function(dag) {
 #' Wrapper function to derive a DAG's testable implications
 #'
 #' @description
-#' Given a graphical model (e.g., a DAG) and a dataset, this function
+#' Given a graphical model (e.g., a DAG) and a dataframe, this function
 #' derives the testable implications and it tests them against
-#' the given dataset. It is a wrapper around the \link[dagitty]{localTests}
+#' the given dataframe. It is a wrapper around the \link[dagitty]{localTests}
 #' function to take into account the following points:
 #' * A single DAG can result in multiple adjustment sets, and we
 #' might want to test all of them.
 #' * The DAG might have been built using nodes with names that differ
-#' from the variables in the dataset, so we need to map them.
-#' * We might have multiple exposure variables in the dataset,
+#' from the variables in the dataframe, so we need to map them.
+#' * We might have multiple exposure variables in the dataframe,
 #' and only one exposure node in the DAG. So we might want to
 #' test all of them.
 #' @md
@@ -199,7 +199,7 @@ test_npsem <- function(dag, dat, meta, params) {
       as.character()
     ret$adjustment_set <- as
 
-    # Step 2: map nodes in DAG to variable names in dataset and extract columns
+    # Step 2: map nodes in DAG to variable names in dataframe and extract columns
     covariates <- dat$covariates |>
       tidylog::select(
         params$identifier,

@@ -83,7 +83,7 @@ estimate_weights <- function(dat,
 #' Assess balance on covariate distributions generated through weighting
 #'
 #' @description
-#' Given a dataset, this function performs the following steps:
+#' Given a dataframe, this function performs the following steps:
 #' * Generate balance statistics on covariates in relation to a
 #' exposure variable, using the \link[cobalt]{bal.tab} function.
 #' * Generate plots displaying distributional balance

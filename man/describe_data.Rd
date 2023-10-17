@@ -2,7 +2,7 @@
 % Please edit documentation in R/explore_data.R
 \name{describe_data}
 \alias{describe_data}
-\title{A function to describe the used dataset}
+\title{A function to describe the used dataframe}
 \usage{
 describe_data(dat, id_var, by_var)
 }
@@ -18,7 +18,7 @@ A nested named list containing the objects corresponding to the
 steps described above.
 }
 \description{
-Given a dataset, this function performs the following steps:
+Given a dataframe, this function performs the following steps:
 \itemize{
 \item Simple diagnose of numerical and categorical
 variables with the \link[dlookr]{diagnose_numeric} and
@@ -31,7 +31,7 @@ after grouping by a factor (e.g., cohort).
 the \link[gtsummary]{tbl_summary} function.
 \item Detailed summary of continuous and categorical variables with
 the \link[gtsummary]{tbl_summary} function.
-\item Visualization of the correlation structure of the dataset using
+\item Visualization of the correlation structure of the dataframe using
 the \link[corrr]{correlate} and \link[corrr]{rplot} functions,
 with both Pearson's and Spearman's correlation.
 }

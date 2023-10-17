@@ -16,24 +16,30 @@ fit_model_weighted(
 )
 }
 \arguments{
-\item{dat}{A dataframe containing the variables of interest. A tibble.}
+\item{dat}{A dataframe containing the variables of interest. A dataframe.}
 
-\item{exposure}{The name of the variable corresponding to the exposure. A string.}
+\item{outcome}{A string indicating the outcome variable. A string.}
 
-\item{covariates}{A vector of covariates' names. A vector.}
+\item{exposure}{A string indicating the exposure variable. A string.}
+
+\item{covariates}{A list of covariate names. A list or vector.}
+
+\item{id_var}{The variable name to be used to identify subjects. A string.}
 
 \item{weights}{The \code{weights} element of the result of the call
 to \code{\link[=estimate_weights]{estimate_weights()}}. A \link[WeightIt]{weightit} object.}
 
+\item{method}{The name of the model to be fitted (e.g., \code{glm}). A string.}
+
 \item{method_args}{A named list with the following variables:
 \itemize{
-\item \code{family}, .
-\item \code{add_inter_exposure}, .
-\item \code{add_inter_exposure_specific}, .
-\item \code{add_splines_exposure}, .
-\item \code{df_splines}, .
-\item \code{threshold_smooth}, .
-\item \code{threshold_k}, .
+\item \code{family}, family to be used within the model to be fitted.
+\item \code{add_inter_exposure}, check argument in \code{\link[=create_formula]{create_formula()}}.
+\item \code{add_inter_exposure_specific}, check argument in \code{\link[=create_formula]{create_formula()}}.
+\item \code{add_splines_exposure}, check argument in \code{\link[=create_formula]{create_formula()}}.
+\item \code{df_splines}, check argument in \code{\link[=create_formula]{create_formula()}}.
+\item \code{threshold_smooth}, check argument in \code{\link[=create_formula]{create_formula()}}.
+\item \code{threshold_k}, check argument in \code{\link[=create_formula]{create_formula()}}.
 }}
 }
 \description{
