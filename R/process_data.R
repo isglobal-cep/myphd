@@ -322,7 +322,7 @@ handle_llodq <- function(dat,
     frac_within <- frac_within |>
       tidylog::group_by(.data[[by_var]]) |>
       naniar::miss_var_summary() |>
-      tidylog::filter(pct_miss >= frac_val_threshold_within) |>
+      tidylog::filter(pct_miss > frac_val_threshold_within) |>
       tidylog::ungroup()
     dat <- dat |>
       tidylog::select(-dplyr::all_of(frac_within$variable))
@@ -332,7 +332,7 @@ handle_llodq <- function(dat,
     frac_overall[frac_overall == id_val] <- NA
     frac_overall <- frac_overall |>
       naniar::miss_var_summary() |>
-      tidylog::filter(pct_miss >= frac_val_threshold_overall) |>
+      tidylog::filter(pct_miss > frac_val_threshold_overall) |>
       tidylog::ungroup()
     dat <- dat |>
       tidylog::select(-dplyr::all_of(frac_overall$variable))
@@ -431,7 +431,7 @@ handle_missing_values <- function(dat,
     tidylog::select(-dplyr::all_of(id_var)) |>
     tidylog::group_by(.data[[by_var]]) |>
     naniar::miss_var_summary() |>
-    tidylog::filter(pct_miss >= threshold_within) |>
+    tidylog::filter(pct_miss > threshold_within) |>
     tidylog::ungroup()
   dat <- dat |>
     tidylog::select(-dplyr::all_of(step1$variable))
@@ -441,7 +441,7 @@ handle_missing_values <- function(dat,
   step2 <- dat |>
     tidylog::select(-dplyr::all_of(id_var)) |>
     naniar::miss_var_summary() |>
-    tidylog::filter(pct_miss >= threshold_overall)
+    tidylog::filter(pct_miss > threshold_overall)
   dat <- dat |>
     tidylog::select(-dplyr::all_of(step2$variable))
 
