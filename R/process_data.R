@@ -77,7 +77,7 @@ convert_time_season <- function(dat, cols) {
 #' @param dic_steps A ordered, nested named list of steps to perform. A list. It can
 #' include the following elements:
 #' * `llodq`, to handle values <LOD/LOQ. A named list with elements:
-#'  * `id_val`, which value in `dat_desc` should be considered. A integer.
+#'  * `id_val`, which values in `dat_desc` should be considered. A vector of integers.
 #'  * `method`, the method to be used. Currently, only a replacement
 #'  approach is supported. A string.
 #'  * `creatinine_threshold`, subjects for which the creatinine levels are
@@ -318,7 +318,7 @@ handle_llodq <- function(dat,
     ## Check fraction of missing values (within and overall)
     dat_desc <- tidylog::select(dat_desc, -dplyr::all_of(id_var))
     frac_within <- dat_desc
-    frac_within[frac_within == id_val] <- NA
+    frac_within[frac_within %in% id_val] <- NA
     frac_within <- frac_within |>
       tidylog::group_by(.data[[by_var]]) |>
       naniar::miss_var_summary() |>
@@ -329,7 +329,7 @@ handle_llodq <- function(dat,
     dat_desc <- tidylog::select(dat_desc, -dplyr::all_of(by_var))
 
     frac_overall <- dat_desc
-    frac_overall[frac_overall == id_val] <- NA
+    frac_overall[frac_overall %in% id_val] <- NA
     frac_overall <- frac_overall |>
       naniar::miss_var_summary() |>
       tidylog::filter(pct_miss > frac_val_threshold_overall) |>
@@ -350,7 +350,7 @@ handle_llodq <- function(dat,
           is.na(x) & dat_desc[
             dplyr::row_number(),
             dplyr::cur_column()
-          ] == id_val ~ as.numeric(replacement_vals[
+          ] %in% id_val ~ as.numeric(replacement_vals[
             replacement_vals$var == dplyr::cur_column(),
             "val"
           ]) / 2,

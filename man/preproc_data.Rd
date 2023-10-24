@@ -34,7 +34,7 @@ for the variables (\code{var}) of interest. A dataframe.}
 include the following elements:
 \itemize{
 \item \code{llodq}, to handle values <LOD/LOQ. A named list with elements:
-\item \code{id_val}, which value in \code{dat_desc} should be considered. A integer.
+\item \code{id_val}, which values in \code{dat_desc} should be considered. A vector of integers.
 \item \code{method}, the method to be used. Currently, only a replacement
 approach is supported. A string.
 \item \code{creatinine_threshold}, subjects for which the creatinine levels are
