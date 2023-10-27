@@ -78,12 +78,13 @@ explore_shift <- function(dat,
 #' @param dat A dataframe containing the variables of interest. A dataframe.
 #' @param id_var The variable name to be used to identify subjects. A string.
 #' @param by_var The variable name to group by. A string.
+#' @param do_corrr
 #'
 #' @returns A nested named list containing the objects corresponding to the
 #' steps described above.
 #'
 #' @export
-describe_data <- function(dat, id_var, by_var) {
+describe_data <- function(dat, id_var, by_var, do_corrr = FALSE) {
   dat <- dat |>
     tidylog::select(-dplyr::all_of(id_var))
 
@@ -162,83 +163,85 @@ describe_data <- function(dat, id_var, by_var) {
 
   ##############################################################################
   # Step 5: correlation structure variables
-  uses <- c("everything", "complete.obs", "pairwise.complete.obs")
   corrs_pearson <- corrs_spearman <- NULL
   viz_corr_pearson <- viz_corr_spearman <- NULL
+  if (do_corrr == TRUE) {
+    uses <- c("everything", "complete.obs", "pairwise.complete.obs")
 
-  ## Pearson
-  computed <- FALSE
-  i <- 1
-  while ((computed == FALSE) & (i <= length(uses))) {
-    use <- uses[[i]]
-    i <- i + 1
-    corrs_pearson <- tryCatch(
-      {
-        ret <- corrr::correlate(
-          x = dat,
-          method = "pearson",
-          use = use
-        ) |>
-          corrr::rearrange(absolute = TRUE)
-        computed <- TRUE
-        ret
-      },
-      error = function(ee) {
-        warning("Error while computing correlation matrix:\n", ee)
-      }
-    )
-  } # End while for Pearson
-  if (!is.null(corrs_pearson)) {
-    viz_corr_pearson <- corrr::rplot(corrs_pearson,
-      print_cor = TRUE
-    ) +
-      ggplot2::theme(axis.text.x = ggplot2::element_text(
-        angle = 60, hjust = 1
-      )) +
-      ggplot2::labs(
-        caption = paste0(
-          "Correlation use: ",
-          use, "."
-        )
+    ## Pearson
+    computed <- FALSE
+    i <- 1
+    while ((computed == FALSE) & (i <= length(uses))) {
+      use <- uses[[i]]
+      i <- i + 1
+      corrs_pearson <- tryCatch(
+        {
+          ret <- corrr::correlate(
+            x = dat,
+            method = "pearson",
+            use = use
+          ) |>
+            corrr::rearrange(absolute = TRUE)
+          computed <- TRUE
+          ret
+        },
+        error = function(ee) {
+          warning("Error while computing correlation matrix:\n", ee)
+        }
       )
-  }
+    } # End while for Pearson
+    if (!is.null(corrs_pearson)) {
+      viz_corr_pearson <- corrr::rplot(corrs_pearson,
+                                       print_cor = TRUE
+      ) +
+        ggplot2::theme(axis.text.x = ggplot2::element_text(
+          angle = 60, hjust = 1
+        )) +
+        ggplot2::labs(
+          caption = paste0(
+            "Correlation use: ",
+            use, "."
+          )
+        )
+    }
 
-  ## Spearman
-  computed <- FALSE
-  i <- 1
-  while ((computed == FALSE) & (i <= length(uses))) {
-    use <- uses[[i]]
-    i <- i + 1
-    corrs_spearman <- tryCatch(
-      {
-        ret <- corrr::correlate(
-          x = dat,
-          method = "spearman",
-          use = use
-        ) |>
-          corrr::rearrange(absolute = TRUE)
-        computed <- TRUE
-        ret
-      },
-      error = function(ee) {
-        warning("Error while computing correlation matrix:\n", ee)
-      }
-    )
-  } # End while for Spearman
-  if (!is.null(corrs_spearman)) {
-    viz_corr_spearman <- corrr::rplot(corrs_spearman,
-      print_cor = TRUE
-    ) +
-      ggplot2::theme(axis.text.x = ggplot2::element_text(
-        angle = 60, hjust = 1
-      )) +
-      ggplot2::labs(
-        caption = paste0(
-          "Correlation use: ",
-          use, "."
-        )
+    ## Spearman
+    computed <- FALSE
+    i <- 1
+    while ((computed == FALSE) & (i <= length(uses))) {
+      use <- uses[[i]]
+      i <- i + 1
+      corrs_spearman <- tryCatch(
+        {
+          ret <- corrr::correlate(
+            x = dat,
+            method = "spearman",
+            use = use
+          ) |>
+            corrr::rearrange(absolute = TRUE)
+          computed <- TRUE
+          ret
+        },
+        error = function(ee) {
+          warning("Error while computing correlation matrix:\n", ee)
+        }
       )
-  }
+    } # End while for Spearman
+    if (!is.null(corrs_spearman)) {
+      viz_corr_spearman <- corrr::rplot(corrs_spearman,
+                                        print_cor = TRUE
+      ) +
+        ggplot2::theme(axis.text.x = ggplot2::element_text(
+          angle = 60, hjust = 1
+        )) +
+        ggplot2::labs(
+          caption = paste0(
+            "Correlation use: ",
+            use, "."
+          )
+        )
+    }
+  } # End if do_corrr
   ##############################################################################
 
   return(list(
