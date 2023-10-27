@@ -84,12 +84,13 @@ create_mapping_labels <- function(labels, codes) {
 #' * `code`, levels of the variable if categorical, separated by a comma.
 #' A dataframe.
 #' @param categorical_types Identifiers, as strings, of categorical types. A vector.
+#' @param cols_to_exclude
 #' @md
 #'
 #' @returns A dataframe containing annotated variables.
 #'
 #' @export
-add_metadata <- function(dat, metadat, categorical_types) {
+add_metadata <- function(dat, metadat, categorical_types, cols_to_exclude) {
   # Helper function to tidy certain variables' names
   .tidy_string <- function(x) {
     x <- gsub(" *\\(.*?\\) *", "", x)
@@ -111,6 +112,8 @@ add_metadata <- function(dat, metadat, categorical_types) {
 
   # Add metadata to each column of dataframe
   for (x in names(dat_modified)) {
+    if (x %in% cols_to_exclude) next
+
     # Extract and tidy metadata for each variable
     if (nrow(metadat |> tidylog::filter(variable == x)) == 0) {
       next
@@ -125,15 +128,27 @@ add_metadata <- function(dat, metadat, categorical_types) {
     info <- lapply(info, as.character)
 
     # Add metadata
+    if (info$comments != "NA") {
+      info$description <- paste0(
+        info$description, " (", tolower(info$comments), ")"
+      )
+    }
     attr(dat_modified[[x]], "label") <- info$description
     attr(dat_modified[[x]], "units") <- info$comments
     attr(dat_modified[[x]], "remarks") <- info$remark
     attr(dat_modified[[x]], "dag_var") <- info$dag
     attr(dat_modified[[x]], "period") <- info$period
     if (info$type == "categorical") {
+      labels_raw <- create_mapping_labels(info$label, info$code)
+      if (min(labels_raw) == 0) {
+        labels <- labels_raw + 1
+      } else {
+        labels <- labels_raw
+      }
+
       dat_modified[[x]] <- labelled::labelled(
         dat_modified[[x]],
-        labels = create_mapping_labels(info$label, info$code),
+        labels = labels,
         label = info$description
       ) |>
         labelled::to_factor()

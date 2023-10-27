@@ -4,7 +4,7 @@
 \alias{add_metadata}
 \title{Add metadata to dataframe}
 \usage{
-add_metadata(dat, metadat, categorical_types)
+add_metadata(dat, metadat, categorical_types, cols_to_exclude)
 }
 \arguments{
 \item{dat}{A dataframe or tibble of data. A dataframe.}
