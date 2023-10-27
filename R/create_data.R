@@ -128,7 +128,7 @@ add_metadata <- function(dat, metadat, categorical_types, cols_to_exclude) {
     info <- lapply(info, as.character)
 
     # Add metadata
-    if (info$comments != "NA") {
+    if (info$comments != "na") {
       info$description <- paste0(
         info$description, " (", tolower(info$comments), ")"
       )
