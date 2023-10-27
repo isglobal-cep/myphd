@@ -4,7 +4,7 @@
 \alias{describe_data}
 \title{A function to describe the used dataframe}
 \usage{
-describe_data(dat, id_var, by_var)
+describe_data(dat, id_var, by_var, do_corrr = FALSE)
 }
 \arguments{
 \item{dat}{A dataframe containing the variables of interest. A dataframe.}
@@ -12,6 +12,8 @@ describe_data(dat, id_var, by_var)
 \item{id_var}{The variable name to be used to identify subjects. A string.}
 
 \item{by_var}{The variable name to group by. A string.}
+
+\item{do_corrr}{}
 }
 \value{
 A nested named list containing the objects corresponding to the
