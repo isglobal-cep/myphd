@@ -192,7 +192,7 @@ describe_data <- function(dat, id_var, by_var, do_corrr = FALSE) {
     } # End while for Pearson
     if (!is.null(corrs_pearson)) {
       viz_corr_pearson <- corrr::rplot(corrs_pearson,
-                                       print_cor = TRUE
+        print_cor = TRUE
       ) +
         ggplot2::theme(axis.text.x = ggplot2::element_text(
           angle = 60, hjust = 1
@@ -229,7 +229,7 @@ describe_data <- function(dat, id_var, by_var, do_corrr = FALSE) {
     } # End while for Spearman
     if (!is.null(corrs_spearman)) {
       viz_corr_spearman <- corrr::rplot(corrs_spearman,
-                                        print_cor = TRUE
+        print_cor = TRUE
       ) +
         ggplot2::theme(axis.text.x = ggplot2::element_text(
           angle = 60, hjust = 1

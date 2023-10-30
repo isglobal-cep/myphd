@@ -29,7 +29,7 @@
     ]
   },
   "Bioconductor": {
-    "Version": "3.17"
+    "Version": "3.18"
   },
   "Packages": {
     "AsioHeaders": {
@@ -2460,7 +2460,7 @@
     },
     "performance": {
       "Package": "performance",
-      "Version": "0.10.5",
+      "Version": "0.10.7",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -2472,7 +2472,7 @@
         "stats",
         "utils"
       ],
-      "Hash": "9d9a476e50f9638d4fe21ce2fd078a23"
+      "Hash": "772c0f0774b2d6ec26c18c77af0c242d"
     },
     "permute": {
       "Package": "permute",
