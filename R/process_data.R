@@ -316,9 +316,17 @@ handle_llodq <- function(dat,
   } else if (method == "replace") {
     # Imputation method where values <LOD/LOQ are replaced with e.g., LOD/2
     ## Check fraction of missing values (within and overall)
-    dat_desc <- tidylog::select(dat_desc, -dplyr::all_of(id_var))
-    frac_within <- dat_desc
-    frac_within[frac_within %in% id_val] <- NA
+    frac_within <- dat_desc |>
+      tidylog::select(-dplyr::all_of(id_var)) |>
+      tidylog::mutate(
+        dplyr::across(
+          dplyr::everything(),
+          \(x) dplyr::case_when(
+            x %in% id_val ~ NA,
+            .default = x
+          )
+        )
+      )
     frac_within <- frac_within |>
       tidylog::group_by(.data[[by_var]]) |>
       naniar::miss_var_summary() |>
@@ -328,39 +336,58 @@ handle_llodq <- function(dat,
       tidylog::select(-dplyr::all_of(frac_within$variable))
     dat_desc <- tidylog::select(dat_desc, -dplyr::all_of(by_var))
 
-    frac_overall <- dat_desc
-    frac_overall[frac_overall %in% id_val] <- NA
+    frac_overall <- dat_desc |>
+      tidylog::select(-dplyr::all_of(id_var)) |>
+      tidylog::mutate(
+        dplyr::across(
+          dplyr::everything(),
+          \(x) dplyr::case_when(
+            x %in% id_val ~ NA,
+            .default = x
+          )
+        )
+      )
     frac_overall <- frac_overall |>
       naniar::miss_var_summary() |>
       tidylog::filter(pct_miss > frac_val_threshold_overall) |>
       tidylog::ungroup()
     dat <- dat |>
-      tidylog::select(-dplyr::all_of(frac_overall$variable))
+      tidylog::select(-dplyr::any_of(frac_overall$variable))
 
     ## Impute remaining
     vars_to_mutate <- setdiff(
       colnames(dat),
       c(id_var, by_var)
     )
-    dat_imputed <- dat |>
-      dplyr::rowwise() |>
-      tidylog::mutate(dplyr::across(
-        dplyr::all_of(vars_to_mutate),
-        \(x) dplyr::case_when(
-          is.na(x) & dat_desc[
-            dplyr::row_number(),
-            dplyr::cur_column()
-          ] %in% id_val ~ as.numeric(replacement_vals[
-            replacement_vals$var == dplyr::cur_column(),
-            "val"
-          ]) / 2,
-          TRUE ~ x
-        )
-      )) # End mutate for replacement
-  } # End replace method
+    dat_imputed <- lapply(vars_to_mutate, function(col_) {
+      x <- dat[[col_]]
+      x <- lapply(1:length(x), function(idx) {
+        if (is.na(x[[idx]]) & dat_desc[idx, col_] %in% id_val) {
+          replacement_vals[replacement_vals$var == col_, ]$val / 2
+        } else {
+          x[[idx]]
+        }
+      }) |>
+        unlist() |>
+        unname()
+    })
+    names(dat_imputed) <- vars_to_mutate
+    dat_imputed <- tibble::as_tibble(dat_imputed) |>
+      tidylog::mutate(
+        {{id_var}} := dat[[id_var]]
+      ) |>
+      tidylog::relocate(dplyr::all_of(id_var))
 
-  # Tidy results (in case of `dplyr::rowwise`)
-  dat_imputed <- tibble::as_tibble(dat_imputed)
+    # Checks
+    assertthat::assert_that(
+      ncol(dat_imputed) == ncol(dat),
+      msg = "Mismatch in the number of columns in the imputed dataset."
+    )
+    assertthat::assert_that(
+      nrow(dat_imputed) == nrow(dat),
+      msg = "Mismatch in the number of rows in the imputed dataset."
+    )
+  } # End replace method
 
   return(list(dat = dat_imputed))
 }
