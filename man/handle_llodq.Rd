@@ -12,6 +12,7 @@ handle_llodq(
   id_val,
   method,
   replacement_vals,
+  divide_by,
   creatinine_threshold,
   frac_val_threshold_within,
   frac_val_threshold_overall,

@@ -37,6 +37,7 @@ include the following elements:
 \item \code{id_val}, which values in \code{dat_desc} should be considered. A vector of integers.
 \item \code{method}, the method to be used. Currently, only a replacement
 approach is supported. A string.
+\item \code{divide_by}, .
 \item \code{creatinine_threshold}, subjects for which the creatinine levels are
 below this value will not be processed. Currently not used. A double.
 \item \code{threshold_within}, the threshold within each group for the

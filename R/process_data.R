@@ -80,6 +80,7 @@ convert_time_season <- function(dat, cols) {
 #'  * `id_val`, which values in `dat_desc` should be considered. A vector of integers.
 #'  * `method`, the method to be used. Currently, only a replacement
 #'  approach is supported. A string.
+#'  * `divide_by`, .
 #'  * `creatinine_threshold`, subjects for which the creatinine levels are
 #'  below this value will not be processed. Currently not used. A double.
 #'  * `threshold_within`, the threshold within each group for the
@@ -141,6 +142,7 @@ preproc_data <- function(dat,
         id_val = dic_steps$llodq$id_val,
         method = dic_steps$llodq$method,
         replacement_vals = dat_llodq,
+        divide_by = dic_steps$llodq$divide_by,
         creatinine_threshold = dic_steps$llodq$creatinine_threshold,
         frac_val_threshold_within = dic_steps$llodq$threshold_within,
         frac_val_threshold_overall = dic_steps$llodq$threshold_overall,
@@ -215,6 +217,7 @@ preproc_data <- function(dat,
 #' @param id_val
 #' @param method
 #' @param replacement_vals
+#' @param divide_by
 #' @param creatinine_threshold
 #' @param frac_val_threshold_within
 #' @param frac_val_threshold_overall
@@ -230,6 +233,7 @@ handle_llodq <- function(dat,
                          id_val,
                          method,
                          replacement_vals,
+                         divide_by,
                          creatinine_threshold,
                          frac_val_threshold_within,
                          frac_val_threshold_overall,
@@ -334,10 +338,9 @@ handle_llodq <- function(dat,
       tidylog::ungroup()
     dat <- dat |>
       tidylog::select(-dplyr::all_of(frac_within$variable))
-    dat_desc <- tidylog::select(dat_desc, -dplyr::all_of(by_var))
 
     frac_overall <- dat_desc |>
-      tidylog::select(-dplyr::all_of(id_var)) |>
+      tidylog::select(-dplyr::all_of(c(id_var, by_var))) |>
       tidylog::mutate(
         dplyr::across(
           dplyr::everything(),
@@ -355,28 +358,19 @@ handle_llodq <- function(dat,
       tidylog::select(-dplyr::any_of(frac_overall$variable))
 
     ## Impute remaining
-    vars_to_mutate <- setdiff(
-      colnames(dat),
-      c(id_var, by_var)
-    )
-    dat_imputed <- lapply(vars_to_mutate, function(col_) {
-      x <- dat[[col_]]
-      x <- lapply(1:length(x), function(idx) {
-        if (is.na(x[[idx]]) & dat_desc[idx, col_] %in% id_val) {
-          replacement_vals[replacement_vals$var == col_, ]$val / 2
+    dat_imputed <- lapply(colnames(dat), function(col_) {
+      lapply(1:nrow(dat), function(idx) {
+        if (is.na(dat[idx, col_]) & dat_desc[idx, col_] %in% id_val) {
+          replacement_vals[replacement_vals$var == col_, ]$val / divide_by
         } else {
-          x[[idx]]
+          dat[idx, col_]
         }
       }) |>
         unlist() |>
         unname()
     })
-    names(dat_imputed) <- vars_to_mutate
-    dat_imputed <- tibble::as_tibble(dat_imputed) |>
-      tidylog::mutate(
-        {{id_var}} := dat[[id_var]]
-      ) |>
-      tidylog::relocate(dplyr::all_of(id_var))
+    names(dat_imputed) <- colnames(dat)
+    dat_imputed <- tibble::as_tibble(dat_imputed)
 
     # Checks
     assertthat::assert_that(
