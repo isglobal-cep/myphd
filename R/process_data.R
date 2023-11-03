@@ -679,7 +679,7 @@ handle_transformation <- function(dat, id_var, by_var, transformation_fun) {
   # When log-transforming, original variable should be strictly positive
   if (deparse(transformation_fun) %in% c(log, log10, log2, log1p, logb)) {
     res <- dat |>
-      tidylog::select(-dplyr::all_of(id_var)) |>
+      tidylog::select(-dplyr::all_of(c(id_var, by_var))) |>
       tidylog::gather() |>
       tidylog::group_by(key) |>
       tidylog::summarise(
