@@ -1,3 +1,103 @@
+#' Title
+#'
+#' @param df
+#' @param df_preds
+#' @param exposure
+#' @param vals_exposure
+#'
+#' @return
+#' @export
+plot_adrf <- function(df, df_preds, exposure, vals_exposure) {
+  adrf <- df_preds |>
+    ggplot2::ggplot(ggplot2::aes(
+      x = .data[[exposure]]
+    )) +
+    ggplot2::geom_point(
+      ggplot2::aes(y = estimate)
+    ) +
+    ggplot2::geom_line(
+      ggplot2::aes(y = estimate),
+      linewidth = 0.2
+    ) +
+    ggplot2::geom_ribbon(
+      ggplot2::aes(
+        ymin = conf.low,
+        ymax = conf.high
+      ),
+      alpha = 0.2
+    ) +
+    ggplot2::geom_rug(
+      mapping = ggplot2::aes(x = .data[[exposure]]),
+      data = df,
+      inherit.aes = FALSE
+    ) +
+    ggplot2::scale_x_continuous(
+      limits = c(
+        vals_exposure[1],
+        vals_exposure[length(vals_exposure)]
+      )
+    ) +
+    ggplot2::labs(
+      x = exposure,
+      y = "E[Y|A]"
+    ) +
+    ggplot2::theme_minimal()
+
+  return(adrf)
+}
+
+#' Title
+#'
+#' @param df
+#' @param df_slopes
+#' @param exposure
+#' @param vals_exposure
+#'
+#' @return
+#' @export
+plot_amef <- function(df, df_slopes, exposure, vals_exposure) {
+  amef <- df_slopes |>
+    ggplot2::ggplot(
+      ggplot2::aes(x = .data[[exposure]])
+    ) +
+    ggplot2::geom_point(
+      ggplot2::aes(y = estimate)
+    ) +
+    ggplot2::geom_line(
+      ggplot2::aes(y = estimate),
+      linewidth = 0.2
+    ) +
+    ggplot2::geom_ribbon(
+      ggplot2::aes(
+        ymin = conf.low,
+        ymax = conf.high
+      ),
+      alpha = 0.2
+    ) +
+    ggplot2::geom_hline(
+      yintercept = 0,
+      linetype = "dashed"
+    ) +
+    ggplot2::geom_rug(
+      mapping = ggplot2::aes(x = .data[[exposure]]),
+      data = df,
+      inherit.aes = FALSE
+    ) +
+    ggplot2::scale_x_continuous(
+      limits = c(
+        vals_exposure[1],
+        vals_exposure[length(vals_exposure)]
+      )
+    ) +
+    ggplot2::labs(
+      x = exposure,
+      y = "dE[Y|A]/dA"
+    ) +
+    ggplot2::theme_minimal()
+
+  return(amef)
+}
+
 #' Plot effect estimates with confidence intervals
 #'
 #' @description
