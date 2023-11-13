@@ -8,6 +8,11 @@
 #' @return
 #' @export
 plot_adrf <- function(df, df_preds, exposure, vals_exposure) {
+  warning(
+    "Function not yet tested.",
+    call. = TRUE
+  )
+
   adrf <- df_preds |>
     ggplot2::ggplot(ggplot2::aes(
       x = .data[[exposure]]
@@ -56,6 +61,11 @@ plot_adrf <- function(df, df_preds, exposure, vals_exposure) {
 #' @return
 #' @export
 plot_amef <- function(df, df_slopes, exposure, vals_exposure) {
+  warning(
+    "Function not yet tested.",
+    call. = TRUE
+  )
+
   amef <- df_slopes |>
     ggplot2::ggplot(
       ggplot2::aes(x = .data[[exposure]])
