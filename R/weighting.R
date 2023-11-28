@@ -94,6 +94,7 @@ estimate_weights <- function(dat,
 #' @md
 #'
 #' @param exposure The name of the variable corresponding to the exposure. A string.
+#' @param type_exposure
 #' @param covariates A vector of covariates' names. A vector.
 #' @param weights The `weights` element of the result of the call
 #' to [estimate_weights()]. A \link[WeightIt]{weightit} object.
@@ -103,14 +104,18 @@ estimate_weights <- function(dat,
 #' steps described above. A list.
 #'
 #' @export
-explore_balance <- function(exposure,
+explore_balance <- function(exposure, type_exposure,
                             covariates,
                             weights,
                             threshold_cor = 0.1) {
   # Assessing balance numerically
   tab <- cobalt::bal.tab(
     weights,
-    stats = c("c"),
+    stats = ifelse(
+      type_exposure == "continuous",
+      "correlations",
+      "mean.diffs"
+    ),
     un = TRUE,
     thresholds = c(cor = threshold_cor),
     int = TRUE,
@@ -128,7 +133,11 @@ explore_balance <- function(exposure,
   # Summarizing balance in a Love plot
   love <- cobalt::love.plot(
     weights,
-    stats = c("c"),
+    stats = ifelse(
+      type_exposure == "continuous",
+      "correlations",
+      "mean.diffs"
+    ),
     abs = FALSE,
     var.order = "unadjusted",
     thresholds = c(cor = threshold_cor),

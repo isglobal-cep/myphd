@@ -4,7 +4,13 @@
 \alias{explore_balance}
 \title{Assess balance on covariate distributions generated through weighting}
 \usage{
-explore_balance(exposure, covariates, weights, threshold_cor = 0.1)
+explore_balance(
+  exposure,
+  type_exposure,
+  covariates,
+  weights,
+  threshold_cor = 0.1
+)
 }
 \arguments{
 \item{exposure}{The name of the variable corresponding to the exposure. A string.}
