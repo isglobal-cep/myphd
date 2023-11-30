@@ -4,7 +4,15 @@
 \alias{estimate_weights}
 \title{Wrapper function to estimate balancing weights}
 \usage{
-estimate_weights(dat, exposure, covariates, id_var, method, method_args)
+estimate_weights(
+  dat,
+  exposure,
+  covariates,
+  s.weights = NULL,
+  id_var,
+  method,
+  method_args
+)
 }
 \arguments{
 \item{dat}{A dataframe containing the variables of interest. A dataframe.}
@@ -12,6 +20,8 @@ estimate_weights(dat, exposure, covariates, id_var, method, method_args)
 \item{exposure}{The name of the variable corresponding to the exposure. A string.}
 
 \item{covariates}{A vector of covariates' names. A vector.}
+
+\item{s.weights}{Optional sampling weights. A vector.}
 
 \item{id_var}{The variable name to be used to identify subjects. A string.}
 
@@ -28,6 +38,7 @@ it uses a fixed library of learners.
 selects the best performing method, or to find the optimal combination of predictions.
 \item \code{use_kernel}, whether to use kernel density estimation
 to estimate the numerator and denominator densities for the weights. A logical.
+\item \code{family_link}, family to be used within the fitted model.
 }}
 }
 \value{

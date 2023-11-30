@@ -8,6 +8,7 @@
 #' @param dat A dataframe containing the variables of interest. A dataframe.
 #' @param exposure The name of the variable corresponding to the exposure. A string.
 #' @param covariates A vector of covariates' names. A vector.
+#' @param s.weights Optional sampling weights. A vector.
 #' @param id_var The variable name to be used to identify subjects. A string.
 #' @param method The method to be used by \link[WeightIt]{weightit} to estimate the weights. A string.
 #' @param method_args A named list with the following variables:
@@ -20,6 +21,7 @@
 #' selects the best performing method, or to find the optimal combination of predictions.
 #' * `use_kernel`, whether to use kernel density estimation
 #' to estimate the numerator and denominator densities for the weights. A logical.
+#' * `family_link`, family to be used within the fitted model.
 #' @md
 #'
 #' @returns A named list containing the estimated weights, and the names
@@ -29,6 +31,7 @@
 estimate_weights <- function(dat,
                              exposure,
                              covariates,
+                             s.weights = NULL,
                              id_var,
                              method,
                              method_args) {
@@ -53,9 +56,11 @@ estimate_weights <- function(dat,
     formula = as.formula(form),
     data = dat,
     method = method,
+    link = method_args$family_link,
     stabilize = method_args$stabilize,
     by = method_args$by,
     ps = NULL,
+    s.weights = s.weights,
     subclass = NULL,
     missing = "ind",
     verbose = FALSE,
@@ -78,6 +83,106 @@ estimate_weights <- function(dat,
     exposure = exposure,
     covariates = covariates
   ))
+}
+
+#' Title
+#'
+#' @param dat
+#' @param idxs_selected
+#' @param id_var
+#' @param filter_out
+#' @param list_covars
+#' @param method
+#' @param method_args
+#' @param trim_weights
+#' @param threshold_trim
+#'
+#' @return
+#' @export
+estimate_selection_weights <- function(dat, idxs_selected, id_var,
+                                       filter_out,
+                                       list_covars,
+                                       method, method_args,
+                                       trim_weights, threshold_trim) {
+  # Add variable indicating whether subject was in fact selected
+  dat <- dat |>
+    tidylog::mutate(
+      selected = ifelse(
+        .data[[id_var]] %in% idxs_selected,
+        1, 0
+      ),
+      selected = as.integer(selected)
+    )
+  ## Eventually filter out observations
+  if (length(filter_out) > 0) {
+    old_dat <- dat
+    dat <- dat |>
+      tidylog::filter(
+        ! .data[[names(filter_out)]] %in% filter_out[[1]]
+      )
+  }
+
+  assertthat::assert_that(
+    sum(as.integer(dat$selected)) == length(
+      base::intersect(dat[[id_var]], idxs_selected)
+    ),
+    msg = "Number of subjects selected does not match."
+  )
+
+  # Estimate probability of selection given covariates
+  sel_weights <- estimate_weights(
+    dat = dat |>
+      tidylog::select(
+        selected,
+        dplyr::all_of(list_covars)
+      ),
+    exposure = "selected",
+    covariates = list_covars,
+    id_var = id_var,
+    method = method,
+    method_args = method_args
+  )
+  if (trim_weights == TRUE) {
+    sel_weights <- WeightIt::trim(
+      sel_weights$weights,
+      at = threshold_trim,
+      lower = TRUE
+    )
+  } else {
+    sel_weights <- sel_weights$weights
+  }
+
+  # Tidy return
+  ret <- tibble::tibble(
+    {{ id_var }} := dat[[id_var]],
+    selected = dat$selected,
+    selection_weights = sel_weights$weights
+  )
+  ret_full <- tidylog::left_join(
+    old_dat |>
+      tidylog::select(-selected),
+    ret,
+    by = id_var
+  ) |>
+    tidylog::select(dplyr::all_of(c(
+      id_var, "selected", "selection_weights"
+    ))) |>
+    tidylog::replace_na(
+      list(
+        selected = 0,
+        selection_weights = 0
+      )
+    )
+  ret_full <- ret_full[match(
+    old_dat[[id_var]], ret_full[[id_var]]
+  ), ] |>
+    tibble::as_tibble()
+  assertthat::assert_that(
+    nrow(ret_full) == nrow(old_dat),
+    msg = "Something went wrong when merging results of weighting with complete data."
+  )
+
+  return(ret)
 }
 
 #' Assess balance on covariate distributions generated through weighting
