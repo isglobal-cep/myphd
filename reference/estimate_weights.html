@@ -51,7 +51,15 @@ method to be used to estimate the weights.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">estimate_weights</span><span class="op">(</span><span class="va">dat</span>, <span class="va">exposure</span>, <span class="va">covariates</span>, <span class="va">id_var</span>, <span class="va">method</span>, <span class="va">method_args</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">estimate_weights</span><span class="op">(</span></span>
+<span>  <span class="va">dat</span>,</span>
+<span>  <span class="va">exposure</span>,</span>
+<span>  <span class="va">covariates</span>,</span>
+<span>  s.weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">id_var</span>,</span>
+<span>  <span class="va">method</span>,</span>
+<span>  <span class="va">method_args</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -66,6 +74,10 @@ method to be used to estimate the weights.</p>
 
 <dt>covariates</dt>
 <dd><p>A vector of covariates' names. A vector.</p></dd>
+
+
+<dt>s.weights</dt>
+<dd><p>Optional sampling weights. A vector.</p></dd>
 
 
 <dt>id_var</dt>
@@ -86,6 +98,7 @@ it uses a fixed library of learners.</p></li>
 selects the best performing method, or to find the optimal combination of predictions.</p></li>
 <li><p><code>use_kernel</code>, whether to use kernel density estimation
 to estimate the numerator and denominator densities for the weights. A logical.</p></li>
+<li><p><code>family_link</code>, family to be used within the fitted model.</p></li>
 </ul></dd>
 
 </dl></div>
