@@ -97,7 +97,7 @@
     },
     "Matrix": {
       "Package": "Matrix",
-      "Version": "1.6-3",
+      "Version": "1.6-4",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -110,7 +110,7 @@
         "stats",
         "utils"
       ],
-      "Hash": "1d1b6901cf9b6b1b446bc56a7d47efa4"
+      "Hash": "d9c655b30a2edc6bb2244c1d1e8d549d"
     },
     "MatrixModels": {
       "Package": "MatrixModels",
@@ -430,7 +430,7 @@
     },
     "bookdown": {
       "Package": "bookdown",
-      "Version": "0.36",
+      "Version": "0.37",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -443,7 +443,7 @@
         "xfun",
         "yaml"
       ],
-      "Hash": "ad8c9846c4aaa18381781a37271e7f40"
+      "Hash": "b1b1c3be5c75309f6107726fa58ee20c"
     },
     "boot": {
       "Package": "boot",
@@ -508,7 +508,7 @@
     },
     "bslib": {
       "Package": "bslib",
-      "Version": "0.6.0",
+      "Version": "0.6.1",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -525,7 +525,7 @@
         "rlang",
         "sass"
       ],
-      "Hash": "fac047b773ad75cea6e2a25214b09ca0"
+      "Hash": "c0d8599494bc7fb408cd206bbdd9cab0"
     },
     "ca": {
       "Package": "ca",
@@ -652,7 +652,7 @@
     },
     "cluster": {
       "Package": "cluster",
-      "Version": "2.1.5",
+      "Version": "2.1.6",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -662,7 +662,7 @@
         "stats",
         "utils"
       ],
-      "Hash": "3573ed1b159e50985fa7eaebf32c6188"
+      "Hash": "0aaa05204035dc43ea0004b9c76611dd"
     },
     "cobalt": {
       "Package": "cobalt",
@@ -736,13 +736,13 @@
     },
     "cpp11": {
       "Package": "cpp11",
-      "Version": "0.4.6",
+      "Version": "0.4.7",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "R"
       ],
-      "Hash": "707fae4bbf73697ec8d85f9d7076c061"
+      "Hash": "5a295d7d963cc5035284dcdbaf334f4e"
     },
     "crayon": {
       "Package": "crayon",
@@ -1584,7 +1584,7 @@
     },
     "haven": {
       "Package": "haven",
-      "Version": "2.5.3",
+      "Version": "2.5.4",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -1601,7 +1601,7 @@
         "tidyselect",
         "vctrs"
       ],
-      "Hash": "9b302fe352f9cfc5dcf0a4139af3a565"
+      "Hash": "9171f898db9d9c4c1b2c745adc2c1ef1"
     },
     "hexSticker": {
       "Package": "hexSticker",
@@ -2876,7 +2876,7 @@
     },
     "robustbase": {
       "Package": "robustbase",
-      "Version": "0.99-0",
+      "Version": "0.99-1",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -2887,7 +2887,7 @@
         "stats",
         "utils"
       ],
-      "Hash": "2af254ab59081fbde822b89d4110f24c"
+      "Hash": "3adb5cc6a5cc5650cb4569204a3209c3"
     },
     "rpart": {
       "Package": "rpart",
@@ -3014,7 +3014,7 @@
     },
     "seriation": {
       "Package": "seriation",
-      "Version": "1.5.2",
+      "Version": "1.5.3",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -3033,7 +3033,7 @@
         "stats",
         "vegan"
       ],
-      "Hash": "0f19562fb8fb2ca86ba0a378cfdc2354"
+      "Hash": "225bdf576bfdc7978090c10c4e66a127"
     },
     "servr": {
       "Package": "servr",
@@ -3231,7 +3231,7 @@
     },
     "testthat": {
       "Package": "testthat",
-      "Version": "3.2.0",
+      "Version": "3.2.1",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -3242,7 +3242,6 @@
         "cli",
         "desc",
         "digest",
-        "ellipsis",
         "evaluate",
         "jsonlite",
         "lifecycle",
@@ -3257,7 +3256,7 @@
         "waldo",
         "withr"
       ],
-      "Hash": "877508719fcb8c9525eccdadf07a5102"
+      "Hash": "4767a686ebe986e6cb01d075b3f09729"
     },
     "textshaping": {
       "Package": "textshaping",
@@ -3521,9 +3520,9 @@
     },
     "vctrs": {
       "Package": "vctrs",
-      "Version": "0.6.4",
+      "Version": "0.6.5",
       "Source": "Repository",
-      "Repository": "RSPM",
+      "Repository": "CRAN",
       "Requirements": [
         "R",
         "cli",
@@ -3531,7 +3530,7 @@
         "lifecycle",
         "rlang"
       ],
-      "Hash": "266c1ca411266ba8f365fcc726444b87"
+      "Hash": "c03fa420630029418f7e6da3667aac4a"
     },
     "vegan": {
       "Package": "vegan",
