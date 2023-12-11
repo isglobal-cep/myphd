@@ -62,13 +62,7 @@ before and after adjusting, using the <a href="https://ngreifer.github.io/cobalt
 </ul></div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">explore_balance</span><span class="op">(</span></span>
-<span>  <span class="va">exposure</span>,</span>
-<span>  <span class="va">type_exposure</span>,</span>
-<span>  <span class="va">covariates</span>,</span>
-<span>  <span class="va">weights</span>,</span>
-<span>  threshold_cor <span class="op">=</span> <span class="fl">0.1</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">explore_balance</span><span class="op">(</span><span class="va">exposure</span>, <span class="va">type_exposure</span>, <span class="va">covariates</span>, <span class="va">weights</span>, <span class="va">threshold_cor</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -87,7 +81,7 @@ to <code><a href="estimate_weights.html">estimate_weights()</a></code>. A <a hre
 
 
 <dt>threshold_cor</dt>
-<dd><p>The balance threshold (default is 0.1). A double.</p></dd>
+<dd><p>The balance threshold. A double.</p></dd>
 
 </dl></div>
     <div id="value">
