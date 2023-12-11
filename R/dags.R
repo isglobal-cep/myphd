@@ -24,6 +24,7 @@ find_common_confounders <- function(dag, type_mas, type_effect) {
 
   return(common_nodes)
 }
+################################################################################
 
 #' Select confounders to minimize missing values
 #'
@@ -84,6 +85,7 @@ minimize_missings <- function(dat, meta, adjustment_sets,
 
   return(ret)
 }
+################################################################################
 
 #' Visualize DAG
 #'
@@ -114,6 +116,7 @@ visualize_dag <- function(dag) {
 
   return(ret)
 }
+################################################################################
 
 #' Convert a DAG to a formatted string
 #'
@@ -143,7 +146,7 @@ from_dagitty_to_ggdag <- function(dag) {
 
   return(to_ggdag)
 }
-
+################################################################################
 
 #' Wrapper function to derive a DAG's testable implications
 #'
@@ -245,3 +248,4 @@ test_npsem <- function(dag, dat, meta, params) {
 
   return(res)
 }
+################################################################################

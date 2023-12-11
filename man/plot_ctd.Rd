@@ -4,12 +4,12 @@
 \alias{plot_ctd}
 \title{Visualize the CTD dataset after loading}
 \usage{
-plot_ctd(dat, group = NULL)
+plot_ctd(dat, group)
 }
 \arguments{
 \item{dat}{The CTD dataset. A dataframe.}
 
-\item{group}{The faceting variable (optional). A string.}
+\item{group}{The faceting variable. A string.}
 }
 \value{
 A ggplot object.

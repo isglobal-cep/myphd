@@ -15,26 +15,26 @@
 #' marginal comparisons.
 #'
 #' @export
-create_df_marginal_comparisons <-
-  function(dat, var, percentiles, by_var) {
-    # Checks
-    if (percentiles[1] < 0 | percentiles[2] > 1) {
-      stop("The percentiles must lie between 0 and 1.",
-        call. = TRUE
-      )
-    }
-
-    # Compute `low` and `high` values of the variable of interest, by group
-    ret <- dat |>
-      tidylog::group_by(.data[[by_var]]) |>
-      tidylog::mutate(
-        low = quantile(.data[[var]], percentiles[1]),
-        high = quantile(.data[[var]], percentiles[2])
-      ) |>
-      tidylog::ungroup()
-
-    return(ret)
+create_df_marginal_comparisons <- function(dat, var, percentiles, by_var) {
+  # Checks
+  if (percentiles[1] < 0 | percentiles[2] > 1) {
+    stop("The percentiles must lie between 0 and 1.",
+      call. = TRUE
+    )
   }
+
+  # Compute `low` and `high` values of the variable of interest, by group
+  ret <- dat |>
+    tidylog::group_by(.data[[by_var]]) |>
+    tidylog::mutate(
+      low = quantile(.data[[var]], percentiles[1]),
+      high = quantile(.data[[var]], percentiles[2])
+    ) |>
+    tidylog::ungroup()
+
+  return(ret)
+}
+################################################################################
 
 #' Create a variable's dictionary for its labels
 #'
@@ -61,6 +61,7 @@ create_mapping_labels <- function(labels, codes) {
 
   return(ret)
 }
+################################################################################
 
 #' Add metadata to dataframe
 #'
@@ -157,3 +158,4 @@ add_metadata <- function(dat, metadat, categorical_types, cols_to_exclude) {
 
   return(dat_modified)
 }
+################################################################################

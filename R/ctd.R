@@ -35,6 +35,7 @@ load_ctd <- function(path, filter_evidence) {
 
   return(ctd)
 }
+################################################################################
 
 #' Visualize the CTD dataset after loading
 #'
@@ -43,12 +44,12 @@ load_ctd <- function(path, filter_evidence) {
 #' categories.
 #'
 #' @param dat The CTD dataset. A dataframe.
-#' @param group The faceting variable (optional). A string.
+#' @param group The faceting variable. A string.
 #'
 #' @returns A ggplot object.
 #'
 #' @export
-plot_ctd <- function(dat, group = NULL) {
+plot_ctd <- function(dat, group) {
   plt <- dat |>
     tidylog::filter(DiseaseCategories != "") |>
     tidylog::group_by(DiseaseCategories) |>
@@ -72,3 +73,4 @@ plot_ctd <- function(dat, group = NULL) {
 
   return(plt)
 }
+################################################################################

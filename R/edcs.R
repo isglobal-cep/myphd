@@ -261,5 +261,6 @@ edcs_information <- function() {
     chem_id = ind
   )
 
-  return(data.table::as.data.table(edcs_info_df))
+  return(edcs_info_df)
 }
+################################################################################

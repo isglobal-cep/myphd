@@ -4,16 +4,16 @@
 \alias{extract_cohort}
 \title{Extract the cohort label from the subject ID}
 \usage{
-extract_cohort(dat, id_var, st = 1, en = 3)
+extract_cohort(dat, id_var, st, en)
 }
 \arguments{
 \item{dat}{A dataframe containing the variables of interest. A dataframe.}
 
 \item{id_var}{The variable name to be used to identify subjects. A string.}
 
-\item{st}{Integer indicating the first element to be extracted (default is 1). An integer.}
+\item{st}{Integer indicating the first element to be extracted. An integer.}
 
-\item{en}{Integer indicating the last element to be extracted (default is 3). An integer.}
+\item{en}{Integer indicating the last element to be extracted. An integer.}
 }
 \value{
 A dataframe containing a new column named \code{cohort}. A dataframe.

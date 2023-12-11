@@ -54,6 +54,7 @@ explore_shift <- function(dat,
 
   return(ret)
 }
+################################################################################
 
 #' A function to describe the used dataframe
 #'
@@ -263,6 +264,7 @@ describe_data <- function(dat, id_var, by_var, do_corrr = FALSE) {
     )
   ))
 }
+################################################################################
 
 #' A function to explore the missing values of a dataframe
 #'
@@ -392,3 +394,4 @@ explore_missings <- function(dat, id_var, by_var, path_save) {
     mcar_tests_byFct = step5
   ))
 }
+################################################################################

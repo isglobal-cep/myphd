@@ -6,10 +6,10 @@
 \usage{
 preproc_data(
   dat,
-  dat_desc = NULL,
+  dat_desc,
   covariates,
   outcome,
-  dat_llodq = NULL,
+  dat_llodq,
   dic_steps,
   id_var,
   by_var

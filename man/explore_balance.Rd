@@ -4,13 +4,7 @@
 \alias{explore_balance}
 \title{Assess balance on covariate distributions generated through weighting}
 \usage{
-explore_balance(
-  exposure,
-  type_exposure,
-  covariates,
-  weights,
-  threshold_cor = 0.1
-)
+explore_balance(exposure, type_exposure, covariates, weights, threshold_cor)
 }
 \arguments{
 \item{exposure}{The name of the variable corresponding to the exposure. A string.}
@@ -20,7 +14,7 @@ explore_balance(
 \item{weights}{The \code{weights} element of the result of the call
 to \code{\link[=estimate_weights]{estimate_weights()}}. A \link[WeightIt]{weightit} object.}
 
-\item{threshold_cor}{The balance threshold (default is 0.1). A double.}
+\item{threshold_cor}{The balance threshold. A double.}
 }
 \value{
 A named list containing the exposure name and the results of the

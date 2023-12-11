@@ -191,6 +191,7 @@ create_formula <- function(dat,
 
   return(form)
 }
+################################################################################
 
 #' Fit various models with weighting
 #'
@@ -275,3 +276,4 @@ fit_model_weighted <- function(dat,
 
   return(list(fit = fit))
 }
+################################################################################

@@ -50,6 +50,7 @@ plot_adrf <- function(df, df_preds, exposure, vals_exposure) {
 
   return(adrf)
 }
+################################################################################
 
 #' Title
 #'
@@ -107,6 +108,7 @@ plot_amef <- function(df, df_slopes, exposure, vals_exposure) {
 
   return(amef)
 }
+################################################################################
 
 #' Plot effect estimates with confidence intervals
 #'
@@ -135,6 +137,12 @@ plot_effect_estimates <- function(dat, size_points) {
       ),
       estimate = round(estimate, 3)
     )
+  if (is.null(size_points)) {
+    dat <- dat |>
+      tidylog::mutate(
+        size_points = 1.5
+      )
+  }
 
   # Plot all effect estimates in single figure
   plt <- dat |>
@@ -167,3 +175,4 @@ plot_effect_estimates <- function(dat, size_points) {
 
   return(plt)
 }
+################################################################################

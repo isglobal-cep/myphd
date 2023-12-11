@@ -55,7 +55,8 @@ check_model <- function(model, path_save_res) {
         vjust = 0.5,
         hjust = 1
       )
-    )
+    ) +
+    ggplot2::coord_flip()
 
   # Posterior predictive checks
   preds <- performance::check_predictions(object = model) |>
@@ -120,3 +121,4 @@ check_model <- function(model, path_save_res) {
     multicorr = multicorr
   ))
 }
+################################################################################

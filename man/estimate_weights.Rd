@@ -8,7 +8,7 @@ estimate_weights(
   dat,
   exposure,
   covariates,
-  s.weights = NULL,
+  s.weights,
   id_var,
   method,
   method_args
@@ -21,7 +21,7 @@ estimate_weights(
 
 \item{covariates}{A vector of covariates' names. A vector.}
 
-\item{s.weights}{Optional sampling weights. A vector.}
+\item{s.weights}{Sampling weights. A vector.}
 
 \item{id_var}{The variable name to be used to identify subjects. A string.}
 

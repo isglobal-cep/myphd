@@ -6,19 +6,20 @@
 #'
 #' @param dat A dataframe containing the variables of interest. A dataframe.
 #' @param id_var The variable name to be used to identify subjects. A string.
-#' @param st Integer indicating the first element to be extracted (default is 1). An integer.
-#' @param en Integer indicating the last element to be extracted (default is 3). An integer.
+#' @param st Integer indicating the first element to be extracted. An integer.
+#' @param en Integer indicating the last element to be extracted. An integer.
 #'
 #' @returns A dataframe containing a new column named `cohort`. A dataframe.
 #'
 #' @export
-extract_cohort <- function(dat, id_var, st = 1, en = 3) {
+extract_cohort <- function(dat, id_var, st, en) {
   dat <- dat |>
     tidylog::mutate(cohort = substr(.data[[id_var]], st, en))
   dat$cohort <- as.factor(dat$cohort)
 
   return(dat)
 }
+################################################################################
 
 #' Convert time variables to season
 #'
@@ -46,6 +47,7 @@ convert_time_season <- function(dat, cols) {
 
   return(ret)
 }
+################################################################################
 
 #' Basic pre-processing of dataframes
 #'
@@ -121,10 +123,10 @@ convert_time_season <- function(dat, cols) {
 #'
 #' @export
 preproc_data <- function(dat,
-                         dat_desc = NULL,
+                         dat_desc,
                          covariates,
                          outcome,
-                         dat_llodq = NULL,
+                         dat_llodq,
                          dic_steps,
                          id_var,
                          by_var) {
@@ -205,6 +207,7 @@ preproc_data <- function(dat,
 
   return(dat = dat_ret)
 }
+################################################################################
 
 #' Various strategies to handle values below the limit of detection/quantification
 #'
@@ -385,6 +388,7 @@ handle_llodq <- function(dat,
 
   return(list(dat = dat_imputed))
 }
+################################################################################
 
 #' Various strategies to handle missing values
 #'
@@ -555,6 +559,7 @@ handle_missing_values <- function(dat,
     )
   )
 }
+################################################################################
 
 #' Title
 #'
@@ -664,6 +669,7 @@ handle_creatinine_confounding <- function(dat,
 
   return(dat_ret)
 }
+################################################################################
 
 #' Title
 #'
@@ -712,6 +718,7 @@ handle_transformation <- function(dat, id_var, by_var, transformation_fun) {
 
   return(dat_ret)
 }
+################################################################################
 
 #' Title
 #'
@@ -737,6 +744,7 @@ handle_standardization <- function(dat,
 
   return(dat_ret)
 }
+################################################################################
 
 #' Bound a outcome variable
 #'
@@ -767,3 +775,4 @@ bound_outcome <- function(dat, var) {
 
   return(dat)
 }
+################################################################################

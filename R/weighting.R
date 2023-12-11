@@ -8,7 +8,7 @@
 #' @param dat A dataframe containing the variables of interest. A dataframe.
 #' @param exposure The name of the variable corresponding to the exposure. A string.
 #' @param covariates A vector of covariates' names. A vector.
-#' @param s.weights Optional sampling weights. A vector.
+#' @param s.weights Sampling weights. A vector.
 #' @param id_var The variable name to be used to identify subjects. A string.
 #' @param method The method to be used by \link[WeightIt]{weightit} to estimate the weights. A string.
 #' @param method_args A named list with the following variables:
@@ -31,7 +31,7 @@
 estimate_weights <- function(dat,
                              exposure,
                              covariates,
-                             s.weights = NULL,
+                             s.weights,
                              id_var,
                              method,
                              method_args) {
@@ -84,6 +84,7 @@ estimate_weights <- function(dat,
     covariates = covariates
   ))
 }
+################################################################################
 
 #' Title
 #'
@@ -118,7 +119,7 @@ estimate_selection_weights <- function(dat, idxs_selected, id_var,
     old_dat <- dat
     dat <- dat |>
       tidylog::filter(
-        ! .data[[names(filter_out)]] %in% filter_out[[1]]
+        !.data[[names(filter_out)]] %in% filter_out[[1]]
       )
   }
 
@@ -184,6 +185,7 @@ estimate_selection_weights <- function(dat, idxs_selected, id_var,
 
   return(ret)
 }
+################################################################################
 
 #' Assess balance on covariate distributions generated through weighting
 #'
@@ -203,7 +205,7 @@ estimate_selection_weights <- function(dat, idxs_selected, id_var,
 #' @param covariates A vector of covariates' names. A vector.
 #' @param weights The `weights` element of the result of the call
 #' to [estimate_weights()]. A \link[WeightIt]{weightit} object.
-#' @param threshold_cor The balance threshold (default is 0.1). A double.
+#' @param threshold_cor The balance threshold. A double.
 #'
 #' @returns A named list containing the exposure name and the results of the
 #' steps described above. A list.
@@ -212,7 +214,7 @@ estimate_selection_weights <- function(dat, idxs_selected, id_var,
 explore_balance <- function(exposure, type_exposure,
                             covariates,
                             weights,
-                            threshold_cor = 0.1) {
+                            threshold_cor) {
   # Assessing balance numerically
   tab <- cobalt::bal.tab(
     weights,
@@ -257,3 +259,4 @@ explore_balance <- function(exposure, type_exposure,
     love = love
   ))
 }
+################################################################################
