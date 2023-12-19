@@ -69,17 +69,6 @@
       ],
       "Hash": "e9e53a559ef99e0c02bc2f9a944f0bee"
     },
-    "Formula": {
-      "Package": "Formula",
-      "Version": "1.2-5",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "stats"
-      ],
-      "Hash": "7a29697b75e027767a53fde6c903eca7"
-    },
     "MASS": {
       "Package": "MASS",
       "Version": "7.3-60",
@@ -882,9 +871,14 @@
     },
     "dlookr": {
       "Package": "dlookr",
-      "Version": "0.6.2",
-      "Source": "Repository",
-      "Repository": "CRAN",
+      "Version": "0.6.3",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "dlookr",
+      "RemoteUsername": "choonghyunryu",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "4898788f1da15ce8a535a38b90ab4a9609bd1561",
       "Requirements": [
         "R",
         "dplyr",
@@ -898,11 +892,11 @@
         "methods",
         "mice",
         "pagedown",
-        "partykit",
         "purrr",
         "reactable",
         "rlang",
         "rmarkdown",
+        "rpart",
         "shiny",
         "showtext",
         "sysfonts",
@@ -911,7 +905,7 @@
         "tidyselect",
         "utils"
       ],
-      "Hash": "21bba94984f3e9154932deb23bd91c26"
+      "Hash": "e754e8c64d8556a190d039189077e0bb"
     },
     "dlstats": {
       "Package": "dlstats",
@@ -1817,18 +1811,6 @@
       ],
       "Hash": "750aba9b42391da33ac290b71a749023"
     },
-    "inum": {
-      "Package": "inum",
-      "Version": "1.0-5",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "libcoin",
-        "stats"
-      ],
-      "Hash": "baa4e298aa0fe48568c951d2fcc5d7c2"
-    },
     "isoband": {
       "Package": "isoband",
       "Version": "0.2.7",
@@ -2005,18 +1987,6 @@
         "utils"
       ],
       "Hash": "7c5e89f04e72d6611c77451f6331a091"
-    },
-    "libcoin": {
-      "Package": "libcoin",
-      "Version": "1.0-10",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "mvtnorm",
-        "stats"
-      ],
-      "Hash": "3f3775a14588ff5d013e5eab4453bf28"
     },
     "lifecycle": {
       "Package": "lifecycle",
@@ -2399,27 +2369,6 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "495d032ad6bfc725f37ce89e3d6dadb2"
-    },
-    "partykit": {
-      "Package": "partykit",
-      "Version": "1.2-20",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "Formula",
-        "R",
-        "grDevices",
-        "graphics",
-        "grid",
-        "inum",
-        "libcoin",
-        "mvtnorm",
-        "rpart",
-        "stats",
-        "survival",
-        "utils"
-      ],
-      "Hash": "8551bfc8d1d6ab813e2e5c8917268cd4"
     },
     "patchwork": {
       "Package": "patchwork",
