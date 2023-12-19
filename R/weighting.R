@@ -184,10 +184,10 @@ estimate_selection_weights <- function(dat, idxs_selected, id_var,
     msg = "Something went wrong when merging results of weighting with complete data."
   )
 
-  return(
+  return(list(
     df = ret,
     weights = sel_weights
-  )
+  ))
 }
 ################################################################################
 
