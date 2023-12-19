@@ -115,8 +115,8 @@ estimate_selection_weights <- function(dat, idxs_selected, id_var,
       selected = as.integer(selected)
     )
   ## Eventually filter out observations
+  old_dat <- dat
   if (length(filter_out) > 0) {
-    old_dat <- dat
     dat <- dat |>
       tidylog::filter(
         !.data[[names(filter_out)]] %in% filter_out[[1]]
