@@ -59,16 +59,6 @@
       ],
       "Hash": "72f87e0092e39384aee16df8d67d7410"
     },
-    "FNN": {
-      "Package": "FNN",
-      "Version": "1.1.3.2",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R"
-      ],
-      "Hash": "e9e53a559ef99e0c02bc2f9a944f0bee"
-    },
     "MASS": {
       "Package": "MASS",
       "Version": "7.3-60",
@@ -819,7 +809,7 @@
     },
     "datawizard": {
       "Package": "datawizard",
-      "Version": "0.9.0",
+      "Version": "0.9.1",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -828,7 +818,7 @@
         "stats",
         "utils"
       ],
-      "Hash": "1706690277f29a2ee69d59483e21c5c6"
+      "Hash": "51cf8172b52cfa5b4b988c73c37accfa"
     },
     "desc": {
       "Package": "desc",
@@ -2055,7 +2045,7 @@
     },
     "magick": {
       "Package": "magick",
-      "Version": "2.8.1",
+      "Version": "2.8.2",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -2063,7 +2053,7 @@
         "curl",
         "magrittr"
       ],
-      "Hash": "691d5b9fd0e7ee9b56301fc8735a2e1f"
+      "Hash": "87da0066dd0d7b1a95c461abfbf10411"
     },
     "magrittr": {
       "Package": "magrittr",
@@ -2101,7 +2091,7 @@
     },
     "mgcv": {
       "Package": "mgcv",
-      "Version": "1.9-0",
+      "Version": "1.9-1",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -2114,7 +2104,7 @@
         "stats",
         "utils"
       ],
-      "Hash": "086028ca0460d0c368028d3bda58f31b"
+      "Hash": "110ee9d83b496279960e162ac97764ce"
     },
     "mice": {
       "Package": "mice",
@@ -2162,20 +2152,6 @@
         "Rcpp"
       ],
       "Hash": "f48238f8d4740426ca12f53f27d004dd"
-    },
-    "missRanger": {
-      "Package": "missRanger",
-      "Version": "2.4.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "FNN",
-        "R",
-        "ranger",
-        "stats",
-        "utils"
-      ],
-      "Hash": "524ac6d1df47e52d21f55e0da5f46688"
     },
     "mitml": {
       "Package": "mitml",
@@ -2986,7 +2962,7 @@
     },
     "servr": {
       "Package": "servr",
-      "Version": "0.27",
+      "Version": "0.28",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -2996,7 +2972,7 @@
         "mime",
         "xfun"
       ],
-      "Hash": "f4d1414c2ddc0a34ea27923134ac3c7b"
+      "Hash": "70954f91166202e83476043dd1942071"
     },
     "shape": {
       "Package": "shape",
@@ -3677,7 +3653,7 @@
     },
     "yulab.utils": {
       "Package": "yulab.utils",
-      "Version": "0.1.1",
+      "Version": "0.1.2",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -3690,7 +3666,7 @@
         "tools",
         "utils"
       ],
-      "Hash": "82f2b8af0f82572dc16a6e9aa37779c9"
+      "Hash": "b737d549a97343eeebe7b87fa76b53c2"
     },
     "zip": {
       "Package": "zip",
