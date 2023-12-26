@@ -26,7 +26,7 @@ create_formula(
 
 \item{exposure}{A string indicating the exposure variable. A string.}
 
-\item{covariates}{A list of covariate names. A list or vector.}
+\item{covariates}{A list of covariate names. A vector.}
 
 \item{id_var}{The variable name to be used to identify subjects. A string.}
 
@@ -36,7 +36,7 @@ create_formula(
 and all the covariates. A bool.}
 
 \item{add_inter_exposure_specific}{A list of covariate names for which
-an interaction with the exposure is desired. A list or vector.}
+an interaction with the exposure is desired. A vector.}
 
 \item{add_splines_exposure}{Whether to model the exposure with natural splines. A bool.}
 

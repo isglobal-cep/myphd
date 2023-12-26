@@ -1,7 +1,10 @@
 PKGNAME = `sed -n "s/Package: *\([^ ]*\)/\1/p" DESCRIPTION`
 PKGVERS = `sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION`
 
-all: doc vignettes site install_deps build
+all: test doc vignettes site install_deps build
+
+test:
+	Rscript -e "devtools::test()"
 
 doc:
 	Rscript -e "devtools::document()"

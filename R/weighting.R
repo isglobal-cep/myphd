@@ -73,8 +73,8 @@ estimate_weights <- function(dat,
     discrete = FALSE,
     use_kernel = method_args$use_kernel,
     plot = ifelse(method_args$use_kernel == TRUE,
-                  TRUE,
-                  FALSE
+      TRUE,
+      FALSE
     )
   )
 
@@ -236,8 +236,8 @@ explore_balance <- function(exposure, type_exposure,
   # Assessing balance graphically
   graph <- lapply(covariates, function(x) {
     cobalt::bal.plot(weights,
-                     var.name = x,
-                     which = "both"
+      var.name = x,
+      which = "both"
     )
   })
 

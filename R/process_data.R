@@ -41,9 +41,22 @@ convert_time_season <- function(dat, cols) {
         ..1 %in% c(12, 1, 2) ~ "winter",
         ..1 %in% c(3, 4, 5) ~ "spring",
         ..1 %in% c(6, 7, 8) ~ "summer",
-        ..1 %in% c(9, 10, 11) ~ "autumn"
+        ..1 %in% c(9, 10, 11) ~ "autumn",
+        .default = "error"
       )
     ))
+
+  # Test that all months were converted properly
+  for (col in cols) {
+    if ("error" %in% ret[[col]]) {
+      stop(
+        glue::glue(
+          "Some values were not converted properly in {col}."
+        ),
+        call. = TRUE
+      )
+    }
+  }
 
   return(ret)
 }
@@ -469,6 +482,15 @@ handle_missing_values <- function(dat,
     tidylog::filter(pct_miss > threshold_overall)
   dat <- dat |>
     tidylog::select(-dplyr::all_of(step2$variable))
+
+  # If no variables are left, stop
+  if (length(colnames(dat)) <= 2) {
+    message("No variables left to impute.\n")
+
+    return(list(
+      dat_imputed = dat
+    ))
+  }
 
   # Step 3: impute the remaining variables
   ## Check whether to perform imputation by including additional variables
