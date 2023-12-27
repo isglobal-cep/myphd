@@ -42,6 +42,7 @@ convert_time_season <- function(dat, cols) {
         ..1 %in% c(3, 4, 5) ~ "spring",
         ..1 %in% c(6, 7, 8) ~ "summer",
         ..1 %in% c(9, 10, 11) ~ "autumn",
+        is.na(..1) ~ NA,
         .default = "error"
       )
     ))

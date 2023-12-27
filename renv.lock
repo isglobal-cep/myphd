@@ -59,17 +59,6 @@
       ],
       "Hash": "72f87e0092e39384aee16df8d67d7410"
     },
-    "Formula": {
-      "Package": "Formula",
-      "Version": "1.2-5",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "stats"
-      ],
-      "Hash": "7a29697b75e027767a53fde6c903eca7"
-    },
     "MASS": {
       "Package": "MASS",
       "Version": "7.3-60",
@@ -334,9 +323,14 @@
     },
     "badger": {
       "Package": "badger",
-      "Version": "0.2.3",
-      "Source": "Repository",
-      "Repository": "CRAN",
+      "Version": "0.2.3.002",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "badger",
+      "RemoteUsername": "GuangchuangYu",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "e8a542c95d847c084f66eccc841c3c067c7291bb",
       "Requirements": [
         "R",
         "desc",
@@ -344,7 +338,7 @@
         "rvcheck",
         "usethis"
       ],
-      "Hash": "90b2d3076e8a07bcc47c9586dc344e8c"
+      "Hash": "b9012bbcb504c2e5dca1caec6d7aef74"
     },
     "base64enc": {
       "Package": "base64enc",
@@ -867,9 +861,14 @@
     },
     "dlookr": {
       "Package": "dlookr",
-      "Version": "0.6.2",
-      "Source": "Repository",
-      "Repository": "CRAN",
+      "Version": "0.6.3",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteUsername": "choonghyunryu",
+      "RemoteRepo": "dlookr",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "86054b70255ceec6ba92063ca5e6f0f97c6a819d",
+      "RemoteHost": "api.github.com",
       "Requirements": [
         "R",
         "dplyr",
@@ -883,11 +882,11 @@
         "methods",
         "mice",
         "pagedown",
-        "partykit",
         "purrr",
         "reactable",
         "rlang",
         "rmarkdown",
+        "rpart",
         "shiny",
         "showtext",
         "sysfonts",
@@ -896,7 +895,7 @@
         "tidyselect",
         "utils"
       ],
-      "Hash": "21bba94984f3e9154932deb23bd91c26"
+      "Hash": "7f071ea0c888d0688a8f956267a525ee"
     },
     "dlstats": {
       "Package": "dlstats",
@@ -1802,18 +1801,6 @@
       ],
       "Hash": "750aba9b42391da33ac290b71a749023"
     },
-    "inum": {
-      "Package": "inum",
-      "Version": "1.0-5",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "libcoin",
-        "stats"
-      ],
-      "Hash": "baa4e298aa0fe48568c951d2fcc5d7c2"
-    },
     "isoband": {
       "Package": "isoband",
       "Version": "0.2.7",
@@ -1990,18 +1977,6 @@
         "utils"
       ],
       "Hash": "7c5e89f04e72d6611c77451f6331a091"
-    },
-    "libcoin": {
-      "Package": "libcoin",
-      "Version": "1.0-10",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "mvtnorm",
-        "stats"
-      ],
-      "Hash": "3f3775a14588ff5d013e5eab4453bf28"
     },
     "lifecycle": {
       "Package": "lifecycle",
@@ -2371,32 +2346,16 @@
       "Repository": "CRAN",
       "Hash": "495d032ad6bfc725f37ce89e3d6dadb2"
     },
-    "partykit": {
-      "Package": "partykit",
-      "Version": "1.2-20",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "Formula",
-        "R",
-        "grDevices",
-        "graphics",
-        "grid",
-        "inum",
-        "libcoin",
-        "mvtnorm",
-        "rpart",
-        "stats",
-        "survival",
-        "utils"
-      ],
-      "Hash": "8551bfc8d1d6ab813e2e5c8917268cd4"
-    },
     "patchwork": {
       "Package": "patchwork",
-      "Version": "1.1.3",
-      "Source": "Repository",
-      "Repository": "CRAN",
+      "Version": "1.1.3.9000",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "patchwork",
+      "RemoteUsername": "thomasp85",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "51a6eff5b71a15da1c04e42aacd111caa6d13041",
       "Requirements": [
         "cli",
         "ggplot2",
@@ -2408,7 +2367,7 @@
         "stats",
         "utils"
       ],
-      "Hash": "c5754106c02e8e019941100c81149431"
+      "Hash": "a08f3516b010ef02553b3860fddbd3f2"
     },
     "pbkrtest": {
       "Package": "pbkrtest",
