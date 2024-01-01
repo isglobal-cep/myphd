@@ -867,7 +867,7 @@
       "RemoteUsername": "choonghyunryu",
       "RemoteRepo": "dlookr",
       "RemoteRef": "HEAD",
-      "RemoteSha": "86054b70255ceec6ba92063ca5e6f0f97c6a819d",
+      "RemoteSha": "8bdcb65f8f081e11fdee8857dfdcbbaee1e81276",
       "RemoteHost": "api.github.com",
       "Requirements": [
         "R",
@@ -895,7 +895,7 @@
         "tidyselect",
         "utils"
       ],
-      "Hash": "7f071ea0c888d0688a8f956267a525ee"
+      "Hash": "e526e27cc5da338627912d90d3d573c7"
     },
     "dlstats": {
       "Package": "dlstats",
