@@ -157,7 +157,7 @@ edcs_information <- function() {
       pubchem_cid = "31736",
       ctd_id = "C103325",
       exposome_explorer_id = "1397",
-      parental_compound = "BzBP"
+      parental_compound = "BBzP"
     ),
     mecpp = list(
       full_name = "mono‑2‑ethyl 5‑carboxypentyl phthalate",
@@ -207,7 +207,7 @@ edcs_information <- function() {
       pubchem_cid = "102401880",
       ctd_id = "NA",
       exposome_explorer_id = "1451",
-      parental_compound = "NA"
+      parental_compound = "MiNP"
     ),
     oxominp = list(
       full_name = "mono‑4‑methyl‑7‑oxooctyl phthalate",
@@ -217,7 +217,7 @@ edcs_information <- function() {
       pubchem_cid = "102401881",
       ctd_id = "NA",
       exposome_explorer_id = "1492",
-      parental_compound = "NA"
+      parental_compound = "MiNP"
     ),
     mibp = list(
       full_name = "mono‑iso‑butyl phthalate",
@@ -237,7 +237,7 @@ edcs_information <- function() {
       pubchem_cid = "8575",
       ctd_id = "C028577",
       exposome_explorer_id = "1398",
-      parental_compound = "NA"
+      parental_compound = "DnBP"
     ),
     mep = list(
       full_name = "monoethyl phthalate",
@@ -254,11 +254,11 @@ edcs_information <- function() {
   edcs_info_df <- stack(edcs_info)
   edcs_info_df$col_names <- .names
   edcs_info_df <- tidylog::pivot_wider(edcs_info_df,
-    names_from = col_names,
-    values_from = values
+                                       names_from = col_names,
+                                       values_from = values
   )
   edcs_info_df <- tidylog::rename(edcs_info_df,
-    chem_id = ind
+                                  chem_id = ind
   )
 
   return(edcs_info_df)
