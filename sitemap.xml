@@ -1,129 +1,45 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/404.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/index.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/add_metadata.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/bound_outcome.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/check_model.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/convert_time_season.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/create_df_marginal_comparisons.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/create_fake_data.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/create_formula.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/create_mapping_labels.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/describe_data.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/edcs_information.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/estimate_selection_weights.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/estimate_weights.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/explore_balance.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/explore_missings.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/explore_shift.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/extract_cohort.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/find_common_confounders.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/fit_model_weighted.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/from_dagitty_to_ggdag.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/geom_dag_text_repel.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/handle_creatinine_confounding.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/handle_llodq.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/handle_missing_values.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/handle_standardization.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/handle_transformation.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/load_ctd.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/minimize_missings.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/myphd-package.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/plot_adrf.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/plot_amef.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/plot_ctd.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/plot_effect_estimates.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/preproc_data.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/test_npsem.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/theme_dag.html</loc>
-  </url>
-  <url>
-    <loc>https://isglobal-cep.github.io/myphd/reference/visualize_dag.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://isglobal-cep.github.io/myphd/404.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/LICENSE-text.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/LICENSE.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/authors.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/index.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/add_metadata.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/bound_outcome.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/check_model.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/convert_time_season.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/create_df_marginal_comparisons.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/create_fake_data.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/create_formula.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/create_mapping_labels.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/describe_data.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/edcs_information.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/estimate_selection_weights.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/estimate_weights.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/explore_balance.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/explore_missings.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/explore_shift.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/extract_cohort.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/find_common_confounders.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/fit_model_weighted.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/from_dagitty_to_ggdag.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/geom_dag_text_repel.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/handle_creatinine_confounding.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/handle_llodq.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/handle_missing_values.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/handle_standardization.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/handle_transformation.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/index.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/load_ctd.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/minimize_missings.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/myphd-package.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/plot_adrf.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/plot_amef.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/plot_ctd.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/plot_effect_estimates.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/preproc_data.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/test_npsem.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/theme_dag.html</loc></url>
+<url><loc>https://isglobal-cep.github.io/myphd/reference/visualize_dag.html</loc></url>
 </urlset>
+
