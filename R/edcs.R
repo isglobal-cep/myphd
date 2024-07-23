@@ -14,7 +14,8 @@ edcs_information <- function() {
     pubchem_cid = "",
     ctd_id = "",
     exposome_explorer_id = "",
-    parental_compound = ""
+    parental_compound = "",
+    molar_mass = "" # g/mol, also known as molecular weight
   )
   .names <- names(template)
 
@@ -27,7 +28,8 @@ edcs_information <- function() {
       pubchem_cid = "9274",
       ctd_id = "C000654497",
       exposome_explorer_id = "NA",
-      parental_compound = "NA"
+      parental_compound = "NA",
+      molar_mass = 186.2
     ),
     dep = list(
       full_name = "diethyl phosphate",
@@ -37,7 +39,8 @@ edcs_information <- function() {
       pubchem_cid = "654",
       ctd_id = "C034789",
       exposome_explorer_id = "NA",
-      parental_compound = "NA"
+      parental_compound = "NA",
+      molar_mass = 154.10
     ),
     detp = list(
       full_name = "diethyl thiophosphate",
@@ -47,17 +50,19 @@ edcs_information <- function() {
       pubchem_cid = "3683036",
       ctd_id = "C035638",
       exposome_explorer_id = "NA",
-      parental_compound = "NA"
+      parental_compound = "NA",
+      molar_mass = 169.16
     ),
     dmdtp = list(
       full_name = "dimethyl dithiophosphate",
       short_name = "DMDTP",
       class = "OP pesticide metabolites",
       smiles = "CSP(=O)(O)SC",
-      pubchem_cid = "NA",
+      pubchem_cid = "36158",
       ctd_id = "Unsure",
       exposome_explorer_id = "NA",
-      parental_compound = "NA"
+      parental_compound = "NA",
+      molar_mass = 158.18
     ),
     dmp = list(
       full_name = "dimethyl phosphate",
@@ -67,7 +72,8 @@ edcs_information <- function() {
       pubchem_cid = "13134",
       ctd_id = "C007477",
       exposome_explorer_id = "NA",
-      parental_compound = "NA"
+      parental_compound = "NA",
+      molar_mass = 126.05
     ),
     dmtp = list(
       full_name = "dimethyl thiophosphate",
@@ -77,7 +83,8 @@ edcs_information <- function() {
       pubchem_cid = "168140",
       ctd_id = "C040340",
       exposome_explorer_id = "NA",
-      parental_compound = "NA"
+      parental_compound = "NA",
+      molar_mass = 142.12
     ),
     bpa = list(
       full_name = "bisphenol A",
@@ -87,7 +94,8 @@ edcs_information <- function() {
       pubchem_cid = "6623",
       ctd_id = "C006780",
       exposome_explorer_id = "1418",
-      parental_compound = "NA"
+      parental_compound = "NA",
+      molar_mass = 228.29
     ),
     etpa = list(
       full_name = "ethyl-paraben",
@@ -97,7 +105,8 @@ edcs_information <- function() {
       pubchem_cid = "8434",
       ctd_id = "C012313",
       exposome_explorer_id = "1422",
-      parental_compound = "NA"
+      parental_compound = "NA",
+      molar_mass = 166.17
     ),
     mepa = list(
       full_name = "methyl-paraben",
@@ -107,7 +116,8 @@ edcs_information <- function() {
       pubchem_cid = "7456",
       ctd_id = "C015358",
       exposome_explorer_id = "1421",
-      parental_compound = "NA"
+      parental_compound = "NA",
+      molar_mass = 152.15
     ),
     bupa = list(
       full_name = "n‑butyl‑paraben",
@@ -117,7 +127,8 @@ edcs_information <- function() {
       pubchem_cid = "7184",
       ctd_id = "C038091",
       exposome_explorer_id = "1424",
-      parental_compound = "NA"
+      parental_compound = "NA",
+      molar_mass = 194.23
     ),
     oxbe = list(
       full_name = "oxybenzone",
@@ -127,7 +138,8 @@ edcs_information <- function() {
       pubchem_cid = "4632",
       ctd_id = "C005290",
       exposome_explorer_id = "1419",
-      parental_compound = "NA"
+      parental_compound = "NA",
+      molar_mass = 228.24
     ),
     prpa = list(
       full_name = "propyl-paraben",
@@ -137,7 +149,8 @@ edcs_information <- function() {
       pubchem_cid = "7175",
       ctd_id = "C006068",
       exposome_explorer_id = "1423",
-      parental_compound = "NA"
+      parental_compound = "NA",
+      molar_mass = 180.20
     ),
     trcs = list(
       full_name = "triclosan",
@@ -147,7 +160,8 @@ edcs_information <- function() {
       pubchem_cid = "5564",
       ctd_id = "D014260",
       exposome_explorer_id = "1420",
-      parental_compound = "NA"
+      parental_compound = "NA",
+      molar_mass = 289.5
     ),
     mbzp = list(
       full_name = "mono benzyl phthalate",
@@ -157,7 +171,8 @@ edcs_information <- function() {
       pubchem_cid = "31736",
       ctd_id = "C103325",
       exposome_explorer_id = "1397",
-      parental_compound = "BBzP"
+      parental_compound = "BBzP",
+      molar_mass = 256.25
     ),
     mecpp = list(
       full_name = "mono‑2‑ethyl 5‑carboxypentyl phthalate",
@@ -167,7 +182,8 @@ edcs_information <- function() {
       pubchem_cid = "148386",
       ctd_id = "C051450",
       exposome_explorer_id = "1403",
-      parental_compound = "DEHP"
+      parental_compound = "DEHP",
+      molar_mass = 308.33
     ),
     mehhp = list(
       full_name = "mono‑2‑ethyl‑5‑hydroxyhexyl phthalate",
@@ -177,7 +193,8 @@ edcs_information <- function() {
       pubchem_cid = "170295",
       ctd_id = "C479069",
       exposome_explorer_id = "1402",
-      parental_compound = "DEHP"
+      parental_compound = "DEHP",
+      molar_mass = 294.34
     ),
     meohp = list(
       full_name = "mono‑2‑ethyl‑5‑oxohexyl phthalate",
@@ -187,7 +204,8 @@ edcs_information <- function() {
       pubchem_cid = "119096",
       ctd_id = "C080276",
       exposome_explorer_id = "1401",
-      parental_compound = "DEHP"
+      parental_compound = "DEHP",
+      molar_mass = 292.33
     ),
     mehp = list(
       full_name = "mono‑2‑ethylhexyl phthalate",
@@ -197,7 +215,8 @@ edcs_information <- function() {
       pubchem_cid = "21924291",
       ctd_id = "C016599",
       exposome_explorer_id = "Unsure",
-      parental_compound = "DEHP"
+      parental_compound = "DEHP",
+      molar_mass = 277.33
     ),
     ohminp = list(
       full_name = "mono‑4‑methyl‑7‑hydroxyoctyl phthalate",
@@ -207,7 +226,8 @@ edcs_information <- function() {
       pubchem_cid = "102401880",
       ctd_id = "NA",
       exposome_explorer_id = "1451",
-      parental_compound = "MiNP"
+      parental_compound = "MiNP",
+      molar_mass = 308.4
     ),
     oxominp = list(
       full_name = "mono‑4‑methyl‑7‑oxooctyl phthalate",
@@ -217,7 +237,8 @@ edcs_information <- function() {
       pubchem_cid = "102401881",
       ctd_id = "NA",
       exposome_explorer_id = "1492",
-      parental_compound = "MiNP"
+      parental_compound = "MiNP",
+      molar_mass = 306.4
     ),
     mibp = list(
       full_name = "mono‑iso‑butyl phthalate",
@@ -227,7 +248,8 @@ edcs_information <- function() {
       pubchem_cid = "92272",
       ctd_id = "C575690",
       exposome_explorer_id = "1399",
-      parental_compound = "DiBP"
+      parental_compound = "DiBP",
+      molar_mass = 222.24
     ),
     mnbp = list(
       full_name = "mono‑n‑butyl phthalate",
@@ -237,7 +259,8 @@ edcs_information <- function() {
       pubchem_cid = "8575",
       ctd_id = "C028577",
       exposome_explorer_id = "1398",
-      parental_compound = "DnBP"
+      parental_compound = "DnBP",
+      molar_mass = 222.24
     ),
     mep = list(
       full_name = "monoethyl phthalate",
@@ -247,18 +270,25 @@ edcs_information <- function() {
       pubchem_cid = "75318",
       ctd_id = "C581825",
       exposome_explorer_id = "1396",
-      parental_compound = "DEP"
+      parental_compound = "DEP",
+      molar_mass = 194.18
     )
   )
 
   edcs_info_df <- stack(edcs_info)
   edcs_info_df$col_names <- .names
-  edcs_info_df <- tidylog::pivot_wider(edcs_info_df,
-                                       names_from = col_names,
-                                       values_from = values
+  edcs_info_df <- tidylog::pivot_wider(
+    edcs_info_df,
+    names_from = col_names,
+    values_from = values
   )
-  edcs_info_df <- tidylog::rename(edcs_info_df,
-                                  chem_id = ind
+  edcs_info_df <- tidylog::rename(
+    edcs_info_df,
+    chem_id = ind
+  )
+
+  assertthat::assert_that(
+    length(unique(edcs_info_df$pubchem_cid)) == length(edcs_info_df$pubchem_cid)
   )
 
   return(edcs_info_df)

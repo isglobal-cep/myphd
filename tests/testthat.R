@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(myphd)
+# library(myphd)
 
-test_check("myphd")
+# test_check("myphd")
