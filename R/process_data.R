@@ -762,7 +762,8 @@ handle_standardization <- function(dat,
       dplyr::all_of(setdiff(
         colnames(dat), c(id_var, by_var)
       )),
-      \(x) (x - do.call(center_fun, list(x, na.rm = TRUE))) / do.call(scale_fun, list(x, na.rm = TRUE))
+      \(x) (x - do.call(min, list(x, na.rm = TRUE))) / (do.call(max, list(x, na.rm = TRUE)) - do.call(min, list(x, na.rm = TRUE)))
+      #\(x) (x - do.call(center_fun, list(x, na.rm = TRUE))) / do.call(scale_fun, list(x, na.rm = TRUE))
     ))
 
   return(dat_ret)
