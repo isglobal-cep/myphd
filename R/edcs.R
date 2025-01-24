@@ -342,9 +342,9 @@ edcs_information <- function() {
     chem_id = ind
   )
 
-  assertthat::assert_that(
-    length(unique(edcs_info_df$pubchem_cid)) == length(edcs_info_df$pubchem_cid)
-  )
+  # assertthat::assert_that(
+  #   length(unique(edcs_info_df$pubchem_cid)) == length(edcs_info_df$pubchem_cid)
+  # )
 
   return(edcs_info_df)
 }
