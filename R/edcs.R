@@ -20,6 +20,61 @@ edcs_information <- function() {
   .names <- names(template)
 
   edcs_info <- list(
+    pfhxs = list(
+      full_name = "perfluorohexane sulfonate",
+      short_name = "PFHXS",
+      class = "PFAS",
+      smiles = "",
+      pubchem_cid = "",
+      ctd_id = "",
+      exposome_explorer_id = "",
+      parental_compound = "",
+      molar_mass = ""
+    ),
+    pfna = list(
+      full_name = "perfluorononanoate",
+      short_name = "PFNA",
+      class = "PFAS",
+      smiles = "",
+      pubchem_cid = "",
+      ctd_id = "",
+      exposome_explorer_id = "",
+      parental_compound = "",
+      molar_mass = ""
+    ),
+    pfoa = list(
+      full_name = "perfluorooctanoate",
+      short_name = "PFOA",
+      class = "PFAS",
+      smiles = "",
+      pubchem_cid = "",
+      ctd_id = "",
+      exposome_explorer_id = "",
+      parental_compound = "",
+      molar_mass = ""
+    ),
+    pfos = list(
+      full_name = "perfluorooctane sulfonate",
+      short_name = "PFOS",
+      class = "PFAS",
+      smiles = "",
+      pubchem_cid = "",
+      ctd_id = "",
+      exposome_explorer_id = "",
+      parental_compound = "",
+      molar_mass = ""
+    ),
+    pfunda = list(
+      full_name = "perfluoroundecanoate",
+      short_name = "PFUNDA",
+      class = "PFAS",
+      smiles = "",
+      pubchem_cid = "",
+      ctd_id = "",
+      exposome_explorer_id = "",
+      parental_compound = "",
+      molar_mass = ""
+    ),
     dedtp = list(
       full_name = "diethyl dithiophosphate",
       short_name = "DEDTP",
