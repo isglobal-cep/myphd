@@ -20,6 +20,39 @@ edcs_information <- function() {
   .names <- names(template)
 
   edcs_info <- list(
+    as = list(
+      full_name = "Arsenic",
+      short_name = "As",
+      class = "Metals",
+      smiles = "",
+      pubchem_cid = "",
+      ctd_id = "",
+      exposome_explorer_id = "",
+      parental_compound = "",
+      molar_mass = ""
+    ),
+    hg = list(
+      full_name = "Mercury",
+      short_name = "Hg",
+      class = "Metals",
+      smiles = "",
+      pubchem_cid = "",
+      ctd_id = "",
+      exposome_explorer_id = "",
+      parental_compound = "",
+      molar_mass = ""
+    ),
+    pb = list(
+      full_name = "Lead",
+      short_name = "Pb",
+      class = "Metals",
+      smiles = "",
+      pubchem_cid = "",
+      ctd_id = "",
+      exposome_explorer_id = "",
+      parental_compound = "",
+      molar_mass = ""
+    ),
     pfhxs = list(
       full_name = "perfluorohexane sulfonate",
       short_name = "PFHXS",
